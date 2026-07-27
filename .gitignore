@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Vercel
+.vercel
+
+# Node (not used, but keep clean if tooling is added later)
+node_modules/
+npm-debug.log*
+*.log
+
+# Claude Code local settings
+.claude/settings.local.json

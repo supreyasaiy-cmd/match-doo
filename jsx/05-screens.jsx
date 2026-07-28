@@ -1779,7 +1779,13 @@ function ProfileEditSheet({ name, handle, avatarSrc, pool = [], customPics = [],
         <div style={{marginBottom: 20}}>
           <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px'}}>Profile picture</div>
           <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{display:'none'}}/>
-          <div className="phone-scroll" style={{display:'flex', gap: 12, overflowX:'auto', padding:'2px 2px 6px'}}>
+          <div
+            className="phone-scroll"
+            onWheel={(e)=>{ const el = e.currentTarget; if (el.scrollWidth > el.clientWidth && Math.abs(e.deltaY) >= Math.abs(e.deltaX)) el.scrollLeft += e.deltaY; }}
+            style={{
+              display:'flex', gap: 12, overflowX:'auto', padding:'2px 2px 6px',
+              touchAction:'pan-x', WebkitOverflowScrolling:'touch', overscrollBehaviorX:'contain',
+            }}>
             {/* Add — always first */}
             <button onClick={()=> fileRef.current && fileRef.current.click()} aria-label="Add photo" style={{
               appearance:'none', cursor:'pointer', flexShrink: 0, padding: 0,

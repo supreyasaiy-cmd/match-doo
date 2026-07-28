@@ -409,6 +409,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
   const [room, setRoom] = React.useState(initialRoom);
   const [showAddMembers, setShowAddMembers] = React.useState(false);
   const [showShare, setShowShare] = React.useState(false);
+  const [showSettings, setShowSettings] = React.useState(false);
   const [memberToast, setMemberToast] = React.useState('');
 
   // Movie-night date for this room (persisted)
@@ -438,6 +439,15 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
     setTimeout(()=> setMemberToast(''), 2000);
   };
 
+  const syncRoom = (next) => { window.ROOMS = (window.ROOMS || []).map(r => r.id === room.id ? next : r); setRoom(next); };
+  const applyRoomUpdate = (patch) => {
+    syncRoom({ ...room, ...patch });
+    setMemberToast('Room updated');
+    setTimeout(()=> setMemberToast(''), 1800);
+  };
+  const removeMember = (id) => syncRoom({ ...room, members: (room.members || []).filter(x => x !== id) });
+  const removeRoom = () => { window.ROOMS = (window.ROOMS || []).filter(r => r.id !== room.id); onBack(); };
+
   // Compute room mutual likes = intersection across all members + me
   const myLikes = new Set(['m1','m2','m9','m11']); // hardcoded sample; in app comes from state
   const allLikes = members.map(m => new Set(window.MATCHES[m.id]?.movieIds || []));
@@ -462,7 +472,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
           }}>
             <Icon name="share" size={16}/>
           </button>
-          <button style={{
+          <button onClick={()=> setShowSettings(true)} aria-label="Room settings" style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
             width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
             display:'flex', alignItems:'center', justifyContent:'center',
@@ -624,6 +634,20 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
 
       {showShare && (
         <ShareRoomSheet room={room} onClose={()=> setShowShare(false)}/>
+      )}
+
+      {showSettings && (
+        <RoomSettingsSheet
+          room={room}
+          members={members}
+          onClose={()=> setShowSettings(false)}
+          onUpdate={applyRoomUpdate}
+          onRemoveMember={removeMember}
+          onAddMembers={()=>{ setShowSettings(false); setShowAddMembers(true); }}
+          onShare={()=>{ setShowSettings(false); setShowShare(true); }}
+          onLeave={()=>{ setShowSettings(false); removeRoom(); }}
+          onDelete={()=>{ setShowSettings(false); removeRoom(); }}
+        />
       )}
 
       {memberToast && (
@@ -1005,4 +1029,143 @@ function ShareRoomSheet({ room, onClose }) {
   );
 }
 
-Object.assign(window, { RoomsScreen, RoomDetailScreen, CreateRoomScreen, ShareRoomSheet, RoomsCalendar, CalendarSheet, collectMovieNights, roomCode, roomLink });
+// ─── Room settings sheet ────────────────────────────────────────────
+function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMember, onAddMembers, onShare, onLeave, onDelete }) {
+  const EMOJIS = ['🌸','🍿','🎬','✨','🎥','🎭','🌙','🍕','☕','🔥','❤️','🎉'];
+  const TONES  = ['#E17F5C','#F0AC72','#7ED9B4','#6F93E0','#93A8E8','#e8c994','#ffb3c1','#d4c4ff'];
+  const [name, setName]   = React.useState(room.name);
+  const [emoji, setEmoji] = React.useState(room.emoji || '🎬');
+  const [tone, setTone]   = React.useState(room.tone || '#E17F5C');
+  const [muted, setMuted] = React.useState(!!room.muted);
+  const [confirm, setConfirm] = React.useState(null); // 'leave' | 'delete'
+
+  const dirty = name.trim() !== room.name || emoji !== (room.emoji || '🎬') || tone !== (room.tone || '#E17F5C') || muted !== !!room.muted;
+  const label = { fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px' };
+  const save = () => { onUpdate({ name: name.trim() || room.name, emoji, tone, muted }); onClose(); };
+
+  return (
+    <div onClick={onClose} className="fade-in" style={{
+      position:'absolute', inset:0, zIndex: 200,
+      background:'rgba(var(--bg-rgb),0.7)',
+      backdropFilter:'blur(16px) saturate(140%)', WebkitBackdropFilter:'blur(16px) saturate(140%)',
+      display:'flex', flexDirection:'column', justifyContent:'flex-end',
+    }}>
+      <div onClick={e=>e.stopPropagation()} className="rise phone-scroll" style={{
+        background:'var(--ink)', borderRadius:'28px 28px 0 0',
+        padding:'14px 20px 96px', maxHeight:'90%', overflowY:'auto',
+        border:'0.5px solid rgba(var(--fg-rgb),0.10)', borderBottom: 0,
+        boxShadow:'0 -20px 40px rgba(0,0,0,0.5)',
+      }}>
+        <div style={{width:42, height:4, borderRadius:2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px'}}/>
+        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:18}}>
+          <div style={{fontFamily:'var(--serif)', fontSize:24, color:'var(--cream)', lineHeight:1.1}}>Room settings</div>
+          <button onClick={onClose} aria-label="Close" style={{appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)', width:34, height:34, borderRadius:999, color:'var(--muted)', display:'flex', alignItems:'center', justifyContent:'center'}}>
+            <Icon name="x" size={16}/>
+          </button>
+        </div>
+
+        {/* preview + name */}
+        <div style={{display:'flex', alignItems:'center', gap:14, marginBottom:22}}>
+          <div style={{width:60, height:60, borderRadius:18, flexShrink:0, fontSize:28,
+            background:`linear-gradient(135deg, ${hexA(tone,0.4)}, ${hexA(tone,0.1)})`,
+            border:`0.5px solid ${hexA(tone,0.4)}`, display:'flex', alignItems:'center', justifyContent:'center'}}>{emoji}</div>
+          <div style={{flex:1, minWidth:0}}>
+            <div style={label}>Room name</div>
+            <input value={name} onChange={e=>setName(e.target.value)} style={{width:'100%', background:'rgba(var(--fg-rgb),0.06)', border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius:12, padding:'11px 12px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize:15, outline:0}}/>
+          </div>
+        </div>
+
+        {/* icon */}
+        <div style={label}>Icon</div>
+        <div style={{display:'flex', gap:6, flexWrap:'wrap', marginBottom:20}}>
+          {EMOJIS.map(e=>(
+            <button key={e} onClick={()=>setEmoji(e)} style={{appearance:'none', width:40, height:40, borderRadius:12, fontSize:20,
+              background: emoji===e ? hexA(tone,0.14) : 'rgba(var(--fg-rgb),0.05)',
+              border:`0.5px solid ${emoji===e ? hexA(tone,0.5) : 'transparent'}`}}>{e}</button>
+          ))}
+        </div>
+
+        {/* color */}
+        <div style={label}>Color</div>
+        <div style={{display:'flex', gap:10, marginBottom:22}}>
+          {TONES.map(t=>(
+            <button key={t} onClick={()=>setTone(t)} aria-label={`Color ${t}`} style={{appearance:'none', width:30, height:30, borderRadius:999, background:t, border:'0.5px solid rgba(0,0,0,0.2)',
+              boxShadow: tone===t ? `0 0 0 2px var(--ink), 0 0 0 3.5px ${t}` : 'none', display:'flex', alignItems:'center', justifyContent:'center'}}>
+              {tone===t && <Icon name="check" size={14} color="#fff" stroke={3}/>}
+            </button>
+          ))}
+        </div>
+
+        {/* mute toggle */}
+        <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'rgba(var(--fg-rgb),0.04)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
+          <IconBadge icon="bell" size={34} tone="#93A8E8"/>
+          <div style={{flex:1, textAlign:'left'}}>
+            <div style={{fontSize:14, fontWeight:600}}>Mute notifications</div>
+            <div style={{fontSize:12, color:'var(--muted)', marginTop:1}}>{muted ? 'Room alerts are off' : 'Get alerts on new matches'}</div>
+          </div>
+          <div style={{width:44, height:26, borderRadius:999, flexShrink:0, position:'relative', transition:'background .2s', background: muted ? 'rgba(var(--fg-rgb),0.15)' : 'var(--green)'}}>
+            <div style={{position:'absolute', top:3, left: muted ? 3 : 21, width:20, height:20, borderRadius:999, background:'#fff', transition:'left .2s'}}/>
+          </div>
+        </button>
+
+        {/* members */}
+        <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', margin:'0 2px 10px'}}>
+          <div style={{fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>Members</div>
+          <div style={{fontSize:11, color:'var(--muted-2)'}}>{members.length}</div>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:6, marginBottom:10}}>
+          {members.length === 0 && <div style={{fontSize:12.5, color:'var(--muted)', padding:'6px 2px'}}>Just you so far.</div>}
+          {members.map(m=>(
+            <div key={m.id} style={{display:'flex', alignItems:'center', gap:12, padding:'8px 10px', borderRadius:12, background:'rgba(var(--fg-rgb),0.04)'}}>
+              <Avatar person={m} size={34}/>
+              <div style={{flex:1, minWidth:0}}>
+                <div style={{fontSize:14, fontWeight:600, color:'var(--cream)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.name}</div>
+                <div style={{fontSize:11.5, color:'var(--muted)'}}>{m.handle || ''}</div>
+              </div>
+              <button onClick={()=>onRemoveMember(m.id)} aria-label={`Remove ${m.name}`} style={{appearance:'none', border:0, background:'transparent', color:'var(--muted-2)', width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center'}}>
+                <Icon name="x" size={15}/>
+              </button>
+            </div>
+          ))}
+        </div>
+        <button onClick={onAddMembers} style={{appearance:'none', border:'0.5px dashed rgba(var(--fg-rgb),0.22)', background:'transparent', borderRadius:12, padding:'11px', width:'100%', color:'var(--cream)', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, fontSize:13.5, fontWeight:600, marginBottom:14}}>
+          <Icon name="plus" size={15} stroke={2.2}/> Add members
+        </button>
+
+        {/* share shortcut */}
+        <button onClick={onShare} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'rgba(var(--fg-rgb),0.04)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
+          <IconBadge icon="share" size={34} tone="#7ED9B4"/>
+          <div style={{flex:1, textAlign:'left', fontSize:14, fontWeight:600}}>Invite / share room</div>
+          <Icon name="chev" size={14} color="var(--muted-2)"/>
+        </button>
+
+        {/* save */}
+        <PrimaryBtn full disabled={!dirty} onClick={save}>Save changes</PrimaryBtn>
+
+        {/* danger zone */}
+        <div style={{height:0.5, background:'var(--line)', margin:'20px 0 16px'}}/>
+        {confirm ? (
+          <div style={{background:'rgba(232,121,138,0.08)', border:'0.5px solid rgba(232,121,138,0.3)', borderRadius:14, padding:14}}>
+            <div style={{fontSize:13.5, color:'var(--cream)', fontWeight:600, marginBottom:4}}>{confirm==='delete' ? 'Delete this room?' : 'Leave this room?'}</div>
+            <div style={{fontSize:12.5, color:'var(--muted)', marginBottom:12}}>{confirm==='delete' ? "This removes the room for good. This can't be undone." : "It'll be removed from your rooms."}</div>
+            <div style={{display:'flex', gap:8}}>
+              <button onClick={()=>setConfirm(null)} style={{appearance:'none', flex:1, border:'0.5px solid rgba(var(--fg-rgb),0.16)', background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)', borderRadius:999, padding:11, fontWeight:600, fontSize:14}}>Cancel</button>
+              <button onClick={()=> confirm==='delete' ? onDelete() : onLeave()} style={{appearance:'none', flex:1, border:0, background:'#E8798A', color:'#fff', borderRadius:999, padding:11, fontWeight:600, fontSize:14}}>{confirm==='delete' ? 'Delete' : 'Leave'}</button>
+            </div>
+          </div>
+        ) : (
+          <div style={{display:'flex', flexDirection:'column', gap:8}}>
+            <button onClick={()=>setConfirm('leave')} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)', background:'transparent', color:'var(--cream)', borderRadius:999, padding:12, fontWeight:600, fontSize:14, display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8}}>
+              <Icon name="arrow" size={15}/> Leave room
+            </button>
+            <button onClick={()=>setConfirm('delete')} style={{appearance:'none', border:'0.5px solid rgba(232,121,138,0.35)', background:'transparent', color:'#E8798A', borderRadius:999, padding:12, fontWeight:600, fontSize:14}}>
+              Delete room
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { RoomsScreen, RoomDetailScreen, CreateRoomScreen, ShareRoomSheet, RoomSettingsSheet, RoomsCalendar, CalendarSheet, collectMovieNights, roomCode, roomLink });

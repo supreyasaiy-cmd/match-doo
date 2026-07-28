@@ -69,6 +69,7 @@ function App() {
   const [search, setSearch]           = React.useState(null);  // { initialQuery }
   const [matchPopup, setMatchPopup]   = React.useState(null);
   const [roomDetail, setRoomDetail]   = React.useState(null);
+  const [calendarOpen, setCalendarOpen] = React.useState(false);
   const [createRoom, setCreateRoom]   = React.useState(false);
   const [addFriend, setAddFriend]     = React.useState(false);
   const [friendProfile, setFriendProfile] = React.useState(null);
@@ -282,6 +283,7 @@ function App() {
         onOpenRoom={(r)=> setRoomDetail(r)}
         onCreateRoom={()=> setCreateRoom(true)}
         onAddFriend={()=> setAddFriend(true)}
+        onOpenCalendar={()=> setCalendarOpen(true)}
         banner={t.bannerPlacement === 'roomsTop' ? <BannerAd placement="roomsTop" onOpenCTA={onOpenAdCTA}/> : null}
       />;
     } else if (tab === 'profile') {
@@ -313,7 +315,14 @@ function App() {
             <BannerAd placement="sticky" onOpenCTA={onOpenAdCTA}/>
           </div>
         )}
-        <TabBar active={tab} onChange={setTab}/>
+        <TabBar active={tab} onChange={(t)=>{
+          // Switching tabs must return to that tab's root — dismiss any
+          // full-screen overlay or sheet that's currently on top.
+          setTab(t);
+          setRoomDetail(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null);
+          setMovieDetail(null); setReadMore(null); setSearch(null);
+          setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false);
+        }}/>
       </>
     );
   }
@@ -376,6 +385,12 @@ function App() {
           )}
           {notifOpen && (
             <NotificationsSheet items={notifications} onClose={()=> setNotifOpen(false)}/>
+          )}
+          {calendarOpen && (
+            <CalendarSheet
+              onClose={()=> setCalendarOpen(false)}
+              onOpenRoom={(r)=>{ setCalendarOpen(false); setRoomDetail(r); }}
+            />
           )}
           {movieDetail && (
             <MovieDetailSheet

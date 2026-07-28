@@ -65,7 +65,8 @@ function collectMovieNights() {
 }
 
 // ─── Movie-night calendar ───────────────────────────────────────────
-function RoomsCalendar({ onOpenRoom }) {
+// `bare` drops the card chrome (bg/border/padding) — used inside a sheet.
+function RoomsCalendar({ onOpenRoom, bare }) {
   const WD = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   const pad = (n) => String(n).padStart(2, '0');
   const iso = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
@@ -99,14 +100,14 @@ function RoomsCalendar({ onOpenRoom }) {
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
   return (
-    <div style={{
+    <div style={bare ? {} : {
       background:'rgba(var(--fg-rgb),0.04)',
       border:'0.5px solid rgba(var(--fg-rgb),0.10)',
       borderRadius: 18, padding:'14px 14px 12px', marginBottom: 14,
     }}>
       {/* header */}
       <div style={{display:'flex', alignItems:'center', gap: 10, marginBottom: 12}}>
-        <Icon name="clock" size={16} color="var(--red)"/>
+        <Icon name="calendar" size={16} color="var(--red)"/>
         <div style={{flex: 1, fontWeight: 600, fontSize: 14, letterSpacing:'-0.01em', color:'var(--cream)'}}>
           Movie nights
         </div>
@@ -203,8 +204,41 @@ function RoomsCalendar({ onOpenRoom }) {
   );
 }
 
+// ─── Calendar bottom sheet ──────────────────────────────────────────
+function CalendarSheet({ onClose, onOpenRoom }) {
+  return (
+    <div className="fade-in" onClick={onClose} style={{
+      position:'absolute', inset: 0, zIndex: 250,
+      background:'rgba(var(--bg-rgb),0.55)',
+      backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
+      display:'flex', flexDirection:'column', justifyContent:'flex-end',
+    }}>
+      <div className="rise" onClick={e=>e.stopPropagation()} style={{
+        background:'var(--ink)', borderRadius:'26px 26px 0 0',
+        padding:'10px 18px 26px', maxHeight:'88%', overflowY:'auto',
+        boxShadow:'0 -24px 60px rgba(0,0,0,0.6)',
+        border:'0.5px solid rgba(var(--fg-rgb),0.12)', borderBottom: 0,
+      }}>
+        {/* handle + close */}
+        <div style={{position:'relative', display:'flex', alignItems:'center', justifyContent:'center', marginBottom: 12}}>
+          <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.35)'}}/>
+          <button onClick={onClose} aria-label="Close" style={{
+            appearance:'none', border:0, position:'absolute', right: 0, top: -2,
+            background:'rgba(var(--fg-rgb),0.08)', color:'var(--cream)',
+            width: 32, height: 32, borderRadius: 999,
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <Icon name="x" size={16}/>
+          </button>
+        </div>
+        <RoomsCalendar bare onOpenRoom={onOpenRoom}/>
+      </div>
+    </div>
+  );
+}
+
 // ─── Rooms list screen ──────────────────────────────────────────────
-function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, banner }) {
+function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, banner }) {
   const [query, setQuery] = React.useState('');
   const rooms = window.ROOMS.filter(r =>
     !query || r.name.toLowerCase().includes(query.toLowerCase())
@@ -229,6 +263,17 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, banner }) {
         }}>
           <Icon name="plus" size={16} stroke={2.4} color="#fff"/>
           Create room
+        </button>
+        <button onClick={onOpenCalendar} aria-label="Movie nights calendar" style={{
+          appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
+          width: 48, flexShrink: 0, background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)',
+          borderRadius: 999, padding: 0, lineHeight: 0,
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+        }}>
+          {/* 1px optical nudge: the calendar glyph's top tabs read top-heavy */}
+          <span style={{display:'flex', transform:'translateY(1px)'}}>
+            <Icon name="calendar" size={19}/>
+          </span>
         </button>
         <button onClick={onAddFriend} style={{
           appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
@@ -265,13 +310,6 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, banner }) {
       </div>
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'4px 18px 130px'}}>
-        {!query && <RoomsCalendar onOpenRoom={onOpenRoom}/>}
-        {!query && (
-          <div style={{
-            fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase',
-            color:'var(--muted)', margin:'2px 2px 10px',
-          }}>Your rooms</div>
-        )}
         <div style={{display:'flex', flexDirection:'column', gap: 10}}>
           {rooms.map(r => <RoomCard key={r.id} room={r} onClick={()=>onOpenRoom(r)}/>)}
         </div>
@@ -967,4 +1005,4 @@ function ShareRoomSheet({ room, onClose }) {
   );
 }
 
-Object.assign(window, { RoomsScreen, RoomDetailScreen, CreateRoomScreen, ShareRoomSheet, RoomsCalendar, collectMovieNights, roomCode, roomLink });
+Object.assign(window, { RoomsScreen, RoomDetailScreen, CreateRoomScreen, ShareRoomSheet, RoomsCalendar, CalendarSheet, collectMovieNights, roomCode, roomLink });

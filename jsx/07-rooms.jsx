@@ -254,7 +254,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, ba
       {/* Primary actions — both clearly clickable up top */}
       <div style={{padding:'2px 18px 12px', display:'flex', gap: 8}}>
         <button onClick={onCreateRoom} style={{
-          appearance:'none', border:0, flex: 1.4,
+          appearance:'none', border:0, flex: 1,
           background:'var(--red)', color:'#fff',
           padding:'12px 14px', borderRadius: 999,
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,

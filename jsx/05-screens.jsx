@@ -114,33 +114,41 @@ function WelcomeScreen({ onSignIn, onSignUp }) {
         <Wordmark/>
 
         <div style={{flex:1, display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'flex-start', paddingTop: 30}}>
-          <div className="wl-badge" style={{
-            display:'inline-flex', alignItems:'center', gap: 8,
-            padding:'8px 14px', borderRadius: 999,
-            border:'0.5px solid', fontSize: 12, fontWeight: 600,
-            letterSpacing:'-0.005em', marginBottom: 24,
-          }}>
-            <Icon name="film" size={14} color="currentColor"/>
-            Stop arguing. Start watching.
-          </div>
-
           <div style={{
-            fontFamily:'var(--serif)', fontSize: 60, lineHeight: 0.96,
-            letterSpacing:'-0.025em', color:'var(--cream)', textWrap:'pretty',
+            fontFamily:'var(--serif)', fontSize: 46, lineHeight: 1.0,
+            letterSpacing:'-0.025em', color:'var(--cream)', textWrap:'nowrap',
           }}>
-            Find films you<br/>
+            Match<br/>
             <em style={{
               fontStyle:'italic',
               background:'linear-gradient(95deg, #E17F5C 0%, #93A8E8 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
-            }}>both love.</em>
+            }}>a movie</em><br/>
+            Make<br/>
+            <em style={{
+              fontStyle:'italic',
+              background:'linear-gradient(95deg, #E17F5C 0%, #93A8E8 80%)',
+              WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
+              backgroundClip:'text', color:'transparent',
+            }}>a moment</em>
+          </div>
+
+          <div className="wl-badge" style={{
+            marginTop: 22,
+            display:'inline-flex', alignItems:'center', gap: 8,
+            padding:'8px 14px', borderRadius: 999,
+            border:'0.5px solid', fontSize: 12, fontWeight: 600,
+            letterSpacing:'-0.005em',
+          }}>
+            <Icon name="film" size={14} color="currentColor"/>
+            Less choosing. More watching together.
           </div>
 
           <div style={{
-            marginTop: 22, color:'var(--muted)', fontSize: 15.5, lineHeight: 1.55, maxWidth: 320,
+            marginTop: 18, color:'var(--muted)', fontSize: 15.5, lineHeight: 1.55, maxWidth: 320,
           }}>
-            Swipe on films and series with the people you actually watch with. When everyone agrees — it's a match.
+            Discover movies and series together. Swipe, match, and turn your shared picks into your next movie night.
           </div>
         </div>
 
@@ -547,32 +555,32 @@ function OnboardingScreen({ initialName = '', onDone }) {
 }
 
 // ─── Matches list ───────────────────────────────────────────────────
-function MatchesScreen({ likes, onOpenMatch, onOpenMovie }) {
+function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
   // Collect every friend across all relationships
   const allFriends = [
     ...(window.FRIENDS.couple || []),
     ...(window.FRIENDS.family || []),
     ...(window.FRIENDS.friends || []),
   ];
-  const myLikes = new Set(likes);
-
-  // Build matches: friend + intersect movies
+  // Build matches per friend from the shared-match state: every film you
+  // both want to watch (window.MATCHES seed + anything the user has liked).
   const matches = allFriends.map(f => {
     const friendLikes = new Set(window.MATCHES[f.id]?.movieIds || []);
     const watchedSet = new Set(window.MATCHES[f.id]?.watched || []);
-    const matched = window.MOVIES.filter(m => myLikes.has(m.id) && friendLikes.has(m.id) && !watchedSet.has(m.id));
+    const matched = window.MOVIES.filter(m => friendLikes.has(m.id) && !watchedSet.has(m.id));
     const watched = window.MOVIES.filter(m => watchedSet.has(m.id));
     return { friend: f, matched, watched };
   }).filter(m => m.matched.length || m.watched.length)
     .sort((a,b) => b.matched.length - a.matched.length);
 
-  const totalMatched = matches.reduce((s,m)=>s+m.matched.length, 0);
+  const totalMatched = new Set(matches.flatMap(m => m.matched.map(x => x.id))).size;
 
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar
         title="Matches"
         large
+        onBack={onBack}
         subtitle={totalMatched ? `${totalMatched} films on your shared queue` : 'Films you both want to watch'}
       />
 
@@ -1161,7 +1169,7 @@ function EmptySectionRow({ text }) {
 }
 
 // ─── Profile / Settings ─────────────────────────────────────────────
-function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb }) {
+function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb }) {
   const tmdbDetail = !tmdbConnected ? 'Not connected'
     : tmdbStatus === 'loading' ? 'Loading real posters…'
     : tmdbStatus === 'error' ? 'Connected · fetch failed'
@@ -1237,7 +1245,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
           <ProfileStatCard label="Want to watch" value={likedMovies.length} accent="var(--red)"
             onClick={()=> setListView({ title:'Want to watch', movies: likedMovies })}/>
           <ProfileStatCard label="Matches" value={matchedMovies.length} accent="var(--green)"
-            onClick={()=> setListView({ title:'Matches', movies: matchedMovies, friends: true })}/>
+            onClick={()=> onOpenMatches && onOpenMatches()}/>
           <ProfileStatCard label="Seen" value={seenMovies.length} accent="var(--gold)"
             onClick={()=> setListView({ title:'Seen', movies: seenMovies })}/>
         </div>

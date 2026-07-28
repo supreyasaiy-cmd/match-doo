@@ -70,6 +70,7 @@ function App() {
   const [matchPopup, setMatchPopup]   = React.useState(null);
   const [roomDetail, setRoomDetail]   = React.useState(null);
   const [calendarOpen, setCalendarOpen] = React.useState(false);
+  const [matchesOpen, setMatchesOpen] = React.useState(false);
   const [createRoom, setCreateRoom]   = React.useState(false);
   const [addFriend, setAddFriend]     = React.useState(false);
   const [friendProfile, setFriendProfile] = React.useState(null);
@@ -290,15 +291,22 @@ function App() {
       // Real stats, computed against the live catalog — no mock numbers.
       const likedMovies = sourceMovies.filter(m => likes.has(m.id));
       const seenMovies = sourceMovies.filter(m => seen.has(m.id));
-      const friendLiked = new Set();
-      ALL_FRIENDS_LIST().forEach(f => (window.MATCHES[f.id]?.movieIds || []).forEach(id => friendLiked.add(id)));
-      const matchedMovies = likedMovies.filter(m => friendLiked.has(m.id));
+      // Matches = the shared watch queue (films you + a friend both want),
+      // per-friend, minus anything already watched together. Same model the
+      // grouped Matches screen uses, so the stat and the screen agree.
+      const matchedIds = new Set();
+      ALL_FRIENDS_LIST().forEach(f => {
+        const watched = new Set(window.MATCHES[f.id]?.watched || []);
+        (window.MATCHES[f.id]?.movieIds || []).forEach(id => { if (!watched.has(id)) matchedIds.add(id); });
+      });
+      const matchedMovies = sourceMovies.filter(m => matchedIds.has(m.id));
       tabContent = <ProfileScreen
         user={user}
         likedMovies={likedMovies}
         matchedMovies={matchedMovies}
         seenMovies={seenMovies}
         onOpenMovie={(m)=> setReadMore({ movie: m })}
+        onOpenMatches={()=> setMatchesOpen(true)}
         theme={theme} onSetTheme={setTheme}
         onSignOut={()=> { setScreen('welcome'); setTab('swipe'); }}
         onOpenTweaks={()=> showToast('Toggle "Tweaks" in the toolbar above to customize')}
@@ -321,7 +329,7 @@ function App() {
           setTab(t);
           setRoomDetail(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null);
           setMovieDetail(null); setReadMore(null); setSearch(null);
-          setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false);
+          setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false); setMatchesOpen(false);
         }}/>
       </>
     );
@@ -406,7 +414,16 @@ function App() {
                 room={roomDetail}
                 onBack={()=> setRoomDetail(null)}
                 onOpenMovie={(m, r)=> setMovieDetail({ movie: m })}
-                onAddMember={()=> showToast('Add member — coming soon')}
+              />
+            </div>
+          )}
+          {matchesOpen && (
+            <div style={{position:'absolute', inset:0, background:'var(--ink)', zIndex: 45}}>
+              <MatchesScreen
+                likes={Array.from(likes)}
+                onBack={()=> setMatchesOpen(false)}
+                onOpenMatch={(f)=> setFriendProfile(f)}
+                onOpenMovie={(m, f)=> setMovieDetail({ movie: m, friend: f })}
               />
             </div>
           )}

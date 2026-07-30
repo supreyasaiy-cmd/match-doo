@@ -326,7 +326,7 @@ function TabBar({ active, onChange }) {
         pointerEvents:'none',
         background:'linear-gradient(180deg, transparent 0%, rgba(var(--bg-rgb),0.5) 42%, rgba(var(--bg-rgb),0.94) 100%)',
       }}/>
-      <div style={{
+      <div data-coach="nav" style={{
         position:'absolute', left: 14, right: 14, bottom: 12, zIndex: 200,
         display:'flex', justifyContent:'space-between', alignItems:'center',
         padding: '10px 12px',

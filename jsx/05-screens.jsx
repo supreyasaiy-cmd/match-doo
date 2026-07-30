@@ -562,7 +562,7 @@ function OnboardingScreen({ initialName = '', onDone }) {
     },
     {
       title: <>Pick a few<br/><em style={{fontStyle:'italic'}}>genres.</em></>,
-      sub: `Choose at least 3. You picked ${genres.size}.`,
+      sub: `Pick at least 3 so we can learn your taste — ${genres.size} so far.`,
       can: genres.size >= 3,
       body: (
         <div style={{display:'flex', flexWrap:'wrap', gap: 8}}>

@@ -98,6 +98,7 @@ button{ font-family: inherit; cursor: default; }
 @keyframes mm-curtain-r { from { transform: translateX(100%);  } to { transform: translateX(0); } }
 @keyframes mm-rise    { from { transform: translateY(40px); opacity:0 } to { transform: translateY(0); opacity:1 } }
 @keyframes mm-spin    { to { transform: rotate(360deg); } }
+@keyframes mm-coach-pulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
 .fade-in   { animation: mm-fade-in 0.34s cubic-bezier(.2,.7,.2,1) both; }
 .pop       { animation: mm-pop     0.42s cubic-bezier(.2,.6,.2,1) both; }
 .rise      { animation: mm-rise    0.5s  cubic-bezier(.2,.7,.2,1) both; }

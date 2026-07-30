@@ -271,7 +271,7 @@ function SwipeDeck({ movies, onSwipe, onTap, density='regular', ads=[], adCadenc
   return (
     <div style={{position:'relative', height:'100%'}}>
       {/* Card stack — fills the area down to just above the nav bar */}
-      <div style={{
+      <div data-coach="card" style={{
         position:'absolute', top: 4, left: 22, right: 22, bottom: 108,
       }}>
         {visible.length === 0 ? (
@@ -299,7 +299,7 @@ function SwipeDeck({ movies, onSwipe, onTap, density='regular', ads=[], adCadenc
       {/* Action buttons — overlaid on the bottom of the poster.
           Wrapper is click-through so drags in the gaps still reach the card. */}
       {visible.length > 0 && (
-        <div style={{
+        <div data-coach="actions" style={{
           position:'absolute', left: 0, right: 0, bottom: 122, zIndex: 110,
           display:'flex', justifyContent:'center', alignItems:'flex-end', gap: 16,
           pointerEvents:'none',
@@ -366,53 +366,162 @@ function EmptyDeck() {
 }
 
 // ─── First-run coach overlay (shown once) ──────────────────────────
+// First-run coach-mark tour: dim overlay + spotlight cut-out on the real
+// element being explained, a pointer arrow, an instruction card, swipe-gesture
+// arrows, and Next / "Got it!" CTAs.
 function SwipeCoach({ onDone }) {
-  const TIPS = [
-    { icon:'heart',  color:'#FF6D29', label:'Like', desc:'Swipe right — add to your list' },
-    { icon:'x',      color:'#CC8050', label:'Pass', desc:'Swipe left — not for you' },
-    { icon:'chevup', color:'#FDA65A', label:'More', desc:'Swipe up — see the details' },
-    { icon:'eye',    color:'#E0955E', label:'Seen', desc:'Swipe down — already watched' },
+  const STEPS = [
+    { sel:'[data-coach="card"]',    pad: 6, radius: 22, place:'bottom',
+      kicker:'How it works', title:'Swipe to pick',
+      text:'Swipe a card whichever way feels right — right to like, left to pass, up for details, and down if you’ve already seen it.',
+      gestures: true },
+    { sel:'[data-coach="actions"]', pad: 12, radius: 40, place:'above',
+      kicker:'Or just tap', title:'Same thing, one tap',
+      text:'Not a swiper? These buttons do exactly the same — Pass, More, Seen, and Like.' },
+    { sel:'[data-coach="nav"]',     pad: 8, radius: 34, place:'above',
+      kicker:'The fun part', title:'Watch together',
+      text:'Create a Room to match with friends or family, then find everything you liked over in Profile.' },
   ];
-  return (
-    <div className="fade-in" style={{
-      position:'absolute', inset:0, zIndex: 250,
-      background:'rgba(var(--bg-rgb),0.88)',
-      backdropFilter:'blur(18px) saturate(140%)', WebkitBackdropFilter:'blur(18px) saturate(140%)',
-      display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center',
-      padding:'0 28px', textAlign:'center',
-    }}>
-      <div className="rise" style={{width:'100%', maxWidth: 340}}>
-        <div style={{
-          fontSize: 11, letterSpacing:'0.22em', textTransform:'uppercase',
-          color:'var(--red)', marginBottom: 10,
-        }}>How it works</div>
-        <div style={{
-          fontFamily:'var(--serif)', fontSize: 34, lineHeight: 1.05,
-          color:'var(--cream)', letterSpacing:'-0.01em', marginBottom: 8,
-        }}>Swipe or tap<br/>to react.</div>
-        <div style={{fontSize: 13.5, color:'var(--muted)', marginBottom: 26, lineHeight: 1.5}}>
-          Use the buttons on the card, or swipe in any direction.
-        </div>
 
+  const [i, setI] = React.useState(0);
+  const [rect, setRect] = React.useState(null);
+  const rootRef = React.useRef(null);
+  const step = STEPS[i];
+  const last = i === STEPS.length - 1;
+
+  const measure = React.useCallback(() => {
+    const root = rootRef.current;
+    const el = root && document.querySelector(STEPS[i].sel);
+    if (!root || !el) { setRect(null); return; }
+    const rr = root.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    const sx = rr.width / (root.offsetWidth || rr.width) || 1;
+    const sy = rr.height / (root.offsetHeight || rr.height) || 1;
+    const p = STEPS[i].pad || 6;
+    setRect({
+      left: (er.left - rr.left) / sx - p,
+      top:  (er.top  - rr.top ) / sy - p,
+      width:  er.width  / sx + p * 2,
+      height: er.height / sy + p * 2,
+    });
+  }, [i]);
+
+  React.useLayoutEffect(() => {
+    const id = requestAnimationFrame(measure);
+    window.addEventListener('resize', measure);
+    return () => { cancelAnimationFrame(id); window.removeEventListener('resize', measure); };
+  }, [measure]);
+
+  const next = () => { if (last) onDone(); else setI(n => n + 1); };
+  const rootH = rootRef.current?.offsetHeight || 800;
+  const rootW = rootRef.current?.offsetWidth || 380;
+
+  // Tooltip position by declared placement.
+  let box = { left: 20, right: 20, bottom: 128 };
+  if (rect && step.place === 'below') box = { left: 20, right: 20, top: rect.top + rect.height + 16 };
+  else if (rect && step.place === 'above') box = { left: 20, right: 20, bottom: (rootH - rect.top) + 16 };
+  const showCaret = rect && (step.place === 'above' || step.place === 'below');
+  const caretLeft = rect ? Math.min(Math.max((rect.left + rect.width/2) - 20 - 7, 16), (rootW - 40) - 30) : 0;
+
+  const arrows = [
+    { d:'right',  label:'Like', color:'#FF6D29', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
+    { d:'left',   label:'Pass', color:'#CC8050', rot: 180, pos:{ left:12,  top:'50%',  ty:'translateY(-50%)' } },
+    { d:'up',     label:'More', color:'#FDA65A', rot: -90, pos:{ top:14,   left:'50%', ty:'translateX(-50%)' } },
+    { d:'down',   label:'Seen', color:'#E0955E', rot: 90,  pos:{ bottom:14,left:'50%', ty:'translateX(-50%)' } },
+  ];
+
+  return (
+    <div ref={rootRef} className="fade-in" style={{
+      position:'absolute', inset:0, zIndex: 500, overflow:'hidden', pointerEvents:'auto',
+    }}>
+      {/* Dim + spotlight cut-out */}
+      {rect ? (
         <div style={{
-          display:'flex', flexDirection:'column', gap: 12,
-          background:'rgba(var(--fg-rgb),0.05)',
-          border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-          borderRadius: 18, padding:'16px 16px', marginBottom: 24, textAlign:'left',
-        }}>
-          {TIPS.map(t => (
-            <div key={t.label} style={{display:'flex', alignItems:'center', gap: 14}}>
-              <IconBadge icon={t.icon} size={38} tone={t.color}/>
-              <div style={{flex:1, minWidth:0}}>
-                <div style={{fontSize: 14.5, fontWeight: 700, color:'var(--cream)'}}>{t.label}</div>
-                <div style={{fontSize: 12, color:'var(--muted)', marginTop: 1}}>{t.desc}</div>
+          position:'absolute', left: rect.left, top: rect.top, width: rect.width, height: rect.height,
+          borderRadius: step.radius, pointerEvents:'none',
+          boxShadow:'0 0 0 9999px rgba(8,5,4,0.76)',
+          border:'1.5px solid rgba(255,109,41,0.9)',
+          transition:'left .34s cubic-bezier(.4,0,.2,1), top .34s cubic-bezier(.4,0,.2,1), width .34s cubic-bezier(.4,0,.2,1), height .34s cubic-bezier(.4,0,.2,1)',
+        }}/>
+      ) : (
+        <div style={{position:'absolute', inset:0, background:'rgba(8,5,4,0.76)'}}/>
+      )}
+
+      {/* Swipe-gesture arrows around the card */}
+      {rect && step.gestures && (
+        <div style={{position:'absolute', left: rect.left, top: rect.top, width: rect.width, height: rect.height, pointerEvents:'none'}}>
+          {arrows.map(g => {
+            const { ty, ...anchor } = g.pos;
+            return (
+              <div key={g.d} style={{
+                position:'absolute', ...anchor, transform: ty,
+                display:'flex', flexDirection:'column', alignItems:'center', gap: 3,
+                animation:'mm-coach-pulse 1.3s ease-in-out infinite',
+              }}>
+                <div style={{
+                  width: 34, height: 34, borderRadius: 999, background: g.color,
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  boxShadow:`0 4px 14px ${g.color}88`, transform:`rotate(${g.rot}deg)`,
+                }}>
+                  <Icon name="arrow" size={17} color="#fff" stroke={2.4}/>
+                </div>
+                <span style={{fontSize: 10, fontWeight: 700, color: g.color, letterSpacing:'0.02em'}}>{g.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Instruction card */}
+      {rect && (
+        <div className="rise" style={{ position:'absolute', ...box, pointerEvents:'auto' }}>
+          {showCaret && (
+            <div style={{
+              position:'absolute', left: caretLeft, width: 14, height: 14,
+              ...(step.place === 'below' ? { top: -7 } : { bottom: -7 }),
+              background:'var(--ink)', transform:'rotate(45deg)',
+              borderTop:  step.place === 'below' ? '0.5px solid rgba(var(--fg-rgb),0.12)' : 0,
+              borderLeft: step.place === 'below' ? '0.5px solid rgba(var(--fg-rgb),0.12)' : 0,
+              borderRight:  step.place === 'above' ? '0.5px solid rgba(var(--fg-rgb),0.12)' : 0,
+              borderBottom: step.place === 'above' ? '0.5px solid rgba(var(--fg-rgb),0.12)' : 0,
+            }}/>
+          )}
+          <div style={{
+            background:'var(--ink)', border:'0.5px solid rgba(var(--fg-rgb),0.12)',
+            borderRadius: 18, padding:'16px 16px 14px', boxShadow:'0 20px 50px rgba(0,0,0,0.55)',
+          }}>
+            <div style={{fontSize: 10, letterSpacing:'0.18em', textTransform:'uppercase', color:'var(--red)', marginBottom: 6}}>{step.kicker}</div>
+            <div style={{fontFamily:'var(--serif)', fontSize: 22, color:'var(--cream)', lineHeight: 1.1, marginBottom: 6}}>{step.title}</div>
+            <div style={{fontSize: 13, color:'var(--muted)', lineHeight: 1.5, marginBottom: 14}}>{step.text}</div>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+              <div style={{display:'flex', gap: 6}}>
+                {STEPS.map((_, k) => (
+                  <span key={k} style={{
+                    width: k === i ? 18 : 6, height: 6, borderRadius: 999,
+                    background: k === i ? 'var(--red)' : 'rgba(var(--fg-rgb),0.22)', transition:'all .25s ease',
+                  }}/>
+                ))}
+              </div>
+              <div style={{display:'flex', alignItems:'center', gap: 8}}>
+                {!last && (
+                  <button onClick={onDone} style={{
+                    appearance:'none', border:0, background:'transparent', color:'var(--muted)',
+                    fontSize: 13, fontWeight: 600, padding:'8px 6px', cursor:'pointer',
+                  }}>Skip</button>
+                )}
+                <button onClick={next} style={{
+                  appearance:'none', border:0, background:'var(--red)', color:'#fff',
+                  fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14, padding:'9px 18px', borderRadius: 999,
+                  boxShadow:'0 6px 18px rgba(255,109,41,0.4)', cursor:'pointer', display:'inline-flex', alignItems:'center', gap: 6,
+                }}>
+                  {last ? 'Got it!' : 'Next'}
+                  {!last && <Icon name="arrow" size={14} color="#fff" stroke={2.4}/>}
+                </button>
               </div>
             </div>
-          ))}
+          </div>
         </div>
-
-        <PrimaryBtn full onClick={onDone}>Got it</PrimaryBtn>
-      </div>
+      )}
     </div>
   );
 }

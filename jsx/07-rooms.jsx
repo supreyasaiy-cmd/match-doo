@@ -240,9 +240,12 @@ function CalendarSheet({ onClose, onOpenRoom }) {
 // ─── Rooms list screen ──────────────────────────────────────────────
 function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, onNotif, notifCount = 0, onOpenAdCTA, banner }) {
   const [query, setQuery] = React.useState('');
+  const [scrollY, setScrollY] = React.useState(0);
   const rooms = window.ROOMS.filter(r =>
     !query || r.name.toLowerCase().includes(query.toLowerCase())
   );
+  // The sponsored ad fades out smoothly over the first ~130px of scroll.
+  const adOpacity = Math.max(0, Math.min(1, 1 - scrollY / 130));
 
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%'}}>
@@ -268,74 +271,76 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
         )}
       />
 
-      <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'2px 0 130px'}}>
-        {/* Sponsored ad — sits at the very top and scrolls away with the page */}
+      {/* Pinned: primary actions (don't scroll) */}
+      <div style={{padding:'2px 18px 12px', display:'flex', gap: 8}}>
+        <button onClick={onCreateRoom} style={{
+          appearance:'none', border:0, flex: 1,
+          background:'var(--red)', color:'#fff',
+          padding:'12px 14px', borderRadius: 999,
+          fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
+          display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
+          boxShadow:'0 6px 18px rgba(255,109,41,0.35)',
+        }}>
+          <Icon name="plus" size={16} stroke={2.4} color="#fff"/>
+          Create room
+        </button>
+        <button onClick={onOpenCalendar} aria-label="Movie nights calendar" style={{
+          appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
+          width: 48, flexShrink: 0, background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
+          borderRadius: 999, padding: 0, lineHeight: 0,
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+        }}>
+          <span style={{display:'flex', transform:'translateY(1px)'}}>
+            <Icon name="calendar" size={19}/>
+          </span>
+        </button>
+        <button onClick={onAddFriend} style={{
+          appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
+          flex: 1, background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
+          padding:'12px 14px', borderRadius: 999,
+          fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
+          display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
+        }}>
+          <Icon name="user" size={15}/>
+          Add friend
+        </button>
+      </div>
+
+      {banner && <div style={{padding:'0 18px 12px'}}>{banner}</div>}
+
+      {/* Pinned: search (doesn't scroll) */}
+      <div style={{padding:'0 18px 12px'}}>
+        <div style={{
+          display:'flex', alignItems:'center', gap: 10,
+          background:'rgba(var(--fg-rgb),0.07)',
+          border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+          borderRadius: 12, padding:'10px 14px',
+        }}>
+          <Icon name="search" size={16} color="var(--muted)"/>
+          <input
+            placeholder="Search rooms"
+            value={query}
+            onChange={e=>setQuery(e.target.value)}
+            style={{
+              flex:1, background:'transparent', border:0, outline:0,
+              color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 14, letterSpacing:'-0.01em',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Scrollable area — the sponsored ad fades out as the room list scrolls */}
+      <div className="phone-scroll" onScroll={e=> setScrollY(e.currentTarget.scrollTop)}
+        style={{flex:1, overflowY:'auto', padding:'4px 18px 130px'}}>
         {!query && (
-          <div style={{padding:'2px 18px 14px'}}>
+          <div style={{
+            marginBottom: 14, opacity: adOpacity, willChange:'opacity',
+            pointerEvents: adOpacity < 0.15 ? 'none' : 'auto',
+          }}>
             <AdCarousel16 onOpenCTA={onOpenAdCTA}/>
           </div>
         )}
-
-        {/* Primary actions */}
-        <div style={{padding:'0 18px 12px', display:'flex', gap: 8}}>
-          <button onClick={onCreateRoom} style={{
-            appearance:'none', border:0, flex: 1,
-            background:'var(--red)', color:'#fff',
-            padding:'12px 14px', borderRadius: 999,
-            fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
-            display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-            boxShadow:'0 6px 18px rgba(255,109,41,0.35)',
-          }}>
-            <Icon name="plus" size={16} stroke={2.4} color="#fff"/>
-            Create room
-          </button>
-          <button onClick={onOpenCalendar} aria-label="Movie nights calendar" style={{
-            appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
-            width: 48, flexShrink: 0, background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
-            borderRadius: 999, padding: 0, lineHeight: 0,
-            display:'inline-flex', alignItems:'center', justifyContent:'center',
-          }}>
-            <span style={{display:'flex', transform:'translateY(1px)'}}>
-              <Icon name="calendar" size={19}/>
-            </span>
-          </button>
-          <button onClick={onAddFriend} style={{
-            appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
-            flex: 1, background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
-            padding:'12px 14px', borderRadius: 999,
-            fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
-            display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-          }}>
-            <Icon name="user" size={15}/>
-            Add friend
-          </button>
-        </div>
-
-        {banner && <div style={{padding:'0 18px 12px'}}>{banner}</div>}
-
-        {/* Search */}
-        <div style={{padding:'0 18px 12px'}}>
-          <div style={{
-            display:'flex', alignItems:'center', gap: 10,
-            background:'rgba(var(--fg-rgb),0.07)',
-            border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-            borderRadius: 12, padding:'10px 14px',
-          }}>
-            <Icon name="search" size={16} color="var(--muted)"/>
-            <input
-              placeholder="Search rooms"
-              value={query}
-              onChange={e=>setQuery(e.target.value)}
-              style={{
-                flex:1, background:'transparent', border:0, outline:0,
-                color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 14, letterSpacing:'-0.01em',
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Rooms */}
-        <div style={{padding:'0 18px', display:'flex', flexDirection:'column', gap: 10}}>
+        <div style={{display:'flex', flexDirection:'column', gap: 10}}>
           {rooms.map(r => <RoomCard key={r.id} room={r} onClick={()=>onOpenRoom(r)}/>)}
         </div>
         {rooms.length === 0 && (

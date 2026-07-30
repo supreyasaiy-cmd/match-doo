@@ -187,7 +187,113 @@ function PopupAdInterstitial({ campaign, onClose, onOpenCTA }) {
   );
 }
 
+// ─── 16:9 display banner ────────────────────────────────────────────
+// A full-width 16:9 ad slot for the top of a screen. Always renders a
+// fillable <image-slot> creative (drop an image in to run an ad); if a
+// 'topBanner' campaign is live it also overlays the advertiser + CTA.
+function BannerAd16({ onOpenCTA, style = {} }) {
+  const campaign = pickBannerCampaign('topBanner');
+  const id = campaign ? `topbanner-${campaign.id}` : 'topbanner-slot';
+  return (
+    <button onClick={() => campaign && onOpenCTA?.(campaign)} style={{
+      appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)',
+      background:'rgba(var(--fg-rgb),0.05)',
+      width:'100%', padding:0, borderRadius:16, overflow:'hidden',
+      position:'relative', display:'block', aspectRatio:'16 / 9',
+      cursor: campaign ? 'pointer' : 'default', ...style,
+    }}>
+      <image-slot id={id} shape="rect" fit="cover"
+        style={{ position:'absolute', inset:0, width:'100%', height:'100%' }}
+        placeholder="Drop ad creative · 16:9"></image-slot>
+      <span style={{
+        position:'absolute', top:8, left:8, zIndex:2,
+        fontSize:9, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase',
+        color:'#fff', background:'rgba(0,0,0,0.45)',
+        backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
+        padding:'3px 8px', borderRadius:999,
+      }}>{campaign ? `Ad · ${campaign.advertiser}` : 'Ad'}</span>
+      {campaign && (
+        <div style={{
+          position:'absolute', left:0, right:0, bottom:0, zIndex:2,
+          padding:'26px 12px 10px',
+          background:'linear-gradient(180deg, transparent, rgba(0,0,0,0.62))',
+          display:'flex', alignItems:'flex-end', justifyContent:'space-between', gap:10,
+        }}>
+          <div style={{fontSize:13.5, fontWeight:700, color:'#fff', letterSpacing:'-0.01em', textShadow:'0 1px 6px rgba(0,0,0,0.5)', textAlign:'left'}}>{campaign.headline}</div>
+          <span style={{fontSize:11, fontWeight:700, color:'var(--ink)', background:'var(--cream)', padding:'6px 12px', borderRadius:999, flexShrink:0, whiteSpace:'nowrap'}}>{campaign.ctaText}</span>
+        </div>
+      )}
+    </button>
+  );
+}
+
+// ─── 16:9 auto-sliding ad carousel ──────────────────────────────────
+// Sample house ads (fictional brands) themed around movie-watching:
+// streaming, cinema tickets, and snack delivery. Auto-advances, pauses
+// while pressed, and can be tapped through with the dots.
+function AdCarousel16({ interval = 4200, onOpenCTA, style = {} }) {
+  const ADS = [
+    { id:'stream', brand:'StreamMax', title:'First month, on us', sub:'4K movies & series, zero ads',
+      cta:'Start free', bg:'radial-gradient(120% 120% at 12% 15%, #3a1420, #0c0507)', accent:'#ff5a7a', emoji:'📺' },
+    { id:'cinema', brand:'Cineo', title:'2 seats, 1 price', sub:'Book tonight’s showing near you',
+      cta:'Get tickets', bg:'radial-gradient(120% 120% at 85% 10%, #241a3a, #08060f)', accent:'#b79cff', emoji:'🎬' },
+    { id:'food',   brand:'QuickBite', title:'Snacks in 20 min', sub:'Popcorn & drinks to your couch',
+      cta:'Order now', bg:'radial-gradient(120% 120% at 15% 85%, #123018, #060d08)', accent:'#5fd98c', emoji:'🍿' },
+  ];
+  const [i, setI] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+  React.useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setI(n => (n + 1) % ADS.length), interval);
+    return () => clearInterval(t);
+  }, [paused, interval, ADS.length]);
+
+  return (
+    <div
+      onPointerDown={()=>setPaused(true)} onPointerUp={()=>setPaused(false)} onPointerLeave={()=>setPaused(false)}
+      style={{
+        position:'relative', width:'100%', aspectRatio:'16 / 9', borderRadius:16, overflow:'hidden',
+        border:'0.5px solid rgba(var(--fg-rgb),0.14)', ...style,
+      }}>
+      <div style={{
+        display:'flex', width:'100%', height:'100%',
+        transform:`translateX(-${i*100}%)`, transition:'transform .6s cubic-bezier(.4,0,.2,1)',
+      }}>
+        {ADS.map(ad => (
+          <button key={ad.id} onClick={()=> onOpenCTA?.(ad)} style={{
+            appearance:'none', border:0, cursor:'pointer', flex:'0 0 100%', height:'100%',
+            position:'relative', background:ad.bg, color:'#fff', textAlign:'left', padding:0, overflow:'hidden',
+          }}>
+            <div style={{position:'absolute', right:-8, bottom:-16, fontSize:118, lineHeight:1, opacity:0.92,
+              filter:'drop-shadow(0 8px 18px rgba(0,0,0,0.55))', transform:'rotate(-8deg)'}}>{ad.emoji}</div>
+            <div style={{position:'absolute', inset:0, background:`radial-gradient(75% 95% at 10% 20%, ${ad.accent}26, transparent 62%)`}}/>
+            <span style={{position:'absolute', top:10, left:12, fontSize:9, fontWeight:700, letterSpacing:'0.1em',
+              textTransform:'uppercase', color:'#fff', background:'rgba(0,0,0,0.42)',
+              backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)', padding:'3px 8px', borderRadius:999}}>
+              Sponsored · {ad.brand}
+            </span>
+            <div style={{position:'absolute', left:14, bottom:13, right:104}}>
+              <div style={{fontSize:19, fontWeight:800, letterSpacing:'-0.02em', lineHeight:1.05, textShadow:'0 2px 8px rgba(0,0,0,0.55)'}}>{ad.title}</div>
+              <div style={{fontSize:12, opacity:0.85, marginTop:3, marginBottom:10, textShadow:'0 1px 4px rgba(0,0,0,0.5)'}}>{ad.sub}</div>
+              <span style={{display:'inline-block', fontSize:12, fontWeight:700, color:'#0c0507',
+                background:ad.accent, padding:'7px 15px', borderRadius:999}}>{ad.cta}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+      <div style={{position:'absolute', bottom:9, right:12, display:'flex', gap:5, zIndex:3}}>
+        {ADS.map((_, k) => (
+          <span key={k} onClick={()=>setI(k)} style={{
+            width: k === i ? 16 : 6, height: 6, borderRadius: 999, cursor:'pointer',
+            background: k === i ? '#fff' : 'rgba(255,255,255,0.45)', transition:'all .3s ease',
+          }}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 Object.assign(window, {
   isAdLive, pickBannerCampaign, activeSwipeAdCampaigns, activePopupAdCampaign,
-  AdTag, BannerAd, AdCardContent, PopupAdInterstitial,
+  AdTag, BannerAd, BannerAd16, AdCarousel16, AdCardContent, PopupAdInterstitial,
 });

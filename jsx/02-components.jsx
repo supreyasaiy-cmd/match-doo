@@ -318,6 +318,51 @@ function TabBar({ active, onChange }) {
     { id: 'profile', icon: 'user',  label: 'Profile' },
   ];
   const ACCENT = '#FF6D29';
+
+  const renderTab = (t) => {
+    const on = active === t.id;
+    // Center brand tab — a prominent circular logo icon (no text)
+    if (t.center) {
+      return (
+        <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
+          appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
+          width: 56, height: 56, borderRadius: '50%',
+          border: '2px solid rgba(244,241,234,0.92)',
+          backgroundImage: 'url("assets/logo-app.png?v=2")',
+          backgroundSize: '128%', backgroundPosition: 'center 48%',
+          backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
+          boxShadow: on
+            ? '0 6px 24px rgba(255,109,41,0.55), 0 0 0 3px rgba(255,109,41,0.45)'
+            : '0 4px 16px rgba(0,0,0,0.40)',
+          transform: on ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
+          transition: 'transform .28s cubic-bezier(.4,0,.2,1), box-shadow .28s ease',
+        }}/>
+      );
+    }
+    // Side tabs — expanding pill (active shows label, inactive icon-only)
+    return (
+      <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
+        appearance:'none', border:0, cursor:'pointer',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        gap: on ? 8 : 0, height: 46,
+        padding: on ? '0 18px' : '0 13px', borderRadius: 999,
+        background: on ? 'rgba(255,109,41,0.16)' : 'transparent',
+        overflow:'hidden', flexShrink: 0, maxWidth:'100%',
+        transition: 'background .3s cubic-bezier(.4,0,.2,1), gap .3s cubic-bezier(.4,0,.2,1), padding .3s cubic-bezier(.4,0,.2,1)',
+      }}>
+        <Icon name={t.icon} size={24} stroke={on ? 2.1 : 1.9}
+          color={on ? ACCENT : 'rgba(244,241,234,0.5)'}/>
+        <span style={{
+          maxWidth: on ? 90 : 0, opacity: on ? 1 : 0,
+          overflow:'hidden', whiteSpace:'nowrap',
+          transition: 'max-width .32s cubic-bezier(.4,0,.2,1), opacity .24s ease',
+          fontFamily:'var(--sans)', fontWeight: 700, fontSize: 13, letterSpacing:'-0.01em',
+          color: ACCENT,
+        }}>{t.label}</span>
+      </button>
+    );
+  };
+
   return (
     <>
       {/* mood-tone scrim behind the bar so it reads over any content */}
@@ -328,10 +373,10 @@ function TabBar({ active, onChange }) {
       }}/>
       <div data-coach="nav" style={{
         position:'absolute', left: 14, right: 14, bottom: 12, zIndex: 200,
-        display:'flex', justifyContent:'space-between', alignItems:'center',
+        display:'flex', alignItems:'center',
         padding: '10px 12px',
-        // dark glass + a diagonal mood gradient (coral → periwinkle) tint —
-        // stays a dark bar in both themes, so icons/rim are kept fixed-light.
+        // dark glass + a diagonal mood gradient tint — stays a dark bar in
+        // both themes, so icons/rim are kept fixed-light.
         background:'linear-gradient(135deg, rgba(255,109,41,0.20) 0%, rgba(224,149,94,0.16) 55%, rgba(26,18,16,0.30) 100%), rgba(20,13,12,0.78)',
         backdropFilter:'blur(30px) saturate(180%)',
         WebkitBackdropFilter:'blur(30px) saturate(180%)',
@@ -339,49 +384,11 @@ function TabBar({ active, onChange }) {
         border:'0.5px solid rgba(244,241,234,0.16)',
         boxShadow:'0 16px 46px rgba(0,0,0,0.55), inset 0 0.5px 0 rgba(244,241,234,0.14)',
       }}>
-        {tabs.map(t=>{
-          const on = active === t.id;
-          // Center brand tab — a prominent circular logo icon (no text)
-          if (t.center) {
-            return (
-              <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
-                appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
-                width: 56, height: 56, borderRadius: '50%',
-                border: '2px solid rgba(244,241,234,0.92)',
-                backgroundImage: 'url("assets/logo-app.png?v=2")',
-                backgroundSize: '128%', backgroundPosition: 'center 48%',
-                backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
-                boxShadow: on
-                  ? '0 6px 24px rgba(255,109,41,0.55), 0 0 0 3px rgba(255,109,41,0.45)'
-                  : '0 4px 16px rgba(0,0,0,0.40)',
-                transform: on ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
-                transition: 'transform .28s cubic-bezier(.4,0,.2,1), box-shadow .28s ease',
-              }}/>
-            );
-          }
-          // Side tabs — expanding pill (active shows label, inactive icon-only)
-          return (
-            <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
-              appearance:'none', border:0, cursor:'pointer',
-              display:'flex', alignItems:'center', justifyContent:'center',
-              gap: on ? 8 : 0, height: 46,
-              padding: on ? '0 18px' : '0 13px', borderRadius: 999,
-              background: on ? 'rgba(255,109,41,0.16)' : 'transparent',
-              overflow:'hidden', flexShrink: 0,
-              transition: 'background .3s cubic-bezier(.4,0,.2,1), gap .3s cubic-bezier(.4,0,.2,1), padding .3s cubic-bezier(.4,0,.2,1)',
-            }}>
-              <Icon name={t.icon} size={24} stroke={on ? 2.1 : 1.9}
-                color={on ? ACCENT : 'rgba(244,241,234,0.5)'}/>
-              <span style={{
-                maxWidth: on ? 90 : 0, opacity: on ? 1 : 0,
-                overflow:'hidden', whiteSpace:'nowrap',
-                transition: 'max-width .32s cubic-bezier(.4,0,.2,1), opacity .24s ease',
-                fontFamily:'var(--sans)', fontWeight: 700, fontSize: 13, letterSpacing:'-0.01em',
-                color: ACCENT,
-              }}>{t.label}</span>
-            </button>
-          );
-        })}
+        {/* Equal-width side rails keep the centre logo locked dead-centre
+            no matter which side tab expands. */}
+        <div style={{flex:1, minWidth:0, display:'flex', justifyContent:'flex-start'}}>{renderTab(tabs[0])}</div>
+        {renderTab(tabs[1])}
+        <div style={{flex:1, minWidth:0, display:'flex', justifyContent:'flex-end'}}>{renderTab(tabs[2])}</div>
       </div>
     </>
   );

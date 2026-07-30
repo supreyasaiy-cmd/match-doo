@@ -286,6 +286,7 @@ function App() {
         onAddFriend={()=> setAddFriend(true)}
         onOpenCalendar={()=> setCalendarOpen(true)}
         onNotif={openNotif} notifCount={notifSeen ? 0 : notifications.length}
+        onOpenAdCTA={onOpenAdCTA}
         banner={t.bannerPlacement === 'roomsTop' ? <BannerAd placement="roomsTop" onOpenCTA={onOpenAdCTA}/> : null}
       />;
     } else if (tab === 'profile') {
@@ -430,7 +431,7 @@ function App() {
             </div>
           )}
           {createRoom && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 46}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
               <CreateRoomScreen
                 onBack={()=> setCreateRoom(false)}
                 onCreate={(r)=>{ setCreateRoom(false); setRoomDetail(r); showToast('Room created'); }}
@@ -438,7 +439,7 @@ function App() {
             </div>
           )}
           {addFriend && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 46}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
               <AddFriendScreen onBack={()=> setAddFriend(false)}/>
             </div>
           )}

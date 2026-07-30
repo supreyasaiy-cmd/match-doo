@@ -310,7 +310,16 @@ function App() {
         onOpenMovie={(m)=> setReadMore({ movie: m })}
         onOpenMatches={()=> setMatchesOpen(true)}
         theme={theme} onSetTheme={setTheme}
-        onSignOut={()=> { setScreen('welcome'); setTab('swipe'); }}
+        onSignOut={()=> {
+          // Reset to a clean first-run state so the coach tour (and a fresh
+          // sign-up's onboarding) show again next time you come back in.
+          setLikes(new Set()); setPasses(new Set()); setSeen(new Set()); setHistory([]);
+          setCoachSeen(false);
+          try { localStorage.removeItem('matchdoo.coachSeen'); } catch {}
+          setNotifSeen(false);
+          setTab('swipe');
+          setScreen('welcome');
+        }}
         onOpenTweaks={()=> showToast('Toggle "Tweaks" in the toolbar above to customize')}
         tmdbConnected={!!tmdbKey}
         tmdbStatus={tmdbStatus}

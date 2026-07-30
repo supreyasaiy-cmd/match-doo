@@ -12,22 +12,22 @@ if (!window.ROOMS) {
     {
       id: 'r1', name: 'Sofia & me', emoji: '🌸',
       type: 'couple', members: ['f1'], lastActivity: 'Active now',
-      tone: '#E17F5C', matchCount: 5, watchDate: _isoSeed(_seedSat),
+      tone: '#FF6D29', matchCount: 5, watchDate: _isoSeed(_seedSat),
     },
     {
       id: 'r2', name: 'Family Night', emoji: '🍿',
       type: 'family', members: ['f2','f3','f4'], lastActivity: '2h ago',
-      tone: '#F0AC72', matchCount: 3, watchDate: _isoSeed(_seedFri),
+      tone: '#FDA65A', matchCount: 3, watchDate: _isoSeed(_seedFri),
     },
     {
       id: 'r3', name: 'Friday Crew', emoji: '🎬',
       type: 'friends', members: ['f5','f6','f7'], lastActivity: 'Yesterday',
-      tone: '#93A8E8', matchCount: 11,
+      tone: '#E0955E', matchCount: 11,
     },
     {
       id: 'r4', name: 'Owen & Mira', emoji: '✨',
       type: 'friends', members: ['f5','f6'], lastActivity: '3d ago',
-      tone: '#86A6DD', matchCount: 7,
+      tone: '#CC8050', matchCount: 7,
     },
   ];
 }
@@ -48,7 +48,7 @@ function collectMovieNights() {
     let d = null;
     try { d = localStorage.getItem(`matchdoo.roomdate.${r.id}`); } catch {}
     if (!d) d = r.watchDate || null;
-    if (d) out.push({ date: d, kind: 'room', room: r, tone: r.tone || '#E17F5C', title: r.name, sub: 'Movie night', emoji: r.emoji || '🎬' });
+    if (d) out.push({ date: d, kind: 'room', room: r, tone: r.tone || '#FF6D29', title: r.name, sub: 'Movie night', emoji: r.emoji || '🎬' });
   }
   try {
     for (let i = 0; i < localStorage.length; i++) {
@@ -58,7 +58,7 @@ function collectMovieNights() {
       if (!d) continue;
       const id = k.slice('matchdoo.schedule.'.length);
       const m = (window.MOVIES || []).find(x => x.id === id);
-      out.push({ date: d, kind: 'movie', movie: m, tone: '#7ED9B4', title: m ? m.title : 'A film', sub: 'Watching solo', emoji: '🎬' });
+      out.push({ date: d, kind: 'movie', movie: m, tone: '#F0B24A', title: m ? m.title : 'A film', sub: 'Watching solo', emoji: '🎬' });
     }
   } catch {}
   return out.sort((a, b) => a.date.localeCompare(b.date));
@@ -101,7 +101,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
 
   return (
     <div style={bare ? {} : {
-      background:'rgba(var(--fg-rgb),0.04)',
+      background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
       border:'0.5px solid rgba(var(--fg-rgb),0.10)',
       borderRadius: 18, padding:'14px 14px 12px', marginBottom: 14,
     }}>
@@ -112,13 +112,13 @@ function RoomsCalendar({ onOpenRoom, bare }) {
           Movie nights
         </div>
         <button onClick={()=>shift(-1)} aria-label="Previous month" style={{
-          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.06)',
+          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
           width: 28, height: 28, borderRadius: 999, color:'var(--cream)',
           display:'flex', alignItems:'center', justifyContent:'center',
         }}><Icon name="chevl" size={14}/></button>
         <div style={{fontSize: 12.5, fontWeight: 600, color:'var(--cream)', minWidth: 104, textAlign:'center'}}>{monthLabel}</div>
         <button onClick={()=>shift(1)} aria-label="Next month" style={{
-          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.06)',
+          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
           width: 28, height: 28, borderRadius: 999, color:'var(--cream)',
           display:'flex', alignItems:'center', justifyContent:'center',
         }}><Icon name="chev" size={14}/></button>
@@ -146,7 +146,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
           return (
             <button key={dIso} onClick={()=>setSel(dIso)} style={{
               appearance:'none', border: isSel ? '0.5px solid var(--red)' : '0.5px solid transparent',
-              background: isSel ? hexA('#E17F5C', 0.14) : 'transparent',
+              background: isSel ? hexA('#FF6D29', 0.14) : 'transparent',
               height: 38, borderRadius: 10, cursor:'pointer', position:'relative',
               display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap: 3,
             }}>
@@ -224,7 +224,7 @@ function CalendarSheet({ onClose, onOpenRoom }) {
           <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.35)'}}/>
           <button onClick={onClose} aria-label="Close" style={{
             appearance:'none', border:0, position:'absolute', right: 0, top: -2,
-            background:'rgba(var(--fg-rgb),0.08)', color:'var(--cream)',
+            background:'rgba(var(--fg-rgb),0.09)', color:'var(--cream)',
             width: 32, height: 32, borderRadius: 999,
             display:'flex', alignItems:'center', justifyContent:'center',
           }}>
@@ -238,7 +238,7 @@ function CalendarSheet({ onClose, onOpenRoom }) {
 }
 
 // ─── Rooms list screen ──────────────────────────────────────────────
-function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, banner }) {
+function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, onNotif, notifCount = 0, banner }) {
   const [query, setQuery] = React.useState('');
   const rooms = window.ROOMS.filter(r =>
     !query || r.name.toLowerCase().includes(query.toLowerCase())
@@ -249,6 +249,23 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, ba
       <TopBar
         title="Rooms" large
         subtitle="Group your people, swipe together"
+        right={onNotif && (
+          <button onClick={onNotif} aria-label="Notifications" style={{
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
+            backdropFilter:'blur(10px) saturate(130%)', WebkitBackdropFilter:'blur(10px) saturate(130%)',
+            width: 38, height: 38, borderRadius: 999, color:'var(--cream)', flexShrink: 0,
+            display:'flex', alignItems:'center', justifyContent:'center', position:'relative',
+          }}>
+            <Icon name="bell" size={17}/>
+            {notifCount > 0 && (
+              <span style={{
+                position:'absolute', top: 7, right: 7,
+                width: 8, height: 8, borderRadius: 999,
+                background:'var(--red)', border:'1.5px solid var(--ink)',
+              }}/>
+            )}
+          </button>
+        )}
       />
 
       {/* Primary actions — both clearly clickable up top */}
@@ -259,14 +276,14 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, ba
           padding:'12px 14px', borderRadius: 999,
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-          boxShadow:'0 6px 18px rgba(225,127,92,0.35)',
+          boxShadow:'0 6px 18px rgba(255,109,41,0.35)',
         }}>
           <Icon name="plus" size={16} stroke={2.4} color="#fff"/>
           Create room
         </button>
         <button onClick={onOpenCalendar} aria-label="Movie nights calendar" style={{
           appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
-          width: 48, flexShrink: 0, background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)',
+          width: 48, flexShrink: 0, background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
           borderRadius: 999, padding: 0, lineHeight: 0,
           display:'inline-flex', alignItems:'center', justifyContent:'center',
         }}>
@@ -277,7 +294,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, ba
         </button>
         <button onClick={onAddFriend} style={{
           appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
-          flex: 1, background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)',
+          flex: 1, background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
           padding:'12px 14px', borderRadius: 999,
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
@@ -292,7 +309,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, ba
       <div style={{padding:'0 18px 12px'}}>
         <div style={{
           display:'flex', alignItems:'center', gap: 10,
-          background:'rgba(var(--fg-rgb),0.06)',
+          background:'rgba(var(--fg-rgb),0.07)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           borderRadius: 12, padding:'10px 14px',
         }}>
@@ -328,7 +345,7 @@ function RoomCard({ room, onClick }) {
   return (
     <button onClick={onClick} style={{
       appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-      background:'rgba(var(--fg-rgb),0.04)',
+      background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
       borderRadius: 18, padding:'14px 14px', width:'100%', textAlign:'left',
       display:'flex', alignItems:'center', gap: 14, color:'var(--cream)',
       position:'relative', overflow:'hidden',
@@ -466,14 +483,14 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
       <TopBar title="" onBack={onBack} right={
         <div style={{display:'flex', alignItems:'center', gap: 8}}>
           <button onClick={()=> setShowShare(true)} aria-label="Share room" style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}>
             <Icon name="share" size={16}/>
           </button>
           <button onClick={()=> setShowSettings(true)} aria-label="Room settings" style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}>
@@ -533,7 +550,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
 
         <div style={{
           display:'flex', gap: 22, marginTop: 22, padding:'14px 22px',
-          background:'rgba(var(--fg-rgb),0.04)',
+          background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
           borderRadius: 16,
         }}>
@@ -566,7 +583,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
               </div>
               {watchDate && (
                 <button onClick={()=> saveWatchDate('')} aria-label="Clear date" style={{
-                  appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+                  appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
                   width: 32, height: 32, borderRadius: 999, color:'var(--muted)', flexShrink:0,
                   display:'flex', alignItems:'center', justifyContent:'center',
                 }}>
@@ -591,7 +608,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
                 position:'relative', cursor:'pointer',
                 display:'inline-flex', alignItems:'center', gap: 6,
                 padding:'9px 14px', borderRadius: 999, fontSize: 13, fontWeight: 600,
-                background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)',
+                background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
                 border:'0.5px solid rgba(var(--fg-rgb),0.12)',
               }}>
                 <Icon name="clock" size={14}/>
@@ -656,12 +673,12 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
           padding:'10px 16px', borderRadius: 999,
           background:'rgba(var(--bg-rgb),0.92)',
           backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-          border:'0.5px solid rgba(126,217,180,0.40)',
+          border:'0.5px solid rgba(240,178,74,0.40)',
           color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)',
         }}>
-          <Icon name="check" size={14} color="#7ED9B4" stroke={2.6}/>
+          <Icon name="check" size={14} color="#F0B24A" stroke={2.6}/>
           {memberToast}
         </div>
       )}
@@ -684,7 +701,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
     setSelected(next);
   };
 
-  const TONES = { couple:'#E17F5C', family:'#F0AC72', friends:'#93A8E8' };
+  const TONES = { couple:'#FF6D29', family:'#FDA65A', friends:'#E0955E' };
 
   const canCreate = name.trim().length >= 2 && selected.size >= 1;
 
@@ -696,7 +713,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
         {/* Emoji + name */}
         <div style={{
           padding:'18px 16px', borderRadius: 18,
-          background:'rgba(var(--fg-rgb),0.04)',
+          background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           display:'flex', alignItems:'center', gap: 12,
         }}>
@@ -743,9 +760,9 @@ function CreateRoomScreen({ onBack, onCreate }) {
           </div>
           <div style={{display:'flex', gap: 6}}>
             {[
-              { id:'friends', label:'Friends', tone:'#93A8E8'},
-              { id:'family',  label:'Family',  tone:'#F0AC72'},
-              { id:'couple',  label:'Partner', tone:'#E17F5C'},
+              { id:'friends', label:'Friends', tone:'#E0955E'},
+              { id:'family',  label:'Family',  tone:'#FDA65A'},
+              { id:'couple',  label:'Partner', tone:'#FF6D29'},
             ].map(o=>{
               const on = type === o.id;
               return (
@@ -848,7 +865,7 @@ function ShareRoomSheet({ room, onClose }) {
   const [qrFailed, setQrFailed] = React.useState(false);
   const code = roomCode(room);
   const link = roomLink(room);
-  const tone = room.tone || '#E17F5C';
+  const tone = room.tone || '#FF6D29';
 
   // QR of the join link — rendered on a light card (dark modules) so it
   // scans reliably. Image is fetched live from a public QR renderer.
@@ -925,7 +942,7 @@ function ShareRoomSheet({ room, onClose }) {
             </div>
           </div>
           <button onClick={onClose} style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 34, height: 34, borderRadius: 999, color:'var(--muted)',
             display:'flex', alignItems:'center', justifyContent:'center', flexShrink: 0,
           }}>
@@ -954,9 +971,9 @@ function ShareRoomSheet({ room, onClose }) {
             ) : (
               <div style={{
                 display:'flex', flexDirection:'column', alignItems:'center', gap: 8,
-                color:'#0b0f18', textAlign:'center',
+                color:'#17100f', textAlign:'center',
               }}>
-                <Icon name="qr" size={64} color="#0b0f18" stroke={1.4}/>
+                <Icon name="qr" size={64} color="#17100f" stroke={1.4}/>
                 <div style={{fontSize: 11, fontWeight: 600, letterSpacing:'0.02em'}}>{code}</div>
               </div>
             )}
@@ -989,7 +1006,7 @@ function ShareRoomSheet({ room, onClose }) {
         <div style={{display:'flex', gap: 8, marginTop: 10}}>
           <button onClick={()=>copy(link, 'Link')} style={{
             appearance:'none', flex: 1, border:'0.5px solid rgba(var(--fg-rgb),0.14)',
-            background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)',
+            background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
             padding:'13px 14px', borderRadius: 14,
             display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
             fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
@@ -1015,12 +1032,12 @@ function ShareRoomSheet({ room, onClose }) {
             padding:'10px 16px', borderRadius: 999,
             background:'rgba(var(--bg-rgb),0.92)',
             backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-            border:'0.5px solid rgba(126,217,180,0.40)',
+            border:'0.5px solid rgba(240,178,74,0.40)',
             color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
             zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
             boxShadow:'0 12px 30px rgba(0,0,0,0.4)', whiteSpace:'nowrap',
           }}>
-            <Icon name="check" size={14} color="#7ED9B4" stroke={2.6}/>
+            <Icon name="check" size={14} color="#F0B24A" stroke={2.6}/>
             {toast}
           </div>
         )}
@@ -1032,14 +1049,14 @@ function ShareRoomSheet({ room, onClose }) {
 // ─── Room settings sheet ────────────────────────────────────────────
 function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMember, onAddMembers, onShare, onLeave, onDelete }) {
   const EMOJIS = ['🌸','🍿','🎬','✨','🎥','🎭','🌙','🍕','☕','🔥','❤️','🎉'];
-  const TONES  = ['#E17F5C','#F0AC72','#7ED9B4','#6F93E0','#93A8E8','#e8c994','#ffb3c1','#d4c4ff'];
+  const TONES  = ['#FF6D29','#FDA65A','#F0B24A','#E8846B','#D98B5A','#C77D52','#B32C1A','#8A5A3C'];
   const [name, setName]   = React.useState(room.name);
   const [emoji, setEmoji] = React.useState(room.emoji || '🎬');
-  const [tone, setTone]   = React.useState(room.tone || '#E17F5C');
+  const [tone, setTone]   = React.useState(room.tone || '#FF6D29');
   const [muted, setMuted] = React.useState(!!room.muted);
   const [confirm, setConfirm] = React.useState(null); // 'leave' | 'delete'
 
-  const dirty = name.trim() !== room.name || emoji !== (room.emoji || '🎬') || tone !== (room.tone || '#E17F5C') || muted !== !!room.muted;
+  const dirty = name.trim() !== room.name || emoji !== (room.emoji || '🎬') || tone !== (room.tone || '#FF6D29') || muted !== !!room.muted;
   const label = { fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px' };
   const save = () => { onUpdate({ name: name.trim() || room.name, emoji, tone, muted }); onClose(); };
 
@@ -1059,7 +1076,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         <div style={{width:42, height:4, borderRadius:2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px'}}/>
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:18}}>
           <div style={{fontFamily:'var(--serif)', fontSize:24, color:'var(--cream)', lineHeight:1.1}}>Room settings</div>
-          <button onClick={onClose} aria-label="Close" style={{appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)', width:34, height:34, borderRadius:999, color:'var(--muted)', display:'flex', alignItems:'center', justifyContent:'center'}}>
+          <button onClick={onClose} aria-label="Close" style={{appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)', width:34, height:34, borderRadius:999, color:'var(--muted)', display:'flex', alignItems:'center', justifyContent:'center'}}>
             <Icon name="x" size={16}/>
           </button>
         </div>
@@ -1071,7 +1088,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
             border:`0.5px solid ${hexA(tone,0.4)}`, display:'flex', alignItems:'center', justifyContent:'center'}}>{emoji}</div>
           <div style={{flex:1, minWidth:0}}>
             <div style={label}>Room name</div>
-            <input value={name} onChange={e=>setName(e.target.value)} style={{width:'100%', background:'rgba(var(--fg-rgb),0.06)', border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius:12, padding:'11px 12px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize:15, outline:0}}/>
+            <input value={name} onChange={e=>setName(e.target.value)} style={{width:'100%', background:'rgba(var(--fg-rgb),0.07)', border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius:12, padding:'11px 12px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize:15, outline:0}}/>
           </div>
         </div>
 
@@ -1097,8 +1114,8 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         </div>
 
         {/* mute toggle */}
-        <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'rgba(var(--fg-rgb),0.04)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
-          <IconBadge icon="bell" size={34} tone="#93A8E8"/>
+        <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
+          <IconBadge icon="bell" size={34} tone="#E0955E"/>
           <div style={{flex:1, textAlign:'left'}}>
             <div style={{fontSize:14, fontWeight:600}}>Mute notifications</div>
             <div style={{fontSize:12, color:'var(--muted)', marginTop:1}}>{muted ? 'Room alerts are off' : 'Get alerts on new matches'}</div>
@@ -1116,7 +1133,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         <div style={{display:'flex', flexDirection:'column', gap:6, marginBottom:10}}>
           {members.length === 0 && <div style={{fontSize:12.5, color:'var(--muted)', padding:'6px 2px'}}>Just you so far.</div>}
           {members.map(m=>(
-            <div key={m.id} style={{display:'flex', alignItems:'center', gap:12, padding:'8px 10px', borderRadius:12, background:'rgba(var(--fg-rgb),0.04)'}}>
+            <div key={m.id} style={{display:'flex', alignItems:'center', gap:12, padding:'8px 10px', borderRadius:12, background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)'}}>
               <Avatar person={m} size={34}/>
               <div style={{flex:1, minWidth:0}}>
                 <div style={{fontSize:14, fontWeight:600, color:'var(--cream)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.name}</div>
@@ -1133,8 +1150,8 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         </button>
 
         {/* share shortcut */}
-        <button onClick={onShare} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'rgba(var(--fg-rgb),0.04)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
-          <IconBadge icon="share" size={34} tone="#7ED9B4"/>
+        <button onClick={onShare} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
+          <IconBadge icon="share" size={34} tone="#F0B24A"/>
           <div style={{flex:1, textAlign:'left', fontSize:14, fontWeight:600}}>Invite / share room</div>
           <Icon name="chev" size={14} color="var(--muted-2)"/>
         </button>
@@ -1149,7 +1166,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
             <div style={{fontSize:13.5, color:'var(--cream)', fontWeight:600, marginBottom:4}}>{confirm==='delete' ? 'Delete this room?' : 'Leave this room?'}</div>
             <div style={{fontSize:12.5, color:'var(--muted)', marginBottom:12}}>{confirm==='delete' ? "This removes the room for good. This can't be undone." : "It'll be removed from your rooms."}</div>
             <div style={{display:'flex', gap:8}}>
-              <button onClick={()=>setConfirm(null)} style={{appearance:'none', flex:1, border:'0.5px solid rgba(var(--fg-rgb),0.16)', background:'rgba(var(--fg-rgb),0.06)', color:'var(--cream)', borderRadius:999, padding:11, fontWeight:600, fontSize:14}}>Cancel</button>
+              <button onClick={()=>setConfirm(null)} style={{appearance:'none', flex:1, border:'0.5px solid rgba(var(--fg-rgb),0.16)', background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)', borderRadius:999, padding:11, fontWeight:600, fontSize:14}}>Cancel</button>
               <button onClick={()=> confirm==='delete' ? onDelete() : onLeave()} style={{appearance:'none', flex:1, border:0, background:'#E8798A', color:'#fff', borderRadius:999, padding:11, fontWeight:600, fontSize:14}}>{confirm==='delete' ? 'Delete' : 'Leave'}</button>
             </div>
           </div>

@@ -4,9 +4,9 @@
 function CategoryPickerSheet({ person, onClose, onPick }) {
   if (!person) return null;
   const OPTIONS = [
-    { id:'friends', label:'Friend',  desc:"Casual movie nights, weekend hangs.", tone:'#93A8E8', icon:'users' },
-    { id:'family',  label:'Family',  desc:"Parents, siblings, cousins.",          tone:'#F0AC72', icon:'home' },
-    { id:'couple',  label:'Partner', desc:"Just the two of you.",                 tone:'#E17F5C', icon:'heart' },
+    { id:'friends', label:'Friend',  desc:"Casual movie nights, weekend hangs.", tone:'#E0955E', icon:'users' },
+    { id:'family',  label:'Family',  desc:"Parents, siblings, cousins.",          tone:'#FDA65A', icon:'home' },
+    { id:'couple',  label:'Partner', desc:"Just the two of you.",                 tone:'#FF6D29', icon:'heart' },
   ];
 
   return (
@@ -127,7 +127,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
             <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>{selected.size} selected</div>
           </div>
           <button onClick={onClose} style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 34, height: 34, borderRadius: 999, color:'var(--muted)',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}>
@@ -138,7 +138,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
         <div style={{padding:'12px 20px 12px'}}>
           <div style={{
             display:'flex', alignItems:'center', gap: 10,
-            background:'rgba(var(--fg-rgb),0.06)',
+            background:'rgba(var(--fg-rgb),0.07)',
             border:'0.5px solid rgba(var(--fg-rgb),0.10)',
             borderRadius: 12, padding:'10px 14px',
           }}>

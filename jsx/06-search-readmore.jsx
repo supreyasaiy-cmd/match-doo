@@ -203,9 +203,9 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         }}>
           <span style={{
             padding:'2px 8px', borderRadius: 5,
-            background: isSeries ? 'rgba(147,168,232,0.18)' : 'rgba(240,172,114,0.18)',
-            border:`0.5px solid ${isSeries ? 'rgba(147,168,232,0.4)' : 'rgba(240,172,114,0.4)'}`,
-            color: isSeries ? '#93A8E8' : '#F0AC72',
+            background: isSeries ? 'rgba(224,149,94,0.18)' : 'rgba(253,166,90,0.18)',
+            border:`0.5px solid ${isSeries ? 'rgba(224,149,94,0.4)' : 'rgba(253,166,90,0.4)'}`,
+            color: isSeries ? '#E0955E' : '#FDA65A',
             fontSize: 10, fontWeight: 700, letterSpacing:'0.08em',
           }}>{isSeries ? 'SERIES' : 'MOVIE'}</span>
           <span>{movie.year}</span><span>·</span>
@@ -220,8 +220,8 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               <div key={s} style={{
                 display:'inline-flex', alignItems:'center', gap: 8,
                 padding:'6px 13px 6px 6px', borderRadius: 999,
-                background:'rgba(126,217,180,0.10)',
-                border:'0.5px solid rgba(126,217,180,0.30)',
+                background:'rgba(240,178,74,0.10)',
+                border:'0.5px solid rgba(240,178,74,0.30)',
               }}>
                 <ServiceChip name={s} size={20}/>
                 <span style={{fontSize: 12.5, fontWeight: 600, color:'var(--cream)'}}>{s}</span>
@@ -253,8 +253,8 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               position:'relative', flex: 1, cursor:'pointer',
               display:'flex', alignItems:'center', gap: 10,
               padding:'13px 14px', borderRadius: 14,
-              background: sched ? 'rgba(126,217,180,0.10)' : 'rgba(var(--fg-rgb),0.06)',
-              border:`0.5px solid ${sched ? 'rgba(126,217,180,0.35)' : 'rgba(var(--fg-rgb),0.14)'}`,
+              background: sched ? 'rgba(240,178,74,0.10)' : 'rgba(var(--fg-rgb),0.06)',
+              border:`0.5px solid ${sched ? 'rgba(240,178,74,0.35)' : 'rgba(var(--fg-rgb),0.14)'}`,
             }}>
               <Icon name="clock" size={18} color={sched ? 'var(--green)' : 'var(--muted)'}/>
               <span style={{flex:1, fontSize: 14, fontWeight: 600, color: sched ? 'var(--cream)' : 'var(--muted)'}}>
@@ -271,7 +271,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
             {sched && (
               <button onClick={()=> saveSched('')} aria-label="Clear date" style={{
                 appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)',
-                background:'rgba(var(--fg-rgb),0.06)', color:'var(--muted)',
+                background:'rgba(var(--fg-rgb),0.07)', color:'var(--muted)',
                 width: 46, height: 46, borderRadius: 14, flexShrink: 0,
                 display:'flex', alignItems:'center', justifyContent:'center',
               }}>
@@ -309,11 +309,11 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               appearance:'none', border:0, position:'absolute', top:'50%', left:'50%',
               transform:'translate(-50%,-50%)',
               width: 64, height: 64, borderRadius:'50%',
-              background:'rgba(255,255,255,0.92)', color:'#0b0f18',
+              background:'rgba(255,255,255,0.92)', color:'#17100f',
               display:'flex', alignItems:'center', justifyContent:'center',
               boxShadow:'0 12px 30px rgba(0,0,0,0.5)',
             }}>
-              <Icon name="play" size={22} color="#0b0f18"/>
+              <Icon name="play" size={22} color="#17100f"/>
             </button>
             <div style={{
               position:'absolute', left: 14, bottom: 12,
@@ -333,7 +333,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               <div key={i} style={{flexShrink:0, width: 80, textAlign:'center'}}>
                 <div style={{
                   width: 80, height: 80, borderRadius: '50%',
-                  background: `hsl(${30 + i*38}, 35%, ${20 + (i%2)*5}%)`,
+                  background: `hsl(${16 + i*9}, 46%, ${22 + (i%2)*5}%)`,
                   marginBottom: 8,
                   display:'flex', alignItems:'center', justifyContent:'center',
                   fontFamily:'var(--serif)', fontSize: 28, color:'var(--cream)',
@@ -373,7 +373,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
           background:'var(--red)', color:'#fff',
           border:0, fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-          boxShadow:'0 8px 24px rgba(225,127,92,0.45)',
+          boxShadow:'0 8px 24px rgba(255,109,41,0.45)',
         }}>
           <Icon name="heart" size={16} color="#fff"/> Like
         </button>
@@ -405,7 +405,7 @@ function SearchScreen({ initialQuery = '', onBack, onPick, contentType = 'both' 
         display:'flex', alignItems:'center', gap: 10,
       }}>
         <button onClick={onBack} style={{
-          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
           width: 38, height: 38, borderRadius: 999,
           display:'flex', alignItems:'center', justifyContent:'center',
           color:'var(--cream)', flexShrink:0,
@@ -414,7 +414,7 @@ function SearchScreen({ initialQuery = '', onBack, onPick, contentType = 'both' 
         </button>
         <div style={{
           flex: 1, display:'flex', alignItems:'center', gap: 10,
-          background:'rgba(var(--fg-rgb),0.06)',
+          background:'rgba(var(--fg-rgb),0.07)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           borderRadius: 14, padding:'10px 14px',
         }}>
@@ -534,7 +534,7 @@ function SearchOverlay({ onClose, onPick }) {
       {/* Close (X) top-right */}
       <div style={{display:'flex', justifyContent:'flex-end', padding:'16px 18px 0'}}>
         <button onClick={onClose} aria-label="Close search" style={{
-          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
           width: 40, height: 40, borderRadius: 999, color:'var(--cream)',
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>
@@ -580,7 +580,7 @@ function SearchOverlay({ onClose, onPick }) {
         <div style={{display:'flex', flexDirection:'column', gap: 8}}>
           {results.map(m => (
             <button key={m.id} onClick={()=> onPick(m)} style={{
-              appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.04)',
+              appearance:'none', border:0, background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
               borderRadius: 14, padding:'8px 10px', textAlign:'left',
               display:'flex', alignItems:'center', gap: 12, width:'100%', color:'var(--cream)', cursor:'pointer',
             }}>

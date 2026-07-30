@@ -45,7 +45,7 @@ function Icon({ name, size = 20, color = 'currentColor', stroke = 1.6 }) {
 // ─── IconBadge ──────────────────────────────────────────────────────
 // Circular tonal icon badge: soft radial glow + ring + icon, in the
 // "system icon" style — one accent hue, glass-tinted, gradient glow.
-function IconBadge({ icon, size = 40, tone = '#E17F5C', style = {} }) {
+function IconBadge({ icon, size = 40, tone = '#FF6D29', style = {} }) {
   const rgba = (a) => {
     if (typeof tone === 'string' && tone[0] === '#' && tone.length === 7) {
       const r = parseInt(tone.slice(1,3),16), g = parseInt(tone.slice(3,5),16), b = parseInt(tone.slice(5,7),16);
@@ -89,7 +89,7 @@ function Poster({ movie, size = 'lg', className = '', style = {}, hideTitle = fa
   return (
     <div className={`poster ${className}`} style={{
       width: dims.w, height: dims.h, aspectRatio: '2/3',
-      background: movie.bg || '#0b0f18', color: movie.fg || '#f4f1ea', ...style,
+      background: movie.bg || '#17100f', color: movie.fg || '#f4f1ea', ...style,
     }}>
       {realPoster ? (
         <img
@@ -100,7 +100,7 @@ function Poster({ movie, size = 'lg', className = '', style = {}, hideTitle = fa
           onError={(e)=>{ e.currentTarget.style.display='none'; }}
         />
       ) : (
-        <PosterArt art={art} fg={movie.fg || '#f4f1ea'} bg={movie.bg || '#0b0f18'} small={small} />
+        <PosterArt art={art} fg={movie.fg || '#f4f1ea'} bg={movie.bg || '#17100f'} small={small} />
       )}
 
       {/* grain */}
@@ -198,13 +198,13 @@ function pickAvatar(person) {
   return AVATAR_POOL[Math.abs(h) % AVATAR_POOL.length];
 }
 
-function Avatar({ person, size = 44, ring = false, ringColor = '#E17F5C' }) {
+function Avatar({ person, size = 44, ring = false, ringColor = '#FF6D29' }) {
   if (!person) return null;
   const photo = person.photo || (person.noPhoto ? null : pickAvatar(person));
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%',
-      background: person.tone || '#86A6DD',
+      background: person.tone || '#CC8050',
       backgroundImage: photo ? `url("${photo}")` : 'none',
       backgroundSize: 'cover', backgroundPosition: 'center',
       display:'flex', alignItems:'center', justifyContent:'center',
@@ -218,7 +218,7 @@ function Avatar({ person, size = 44, ring = false, ringColor = '#E17F5C' }) {
         <span style={{
           position:'absolute', right: -1, bottom: 1,
           width: size*0.26, height: size*0.26, borderRadius:'50%',
-          background:'#7ED9B4', border:'2px solid var(--ink)',
+          background:'#F0B24A', border:'2px solid var(--ink)',
         }}/>
       )}
     </div>
@@ -291,7 +291,7 @@ function ContextSwitcher({ value, onChange, compact=false }) {
   return (
     <div style={{
       display:'inline-flex', padding: 3,
-      background:'rgba(var(--fg-rgb),0.06)', borderRadius: 999,
+      background:'rgba(var(--fg-rgb),0.07)', borderRadius: 999,
       border:'0.5px solid rgba(var(--fg-rgb),0.1)',
     }}>
       {opts.map(o=>{
@@ -317,7 +317,7 @@ function TabBar({ active, onChange }) {
     { id: 'swipe',   icon: 'cards', label: 'MatchDoo', center: true },
     { id: 'profile', icon: 'user',  label: 'Profile' },
   ];
-  const ACCENT = '#E17F5C';
+  const ACCENT = '#FF6D29';
   return (
     <>
       {/* mood-tone scrim behind the bar so it reads over any content */}
@@ -332,7 +332,7 @@ function TabBar({ active, onChange }) {
         padding: '10px 12px',
         // dark glass + a diagonal mood gradient (coral → periwinkle) tint —
         // stays a dark bar in both themes, so icons/rim are kept fixed-light.
-        background:'linear-gradient(135deg, rgba(225,127,92,0.20) 0%, rgba(147,168,232,0.16) 55%, rgba(15,19,28,0.30) 100%), rgba(13,17,25,0.78)',
+        background:'linear-gradient(135deg, rgba(255,109,41,0.20) 0%, rgba(224,149,94,0.16) 55%, rgba(26,18,16,0.30) 100%), rgba(20,13,12,0.78)',
         backdropFilter:'blur(30px) saturate(180%)',
         WebkitBackdropFilter:'blur(30px) saturate(180%)',
         borderRadius: 32,
@@ -341,26 +341,22 @@ function TabBar({ active, onChange }) {
       }}>
         {tabs.map(t=>{
           const on = active === t.id;
-          // Center brand tab — always prominent (white pill + logomark)
+          // Center brand tab — a prominent circular logo icon (no text)
           if (t.center) {
             return (
               <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
-                appearance:'none', border:'0.5px solid rgba(0,0,0,0.06)', cursor:'pointer',
-                display:'flex', alignItems:'center', gap: 8, height: 48,
-                padding:'0 18px', borderRadius: 999, flexShrink: 0,
-                background:'#f4f1ea',
+                appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
+                width: 56, height: 56, borderRadius: '50%',
+                border: '2px solid rgba(244,241,234,0.92)',
+                backgroundImage: 'url("assets/logo-app.png?v=2")',
+                backgroundSize: '128%', backgroundPosition: 'center 48%',
+                backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
                 boxShadow: on
-                  ? '0 6px 22px rgba(225,127,92,0.5), 0 0 0 2px rgba(225,127,92,0.5)'
-                  : '0 4px 14px rgba(0,0,0,0.35)',
-                transform: on ? 'translateY(-1px) scale(1.02)' : 'scale(1)',
+                  ? '0 6px 24px rgba(255,109,41,0.55), 0 0 0 3px rgba(255,109,41,0.45)'
+                  : '0 4px 16px rgba(0,0,0,0.40)',
+                transform: on ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
                 transition: 'transform .28s cubic-bezier(.4,0,.2,1), box-shadow .28s ease',
-              }}>
-                <Logomark size={22}/>
-                <span style={{
-                  fontFamily:'var(--sans)', fontWeight: 800, fontSize: 14,
-                  color:'#16191f', letterSpacing:'-0.01em',
-                }}>MatchDoo</span>
-              </button>
+              }}/>
             );
           }
           // Side tabs — expanding pill (active shows label, inactive icon-only)
@@ -370,7 +366,7 @@ function TabBar({ active, onChange }) {
               display:'flex', alignItems:'center', justifyContent:'center',
               gap: on ? 8 : 0, height: 46,
               padding: on ? '0 18px' : '0 13px', borderRadius: 999,
-              background: on ? 'rgba(225,127,92,0.16)' : 'transparent',
+              background: on ? 'rgba(255,109,41,0.16)' : 'transparent',
               overflow:'hidden', flexShrink: 0,
               transition: 'background .3s cubic-bezier(.4,0,.2,1), gap .3s cubic-bezier(.4,0,.2,1), padding .3s cubic-bezier(.4,0,.2,1)',
             }}>
@@ -401,7 +397,7 @@ function TopBar({ title, onBack, right, subtitle, large=false }) {
       <div style={{display:'flex', alignItems:'center', gap: 10, minWidth:0, flex:1}}>
         {onBack && (
           <button onClick={onBack} style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 36, height: 36, borderRadius: 999,
             display:'flex', alignItems:'center', justifyContent:'center',
             color:'var(--cream)', flexShrink:0,

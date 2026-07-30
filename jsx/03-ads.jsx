@@ -140,7 +140,7 @@ function PopupAdInterstitial({ campaign, onClose, onOpenCTA }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 22px',
     }}>
       <div className="pop" style={{
-        width: '100%', maxWidth: 320, background: '#131a26', borderRadius: 26,
+        width: '100%', maxWidth: 320, background: '#241813', borderRadius: 26,
         border: '0.5px solid rgba(var(--fg-rgb),0.12)', overflow: 'hidden', position: 'relative',
         boxShadow: '0 30px 80px rgba(0,0,0,0.55)',
       }}>

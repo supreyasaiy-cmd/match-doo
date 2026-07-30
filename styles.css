@@ -2,22 +2,24 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 :root{
-  /* Foreground (text/overlays) + dark-glass base as raw RGB so themes can flip them */
+  /* Foreground (text/overlays) + dark-glass base as raw RGB so themes can flip them.
+     "On Fire" mood — warm near-black base, ember-orange accents. */
   --fg-rgb: 244,241,234;
-  --bg-rgb: 15,19,28;
+  --bg-rgb: 26,18,16;
 
-  --ink: #0b0f18;
-  --ink-2: #131a26;
-  --ink-3: #1d2733;
-  --cream: #f4f1ea;
-  --cream-2: #e8e3d6;
+  --ink: #17100f;
+  --ink-2: #241813;
+  --ink-3: #33221b;
+  --cream: #f6f1ea;
+  --cream-2: #ece2d5;
   --muted: rgba(var(--fg-rgb),0.55);
   --muted-2: rgba(var(--fg-rgb),0.35);
-  --line: rgba(196,209,234,0.12);
-  --red: #E17F5C;
-  --gold: #F0AC72;
-  --green: #7ED9B4;
-  --blue: #6F93E0;
+  --line: rgba(255,236,226,0.12);
+  --red: #FF6D29;
+  --gold: #FDA65A;
+  --green: #F0B24A;
+  --blue: #D98B5A;
+  --page-bg: #140d0c;
 
   --serif: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
   --sans: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
@@ -28,25 +30,25 @@
    Foreground overlays (rgba(var(--fg-rgb),a)) become subtle dark tints,
    dark-glass (rgba(var(--bg-rgb),a)) becomes light glass. */
 :root[data-theme="light"]{
-  --fg-rgb: 26,30,40;
-  --bg-rgb: 248,246,240;
-  --ink: #f5f2ec;
-  --ink-2: #ece8df;
-  --ink-3: #ded9cd;
-  --cream: #16191f;
-  --cream-2: #2a2f38;
+  --fg-rgb: 34,24,20;
+  --bg-rgb: 250,244,238;
+  --ink: #f7f1ea;
+  --ink-2: #efe6dc;
+  --ink-3: #e2d5c8;
+  --cream: #1c1512;
+  --cream-2: #3a2d26;
   --muted: rgba(var(--fg-rgb),0.62);
   --muted-2: rgba(var(--fg-rgb),0.42);
-  --line: rgba(26,30,40,0.14);
-  --page-bg: #ece7de;
+  --line: rgba(34,24,20,0.14);
+  --page-bg: #efe3d8;
 }
 
 body{
   margin: 0;
   background:
-    radial-gradient(60% 45% at 12% 0%, rgba(225,127,92,0.10), transparent 60%),
-    radial-gradient(55% 45% at 92% 8%, rgba(111,147,224,0.10), transparent 60%),
-    var(--page-bg, #0d1017);
+    radial-gradient(70% 55% at 18% 2%, rgba(255,109,41,0.18), transparent 60%),
+    radial-gradient(60% 50% at 88% 12%, rgba(179,44,26,0.16), transparent 62%),
+    var(--page-bg, #140d0c);
   min-height: 100vh;
   font-family: var(--sans);
   color: var(--cream);
@@ -78,13 +80,13 @@ button{ font-family: inherit; cursor: default; }
 .tap-row{ transition: background .14s ease; cursor: pointer; }
 .tap-row:active{ background: rgba(244,241,234,0.06) !important; }
 
-/* Welcome coral badge — theme-aware so it stays legible on light bg */
-.wl-badge{ background: rgba(225,127,92,0.10); border-color: rgba(225,127,92,0.35); color: var(--red); }
+/* Welcome ember badge — theme-aware so it stays legible on light bg */
+.wl-badge{ background: rgba(255,109,41,0.12); border-color: rgba(255,109,41,0.40); color: var(--red); }
 :root[data-theme="light"] .wl-badge{
-  background: #E17F5C;
+  background: #FF6D29;
   border-color: rgba(0,0,0,0.06);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(225,127,92,0.35);
+  box-shadow: 0 4px 14px rgba(255,109,41,0.38);
 }
 
 /* Animations */

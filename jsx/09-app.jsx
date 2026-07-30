@@ -22,7 +22,7 @@ function seedFriendLikesAgainst(movies) {
 }
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "accent": "#E17F5C",
+  "accent": "#FF6D29",
   "celebration": "curtain",
   "density": "regular",
   "bannerPlacement": "swipeTop"
@@ -257,10 +257,10 @@ function App() {
     content = <AuthScreen
       mode={authMode}
       onBack={()=> setScreen('welcome')}
-      onAuth={(u)=>{
+      onAuth={(u, submittedMode)=>{
         setUser({...user, ...u});
-        // Sign-up flow → onboarding; Sign-in → main
-        setScreen(authMode === 'signup' ? 'onboarding' : 'main');
+        // Sign-up flow → onboarding; Sign-in → main (mode reflects any in-screen switch)
+        setScreen((submittedMode || authMode) === 'signup' ? 'onboarding' : 'main');
       }}
     />;
   } else if (screen === 'onboarding') {
@@ -285,6 +285,7 @@ function App() {
         onCreateRoom={()=> setCreateRoom(true)}
         onAddFriend={()=> setAddFriend(true)}
         onOpenCalendar={()=> setCalendarOpen(true)}
+        onNotif={openNotif} notifCount={notifSeen ? 0 : notifications.length}
         banner={t.bannerPlacement === 'roomsTop' ? <BannerAd placement="roomsTop" onOpenCTA={onOpenAdCTA}/> : null}
       />;
     } else if (tab === 'profile') {
@@ -341,7 +342,8 @@ function App() {
     <IOSDevice dark={theme === 'dark'}>
       <div style={{
         position:'absolute', inset:0,
-        background:'var(--ink)', color:'var(--cream)',
+        background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)',
+        color:'var(--cream)',
         display:'flex', flexDirection:'column',
       }}>
         <div style={{height: 50, flexShrink: 0}}/>
@@ -409,7 +411,7 @@ function App() {
             />
           )}
           {roomDetail && (
-            <div style={{position:'absolute', inset:0, background:'var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
               <RoomDetailScreen
                 room={roomDetail}
                 onBack={()=> setRoomDetail(null)}
@@ -418,7 +420,7 @@ function App() {
             </div>
           )}
           {matchesOpen && (
-            <div style={{position:'absolute', inset:0, background:'var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
               <MatchesScreen
                 likes={Array.from(likes)}
                 onBack={()=> setMatchesOpen(false)}
@@ -428,7 +430,7 @@ function App() {
             </div>
           )}
           {createRoom && (
-            <div style={{position:'absolute', inset:0, background:'var(--ink)', zIndex: 46}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 46}}>
               <CreateRoomScreen
                 onBack={()=> setCreateRoom(false)}
                 onCreate={(r)=>{ setCreateRoom(false); setRoomDetail(r); showToast('Room created'); }}
@@ -436,12 +438,12 @@ function App() {
             </div>
           )}
           {addFriend && (
-            <div style={{position:'absolute', inset:0, background:'var(--ink)', zIndex: 46}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 46}}>
               <AddFriendScreen onBack={()=> setAddFriend(false)}/>
             </div>
           )}
           {friendProfile && (
-            <div style={{position:'absolute', inset:0, background:'var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
               <FriendProfileScreen
                 friend={friendProfile}
                 onBack={()=> setFriendProfile(null)}
@@ -532,8 +534,8 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
         <div style={{display:'flex', alignItems:'center', gap: 8}}>
           {canUndo && (
             <button onClick={onUndo} aria-label="Undo last swipe" title="Undo" style={{
-              appearance:'none', border:'0.5px solid rgba(240,172,114,0.4)',
-              background:'rgba(240,172,114,0.12)', color:'var(--gold)',
+              appearance:'none', border:'0.5px solid rgba(253,166,90,0.4)',
+              background:'rgba(253,166,90,0.12)', color:'var(--gold)',
               height: 36, borderRadius: 999, padding:'0 12px',
               display:'inline-flex', alignItems:'center', gap: 6,
               fontFamily:'var(--sans)', fontSize: 12.5, fontWeight: 600,
@@ -543,14 +545,14 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
             </button>
           )}
           <button onClick={onSearch} style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.06)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
             width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}>
             <Icon name="search" size={16}/>
           </button>
           <button onClick={onNotif} aria-label="Notifications" style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.06)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
             width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
             display:'flex', alignItems:'center', justifyContent:'center',
             position:'relative',
@@ -578,10 +580,10 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
 // ─── Notifications sheet ───────────────────────────────────────────
 function NotificationsSheet({ items = [], onClose }) {
   const META = {
-    match:    { icon:'heart',   tone:'#7ED9B4' },
-    friend:   { icon:'user',    tone:'#93A8E8' },
-    reminder: { icon:'clock',   tone:'#F0AC72' },
-    new:      { icon:'sparkle', tone:'#E17F5C' },
+    match:    { icon:'heart',   tone:'#F0B24A' },
+    friend:   { icon:'user',    tone:'#E0955E' },
+    reminder: { icon:'clock',   tone:'#FDA65A' },
+    new:      { icon:'sparkle', tone:'#FF6D29' },
   };
   return (
     <div onClick={onClose} style={{
@@ -600,7 +602,7 @@ function NotificationsSheet({ items = [], onClose }) {
         <div style={{padding:'0 20px 8px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
           <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>Notifications</div>
           <button onClick={onClose} style={{
-            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 34, height: 34, borderRadius: 999, color:'var(--muted)',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}>
@@ -661,7 +663,7 @@ function MatchToast({ movie, friend, onDismiss }) {
       padding:'12px 14px', borderRadius: 18,
       background:'rgba(var(--bg-rgb),0.85)',
       backdropFilter:'blur(20px)',
-      border:'0.5px solid rgba(225,127,92,0.35)',
+      border:'0.5px solid rgba(255,109,41,0.35)',
       display:'flex', alignItems:'center', gap: 12,
       boxShadow:'0 12px 30px rgba(0,0,0,0.4)', color:'var(--cream)',
     }}>
@@ -686,7 +688,7 @@ function MatchDooTweaks({ t, setTweak }) {
     <TweaksPanel>
       <TweakSection label="Theme"/>
       <TweakColor label="Accent" value={t.accent}
-        options={['#E17F5C','#F0AC72','#93A8E8','#7ED9B4']}
+        options={['#FF6D29','#FDA65A','#E0955E','#F0B24A']}
         onChange={(v)=>{ setTweak('accent', v); document.documentElement.style.setProperty('--red', v); }}
       />
       <TweakSection label="Match moment"/>

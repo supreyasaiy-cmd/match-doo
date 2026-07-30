@@ -1,10 +1,10 @@
 // swipe.jsx — Card stack with 4-direction gestures (right=want, left=pass, up=seen, down=super)
 
 const SWIPE_LABELS = {
-  right: { text: 'LIKE',       color: '#E17F5C', rot: -8 },
-  left:  { text: 'PASS',       color: '#86A6DD', rot:  8 },
-  up:    { text: 'READ MORE',  color: '#F0AC72', rot:  0 },
-  down:  { text: 'SEEN',       color: '#93A8E8', rot:  0 },
+  right: { text: 'LIKE',       color: '#FF6D29', rot: -8 },
+  left:  { text: 'PASS',       color: '#CC8050', rot:  8 },
+  up:    { text: 'READ MORE',  color: '#FDA65A', rot:  0 },
+  down:  { text: 'SEEN',       color: '#E0955E', rot:  0 },
 };
 
 function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, density='regular', onOpenAdCTA }) {
@@ -304,10 +304,10 @@ function SwipeDeck({ movies, onSwipe, onTap, density='regular', ads=[], adCadenc
           display:'flex', justifyContent:'center', alignItems:'flex-end', gap: 16,
           pointerEvents:'none',
         }}>
-          <ActionBtn label="Pass" icon="x"      color="#86A6DD" size={60} onClick={()=>programmatic('left')} />
-          <ActionBtn label="More" icon="chevup" color="#F0AC72" size={48} onClick={()=>programmatic('up')} />
-          <ActionBtn label="Seen" icon="eye"    color="#93A8E8" size={48} onClick={()=>programmatic('down')} />
-          <ActionBtn label="Like" icon="heart"  color="#E17F5C" size={60} onClick={()=>programmatic('right')} filled/>
+          <ActionBtn label="Pass" icon="x"      color="#CC8050" size={60} onClick={()=>programmatic('left')} />
+          <ActionBtn label="More" icon="chevup" color="#FDA65A" size={48} onClick={()=>programmatic('up')} />
+          <ActionBtn label="Seen" icon="eye"    color="#E0955E" size={48} onClick={()=>programmatic('down')} />
+          <ActionBtn label="Like" icon="heart"  color="#FF6D29" size={60} onClick={()=>programmatic('right')} filled/>
         </div>
       )}
     </div>
@@ -326,12 +326,12 @@ function ActionBtn({ icon, color, size, onClick, filled=false, label }) {
         background: filled ? color : 'rgba(0,0,0,0.32)',
         backdropFilter: filled ? 'none' : 'blur(10px) saturate(140%)',
         WebkitBackdropFilter: filled ? 'none' : 'blur(10px) saturate(140%)',
-        color: filled ? '#0b0f18' : color,
+        color: filled ? '#17100f' : color,
         display:'flex', alignItems:'center', justifyContent:'center',
         transition:'transform .14s ease',
         boxShadow: filled ? `0 8px 22px ${color}66` : '0 6px 18px rgba(0,0,0,0.45)',
       }}>
-        <Icon name={icon} size={size*0.42} stroke={filled? 2.2:1.8} color={filled? '#0b0f18' : color}/>
+        <Icon name={icon} size={size*0.42} stroke={filled? 2.2:1.8} color={filled? '#17100f' : color}/>
       </button>
       <span style={{
         fontSize: 10.5, fontWeight: 600, color:'rgba(255,255,255,0.92)', letterSpacing:'0.02em',
@@ -350,7 +350,7 @@ function EmptyDeck() {
     }}>
       <div style={{
         width: 64, height: 64, borderRadius:'50%',
-        background:'rgba(var(--fg-rgb),0.06)',
+        background:'rgba(var(--fg-rgb),0.07)',
         display:'flex', alignItems:'center', justifyContent:'center',
       }}>
         <Icon name="film" size={28} color="var(--cream)"/>
@@ -368,10 +368,10 @@ function EmptyDeck() {
 // ─── First-run coach overlay (shown once) ──────────────────────────
 function SwipeCoach({ onDone }) {
   const TIPS = [
-    { icon:'heart',  color:'#E17F5C', label:'Like', desc:'Swipe right — add to your list' },
-    { icon:'x',      color:'#86A6DD', label:'Pass', desc:'Swipe left — not for you' },
-    { icon:'chevup', color:'#F0AC72', label:'More', desc:'Swipe up — see the details' },
-    { icon:'eye',    color:'#93A8E8', label:'Seen', desc:'Swipe down — already watched' },
+    { icon:'heart',  color:'#FF6D29', label:'Like', desc:'Swipe right — add to your list' },
+    { icon:'x',      color:'#CC8050', label:'Pass', desc:'Swipe left — not for you' },
+    { icon:'chevup', color:'#FDA65A', label:'More', desc:'Swipe up — see the details' },
+    { icon:'eye',    color:'#E0955E', label:'Seen', desc:'Swipe down — already watched' },
   ];
   return (
     <div className="fade-in" style={{

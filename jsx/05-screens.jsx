@@ -369,12 +369,6 @@ function SsoButton({ kind, loading, disabled, onClick }) {
   );
 }
 
-// ─── Login (legacy export name — now exports Welcome) ───────────────
-function LoginScreen({ onAuth }) {
-  // Kept for back-compat; not used by the new App flow.
-  return <WelcomeScreen onSignIn={onAuth} onSignUp={onAuth}/>;
-}
-
 function Wordmark({ small=false }) {
   return (
     <div style={{display:'flex', alignItems:'center', gap: 10}}>
@@ -426,45 +420,6 @@ function FieldInput({ type, placeholder, value, onChange, icon }) {
         }}
       />
     </div>
-  );
-}
-
-function CodeInput({ onComplete, target }) {
-  const [code, setCode] = React.useState(['','','','','','']);
-  const refs = React.useRef([]);
-  React.useEffect(()=>{ refs.current[0]?.focus(); }, []);
-  const set = (i, v) => {
-    if (!/^\d?$/.test(v)) return;
-    const next = [...code]; next[i] = v; setCode(next);
-    if (v && i < 5) refs.current[i+1]?.focus();
-    if (next.every(c=>c)) setTimeout(()=> onComplete(), 300);
-  };
-
-  return (
-    <>
-      <div style={{fontSize: 13, color:'var(--muted)', marginBottom: 2, paddingLeft: 4}}>
-        We sent a 6-digit code to <span style={{color:'var(--cream)'}}>{target}</span>
-      </div>
-      <div style={{display:'flex', gap: 8, marginTop: 6, justifyContent:'space-between'}}>
-        {code.map((c,i)=>(
-          <input key={i} ref={el => refs.current[i] = el}
-            inputMode="numeric" maxLength={1} value={c}
-            onChange={e => set(i, e.target.value)}
-            onKeyDown={e => { if (e.key === 'Backspace' && !c && i>0) refs.current[i-1]?.focus(); }}
-            style={{
-              flex: '1 1 0', minWidth: 0, width: 0,
-              height: 56, padding: 0, textAlign:'center',
-              background:'rgba(var(--fg-rgb),0.07)',
-              border:`0.5px solid ${c? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
-              borderRadius: 12, color:'var(--cream)',
-              fontFamily:'var(--serif)', fontSize: 26,
-              outline: 'none',
-            }}
-          />
-        ))}
-      </div>
-      <PrimaryBtn full onClick={onComplete}>Continue</PrimaryBtn>
-    </>
   );
 }
 
@@ -789,7 +744,7 @@ function EmptyMatches() {
 }
 
 // ─── Friends ────────────────────────────────────────────────────────
-function FriendsScreen({ onOpenFriend, onOpenAdd }) {
+function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
   const [context, setContext] = React.useState('friends');
   const [query, setQuery] = React.useState('');
 
@@ -798,9 +753,10 @@ function FriendsScreen({ onOpenFriend, onOpenAdd }) {
   );
 
   return (
-    <div style={{display:'flex', flexDirection:'column', height:'100%'}}>
+    <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar
         title="Friends" large
+        onBack={onBack}
         subtitle="Tap a friend to see your matches"
         right={
           <button onClick={onOpenAdd} style={{
@@ -2328,7 +2284,7 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
 }
 
 Object.assign(window, {
-  LoginScreen, WelcomeScreen, AuthScreen,
+  WelcomeScreen, AuthScreen,
   OnboardingScreen, MatchesScreen,
   FriendsScreen, AddFriendScreen, FriendProfileScreen, ProfileScreen,
   MovieDetailSheet, MatchCelebration, Wordmark, Logomark, TmdbConnectSheet,

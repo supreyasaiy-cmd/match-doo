@@ -73,6 +73,7 @@ function App() {
   const [matchesOpen, setMatchesOpen] = React.useState(false);
   const [createRoom, setCreateRoom]   = React.useState(false);
   const [addFriend, setAddFriend]     = React.useState(false);
+  const [friendsOpen, setFriendsOpen] = React.useState(false);
   const [friendProfile, setFriendProfile] = React.useState(null);
   const [toast, setToast]             = React.useState(null);
   const [tmdbSheetOpen, setTmdbSheetOpen] = React.useState(false);
@@ -109,6 +110,14 @@ function App() {
     return list;
   }, []);
   const openNotif = () => { setNotifOpen(true); setNotifSeen(true); };
+  // Tapping a notification jumps to the relevant place.
+  const openNotifTarget = (n) => {
+    setNotifOpen(false);
+    if (n.type === 'match') setMatchesOpen(true);
+    else if (n.type === 'friend') { if (n.person) setFriendProfile(n.person); else setFriendsOpen(true); }
+    else if (n.type === 'reminder') setTab('rooms');
+    else setTab('swipe');
+  };
 
   // TMDB — admin-managed; we silently read the key if an admin set one, otherwise local sample
   const [tmdbMovies, setTmdbMovies] = React.useState(null);
@@ -283,7 +292,7 @@ function App() {
       tabContent = <RoomsScreen
         onOpenRoom={(r)=> setRoomDetail(r)}
         onCreateRoom={()=> setCreateRoom(true)}
-        onAddFriend={()=> setAddFriend(true)}
+        onAddFriend={()=> setFriendsOpen(true)}
         onOpenCalendar={()=> setCalendarOpen(true)}
         onNotif={openNotif} notifCount={notifSeen ? 0 : notifications.length}
         onOpenAdCTA={onOpenAdCTA}
@@ -338,7 +347,7 @@ function App() {
           // Switching tabs must return to that tab's root — dismiss any
           // full-screen overlay or sheet that's currently on top.
           setTab(t);
-          setRoomDetail(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null);
+          setRoomDetail(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null); setFriendsOpen(false);
           setMovieDetail(null); setReadMore(null); setSearch(null);
           setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false); setMatchesOpen(false);
         }}/>
@@ -404,7 +413,7 @@ function App() {
             />
           )}
           {notifOpen && (
-            <NotificationsSheet items={notifications} onClose={()=> setNotifOpen(false)}/>
+            <NotificationsSheet items={notifications} onClose={()=> setNotifOpen(false)} onOpen={openNotifTarget}/>
           )}
           {calendarOpen && (
             <CalendarSheet
@@ -450,6 +459,15 @@ function App() {
           {addFriend && (
             <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
               <AddFriendScreen onBack={()=> setAddFriend(false)}/>
+            </div>
+          )}
+          {friendsOpen && (
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
+              <FriendsScreen
+                onBack={()=> setFriendsOpen(false)}
+                onOpenFriend={(f)=> setFriendProfile(f)}
+                onOpenAdd={()=> setAddFriend(true)}
+              />
             </div>
           )}
           {friendProfile && (
@@ -588,7 +606,7 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
 
 // ─── Toasts ────────────────────────────────────────────────────────
 // ─── Notifications sheet ───────────────────────────────────────────
-function NotificationsSheet({ items = [], onClose }) {
+function NotificationsSheet({ items = [], onClose, onOpen }) {
   const META = {
     match:    { icon:'heart',   tone:'#F0B24A' },
     friend:   { icon:'user',    tone:'#E0955E' },
@@ -628,16 +646,18 @@ function NotificationsSheet({ items = [], onClose }) {
           ) : items.map(n => {
             const m = META[n.type] || META.new;
             return (
-              <div key={n.id} style={{
+              <button key={n.id} onClick={()=> onOpen?.(n)} className="tap-row" style={{
+                appearance:'none', border:0, background:'transparent', width:'100%', textAlign:'left', cursor:'pointer',
                 display:'flex', alignItems:'center', gap: 12,
-                padding:'12px 10px', borderRadius: 14,
+                padding:'12px 10px', borderRadius: 14, color:'var(--cream)',
               }}>
                 {n.person ? <Avatar person={n.person} size={40}/> : <IconBadge icon={m.icon} size={40} tone={m.tone}/>}
                 <div style={{flex:1, minWidth:0}}>
                   <div style={{fontSize: 13.5, color:'var(--cream)', lineHeight: 1.35}}>{n.text}</div>
                   <div style={{fontSize: 11, color:'var(--muted)', marginTop: 3}}>{n.time}</div>
                 </div>
-              </div>
+                <Icon name="chev" size={14} color="var(--muted-2)"/>
+              </button>
             );
           })}
         </div>

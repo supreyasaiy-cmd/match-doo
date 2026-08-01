@@ -187,45 +187,6 @@ function PopupAdInterstitial({ campaign, onClose, onOpenCTA }) {
   );
 }
 
-// ─── 16:9 display banner ────────────────────────────────────────────
-// A full-width 16:9 ad slot for the top of a screen. Always renders a
-// fillable <image-slot> creative (drop an image in to run an ad); if a
-// 'topBanner' campaign is live it also overlays the advertiser + CTA.
-function BannerAd16({ onOpenCTA, style = {} }) {
-  const campaign = pickBannerCampaign('topBanner');
-  const id = campaign ? `topbanner-${campaign.id}` : 'topbanner-slot';
-  return (
-    <button onClick={() => campaign && onOpenCTA?.(campaign)} style={{
-      appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)',
-      background:'rgba(var(--fg-rgb),0.05)',
-      width:'100%', padding:0, borderRadius:16, overflow:'hidden',
-      position:'relative', display:'block', aspectRatio:'16 / 9',
-      cursor: campaign ? 'pointer' : 'default', ...style,
-    }}>
-      <image-slot id={id} shape="rect" fit="cover"
-        style={{ position:'absolute', inset:0, width:'100%', height:'100%' }}
-        placeholder="Drop ad creative · 16:9"></image-slot>
-      <span style={{
-        position:'absolute', top:8, left:8, zIndex:2,
-        fontSize:9, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase',
-        color:'#fff', background:'rgba(0,0,0,0.45)',
-        backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
-        padding:'3px 8px', borderRadius:999,
-      }}>{campaign ? `Ad · ${campaign.advertiser}` : 'Ad'}</span>
-      {campaign && (
-        <div style={{
-          position:'absolute', left:0, right:0, bottom:0, zIndex:2,
-          padding:'26px 12px 10px',
-          background:'linear-gradient(180deg, transparent, rgba(0,0,0,0.62))',
-          display:'flex', alignItems:'flex-end', justifyContent:'space-between', gap:10,
-        }}>
-          <div style={{fontSize:13.5, fontWeight:700, color:'#fff', letterSpacing:'-0.01em', textShadow:'0 1px 6px rgba(0,0,0,0.5)', textAlign:'left'}}>{campaign.headline}</div>
-          <span style={{fontSize:11, fontWeight:700, color:'var(--ink)', background:'var(--cream)', padding:'6px 12px', borderRadius:999, flexShrink:0, whiteSpace:'nowrap'}}>{campaign.ctaText}</span>
-        </div>
-      )}
-    </button>
-  );
-}
 
 // ─── 16:9 auto-sliding ad carousel ──────────────────────────────────
 // Sample house ads (fictional brands) themed around movie-watching:
@@ -295,5 +256,5 @@ function AdCarousel16({ interval = 4200, onOpenCTA, style = {} }) {
 
 Object.assign(window, {
   isAdLive, pickBannerCampaign, activeSwipeAdCampaigns, activePopupAdCampaign,
-  AdTag, BannerAd, BannerAd16, AdCarousel16, AdCardContent, PopupAdInterstitial,
+  AdTag, BannerAd, AdCarousel16, AdCardContent, PopupAdInterstitial,
 });

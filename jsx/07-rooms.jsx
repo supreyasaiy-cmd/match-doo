@@ -302,7 +302,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
         }}>
           <Icon name="user" size={15}/>
-          Add friend
+          Friends
         </button>
       </div>
 

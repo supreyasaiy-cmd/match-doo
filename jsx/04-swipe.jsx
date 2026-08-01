@@ -78,20 +78,23 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
   else if (drag?.releasing === 'down')  { translateY = 900; rotate = 0; opacity = 0; }
   else if (drag?.releasing === 'snap')  { translateX = 0; translateY = 0; rotate = 0; }
   else if (drag) {
-    if (drag.locked === 'h') { translateY = dy * 0.2; rotate = dx * 0.05; }
+    if (drag.locked === 'h') { translateY = dy * 0.2; rotate = dx * 0.07; }
     else if (drag.locked === 'v') { translateX = dx * 0.2; rotate = 0; }
-    else { rotate = dx * 0.04; }
+    else { rotate = dx * 0.05; }
   }
 
-  // Decide label
+  // Decide label — kick in early so it's easy to read.
   let activeLabel = null;
   if (isTop && drag && !drag.releasing) {
-    if (drag.locked === 'h') activeLabel = dx > 30 ? 'right' : dx < -30 ? 'left' : null;
-    else if (drag.locked === 'v') activeLabel = dy < -30 ? 'up' : dy > 30 ? 'down' : null;
+    if (drag.locked === 'h') activeLabel = dx > 18 ? 'right' : dx < -18 ? 'left' : null;
+    else if (drag.locked === 'v') activeLabel = dy < -18 ? 'up' : dy > 18 ? 'down' : null;
   } else if (drag?.releasing && drag.releasing !== 'snap') {
     activeLabel = drag.releasing;
   }
-  const labelOpacity = activeLabel ? Math.min(1, (Math.abs(drag.locked==='h'? dx : dy)) / 90) : 0;
+  const dragMag = drag ? Math.abs(drag.locked === 'h' ? dx : dy) : 0;
+  // Ramp up fast — visible almost immediately, full by ~90px.
+  const labelOpacity = activeLabel ? (drag?.releasing ? 1 : Math.min(1, 0.55 + dragMag / 80)) : 0;
+  const labelScale   = activeLabel ? Math.min(1.1, 0.9 + dragMag / 240) : 0.9;
 
   const transition = drag?.releasing ? 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s ease' : (drag ? 'none' : 'transform .24s ease');
 
@@ -190,22 +193,35 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
         </>
         )}
 
-        {/* swipe label */}
+        {/* directional glow ring — grows with the swipe for motion feedback */}
+        {activeLabel && (
+          <div style={{
+            position:'absolute', inset:0, borderRadius:24, pointerEvents:'none',
+            boxShadow:`inset 0 0 0 3px ${SWIPE_LABELS[activeLabel].color}, inset 0 0 55px ${SWIPE_LABELS[activeLabel].color}66`,
+            opacity: labelOpacity,
+            transition: drag?.releasing ? 'opacity .28s ease' : 'none',
+          }}/>
+        )}
+
+        {/* swipe stamp — bold, filled, glowing so the action is unmistakable */}
         {activeLabel && (
           <div style={{
             position:'absolute',
-            top: activeLabel === 'up' ? 38 : (activeLabel === 'down' ? 'auto' : 60),
-            bottom: activeLabel === 'down' ? 38 : 'auto',
-            left: activeLabel === 'left' ? 30 : (activeLabel === 'right' ? 'auto' : '50%'),
-            right: activeLabel === 'right' ? 30 : 'auto',
-            transform: `${activeLabel === 'up' || activeLabel === 'down' ? 'translateX(-50%)' : ''} rotate(${SWIPE_LABELS[activeLabel].rot}deg)`,
+            top: activeLabel === 'up' ? 42 : (activeLabel === 'down' ? 'auto' : 66),
+            bottom: activeLabel === 'down' ? 42 : 'auto',
+            // Stamp sits on the side that stays on-screen as the card slides
+            // away: LIKE on the left (swipe right), PASS on the right (swipe left).
+            left: activeLabel === 'right' ? 28 : (activeLabel === 'left' ? 'auto' : '50%'),
+            right: activeLabel === 'left' ? 28 : 'auto',
+            transform: `${activeLabel === 'up' || activeLabel === 'down' ? 'translateX(-50%)' : ''} rotate(${SWIPE_LABELS[activeLabel].rot}deg) scale(${labelScale})`,
+            transformOrigin:'center',
             opacity: labelOpacity,
-            padding:'10px 18px', borderRadius: 8,
-            border: `1.5px solid ${SWIPE_LABELS[activeLabel].color}`,
-            color: SWIPE_LABELS[activeLabel].color,
-            fontFamily:'var(--sans)', fontWeight: 600, fontSize: 17, letterSpacing:'0.1em',
-            background:'rgba(0,0,0,0.45)',
-            backdropFilter:'blur(4px)',
+            padding:'12px 22px', borderRadius: 12, whiteSpace:'nowrap',
+            border:'2px solid rgba(255,255,255,0.92)',
+            color:'#fff', background: SWIPE_LABELS[activeLabel].color,
+            fontFamily:'var(--sans)', fontWeight: 800, fontSize: 22, letterSpacing:'0.06em',
+            boxShadow:`0 0 30px ${SWIPE_LABELS[activeLabel].color}cc, 0 8px 22px rgba(0,0,0,0.45)`,
+            transition: drag?.releasing ? 'opacity .28s ease, transform .28s ease' : 'none',
             pointerEvents:'none',
           }}>
             {SWIPE_LABELS[activeLabel].text}

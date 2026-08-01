@@ -2234,11 +2234,11 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
 
       <div className="rise" style={{
         animationDelay:'.18s',
-        fontFamily:'var(--serif)', fontSize: 48, lineHeight: 0.96,
+        fontFamily:'var(--serif)', fontSize: 44, lineHeight: 1.0,
         textAlign:'center', color:'var(--cream)', letterSpacing:'-0.02em',
-        position:'relative', zIndex:1, marginBottom: 24,
+        position:'relative', zIndex:1, marginBottom: 24, whiteSpace:'nowrap',
       }}>
-        It's a<br/><em style={{fontStyle:'italic'}}>match.</em>
+        It's a <em style={{fontStyle:'italic'}}>match.</em>
       </div>
 
       {/* Stacked poster + avatars */}

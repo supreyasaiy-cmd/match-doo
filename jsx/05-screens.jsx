@@ -1282,8 +1282,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'18px 0 130px'}}>
         <div style={{display:'flex', gap: 10, padding:'0 18px 18px'}}>
-          <ProfileStatCard label="Want to watch" value={likedMovies.length} accent="var(--red)"
-            onClick={()=> setListView({ title:'Want to watch', movies: likedMovies })}/>
+          <ProfileStatCard label="Like" value={likedMovies.length} accent="var(--red)"
+            onClick={()=> setListView({ title:'Like', movies: likedMovies })}/>
           <ProfileStatCard label="Matches" value={matchedMovies.length} accent="var(--green)"
             onClick={()=> onOpenMatches && onOpenMatches()}/>
           <ProfileStatCard label="Seen" value={seenMovies.length} accent="var(--gold)"

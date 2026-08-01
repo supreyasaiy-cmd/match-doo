@@ -2202,6 +2202,27 @@ function RatingCard({ label, value, color, sub }) {
 
 // ─── Match celebration ──────────────────────────────────────────────
 function MatchCelebration({ movie, friend, onWatch, onKeep }) {
+  // Popcorn + movie confetti — a single burst out of the centre when the
+  // match appears (no ongoing rain).
+  const burst = React.useMemo(() => {
+    const EM = ['🍿','🍿','🍿','🍿','🎬','🎉','🎟️','⭐','✨','🥤','🎈','🍿'];
+    return Array.from({ length: 20 }, (_, i) => {
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 130 + Math.random() * 220;
+      return {
+        id: i, emoji: EM[(Math.random() * EM.length) | 0],
+        tx: `${(Math.cos(ang) * dist) | 0}px`,
+        ty: `${((Math.sin(ang) * dist) - 50) | 0}px`, // bias upward for the burst
+        r:  `${(Math.random() * 960 - 480) | 0}deg`,
+        delay: `${(Math.random() * 0.5).toFixed(2)}s`,
+        dur:   `${(1.6 + Math.random() * 1.4).toFixed(2)}s`,
+        size:  (18 + Math.random() * 18) | 0,
+        left:  `${44 + Math.random() * 12}%`,
+        top:   `${36 + Math.random() * 10}%`,
+      };
+    });
+  }, []);
+
   return (
     <div style={{
       position:'absolute', inset:0, zIndex: 999,
@@ -2209,7 +2230,7 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
       backdropFilter:'blur(24px) saturate(140%)',
       WebkitBackdropFilter:'blur(24px) saturate(140%)',
       display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-      padding: '0 24px',
+      padding: '0 24px', overflow:'hidden',
     }}>
       {/* curtains */}
       <div style={{
@@ -2222,6 +2243,18 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
         background:'linear-gradient(270deg, rgba(253,166,90,0.12), transparent)',
         animation:'mm-curtain-r .6s cubic-bezier(.4,0,.2,1) both',
       }}/>
+
+      {/* Popcorn + movie-night confetti burst */}
+      <div aria-hidden="true" style={{position:'absolute', inset:0, pointerEvents:'none', overflow:'hidden', zIndex:5}}>
+        {burst.map(p => (
+          <span key={'b'+p.id} style={{
+            position:'absolute', left:p.left, top:p.top, fontSize:p.size, lineHeight:1,
+            '--tx': p.tx, '--ty': p.ty, '--r': p.r,
+            animation:`mm-confetti ${p.dur} cubic-bezier(.15,.6,.3,1) ${p.delay} both`,
+            willChange:'transform, opacity',
+          }}>{p.emoji}</span>
+        ))}
+      </div>
 
       {/* Top tag */}
       <div className="rise" style={{

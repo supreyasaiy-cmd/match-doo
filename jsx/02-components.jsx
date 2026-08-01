@@ -38,6 +38,7 @@ function Icon({ name, size = 20, color = 'currentColor', stroke = 1.6 }) {
     contacts: <><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M4 21v-2a4 4 0 0 1 3-3.87"/><circle cx="12" cy="7" r="4"/></>,
     film:     <><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></>,
     home:     <><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></>,
+    sofa:     <><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><rect x="3" y="11" width="18" height="6.5" rx="2.4"/><path d="M3 14.5h18"/><path d="M6.5 17.5v2.2M17.5 17.5v2.2"/></>,
   };
   return <svg {...p}>{paths[name]}</svg>;
 }
@@ -313,7 +314,7 @@ function ContextSwitcher({ value, onChange, compact=false }) {
 // ─── Tab bar (bottom nav) ───────────────────────────────────────────
 function TabBar({ active, onChange }) {
   const tabs = [
-    { id: 'rooms',   icon: 'users', label: 'Rooms'   },
+    { id: 'rooms',   icon: 'sofa',  label: 'Rooms'   },
     { id: 'swipe',   icon: 'cards', label: 'MatchDoo', center: true },
     { id: 'profile', icon: 'user',  label: 'Profile' },
   ];

@@ -340,25 +340,24 @@ function TabBar({ active, onChange }) {
         }}/>
       );
     }
-    // Side tabs — expanding pill (active shows label, inactive icon-only)
+    // Side tabs — always icon + text; active vs inactive shown by colour
+    const col = on ? ACCENT : 'rgba(244,241,234,0.5)';
     return (
       <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
         appearance:'none', border:0, cursor:'pointer',
         display:'flex', alignItems:'center', justifyContent:'center',
-        gap: on ? 8 : 0, height: 46,
-        padding: on ? '0 18px' : '0 13px', borderRadius: 999,
+        gap: 7, height: 46,
+        padding: '0 16px', borderRadius: 999,
         background: on ? 'rgba(255,109,41,0.16)' : 'transparent',
         overflow:'hidden', flexShrink: 0, maxWidth:'100%',
-        transition: 'background .3s cubic-bezier(.4,0,.2,1), gap .3s cubic-bezier(.4,0,.2,1), padding .3s cubic-bezier(.4,0,.2,1)',
+        transition: 'background .3s cubic-bezier(.4,0,.2,1)',
       }}>
-        <Icon name={t.icon} size={24} stroke={on ? 2.1 : 1.9}
-          color={on ? ACCENT : 'rgba(244,241,234,0.5)'}/>
+        <Icon name={t.icon} size={22} stroke={on ? 2.1 : 1.8} color={col}/>
         <span style={{
-          maxWidth: on ? 90 : 0, opacity: on ? 1 : 0,
-          overflow:'hidden', whiteSpace:'nowrap',
-          transition: 'max-width .32s cubic-bezier(.4,0,.2,1), opacity .24s ease',
-          fontFamily:'var(--sans)', fontWeight: 700, fontSize: 13, letterSpacing:'-0.01em',
-          color: ACCENT,
+          whiteSpace:'nowrap',
+          fontFamily:'var(--sans)', fontWeight: on ? 700 : 600, fontSize: 13, letterSpacing:'-0.01em',
+          color: col,
+          transition: 'color .3s ease',
         }}>{t.label}</span>
       </button>
     );

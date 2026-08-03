@@ -352,7 +352,7 @@ function TabBar({ active, onChange }) {
         overflow:'hidden', flexShrink: 0, maxWidth:'100%',
         transition: 'background .3s cubic-bezier(.4,0,.2,1)',
       }}>
-        <Icon name={t.icon} size={22} stroke={on ? 2.1 : 1.8} color={col}/>
+        <Icon name={t.icon} size={27} stroke={on ? 2.1 : 1.8} color={col}/>
         <span style={{
           whiteSpace:'nowrap',
           fontFamily:'var(--sans)', fontWeight: on ? 700 : 600, fontSize: 13, letterSpacing:'-0.01em',

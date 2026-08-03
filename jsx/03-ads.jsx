@@ -1,6 +1,11 @@
 // ads.jsx — Banner / Swipe / Popup ad rendering + scheduling helpers
 // Reads campaign data from window.ADS (see data.js). Admin CMS lives in Admin.html.
 
+// Master switch for banner-style ad placements (the Rooms sponsored carousel
+// and the top-of-tab / sticky BannerAd). Hidden for now — flip to true to
+// bring the banner inventory back. Swipe/popup ads are unaffected.
+const BANNER_ADS_ENABLED = false;
+
 function adParseDT(dateStr, timeStr) {
   if (!dateStr) return null;
   const d = new Date(`${dateStr}T${timeStr || '00:00'}:00`);
@@ -51,6 +56,7 @@ function AdTag({ style = {} }) {
 
 // ─── Banner ad (top-of-tab or sticky-above-tabbar) ──────────────────
 function BannerAd({ placement, onOpenCTA, style = {} }) {
+  if (!BANNER_ADS_ENABLED) return null;
   const campaign = pickBannerCampaign(placement);
   if (!campaign) return null;
   return (
@@ -193,6 +199,7 @@ function PopupAdInterstitial({ campaign, onClose, onOpenCTA }) {
 // streaming, cinema tickets, and snack delivery. Auto-advances, pauses
 // while pressed, and can be tapped through with the dots.
 function AdCarousel16({ interval = 4200, onOpenCTA, style = {} }) {
+  if (!BANNER_ADS_ENABLED) return null;
   const ADS = [
     { id:'stream', brand:'StreamMax', title:'First month, on us', sub:'4K movies & series, zero ads',
       cta:'Start free', bg:'radial-gradient(120% 120% at 12% 15%, #3a1420, #0c0507)', accent:'#ff5a7a', emoji:'📺' },
@@ -255,6 +262,7 @@ function AdCarousel16({ interval = 4200, onOpenCTA, style = {} }) {
 }
 
 Object.assign(window, {
+  BANNER_ADS_ENABLED,
   isAdLive, pickBannerCampaign, activeSwipeAdCampaigns, activePopupAdCampaign,
   AdTag, BannerAd, AdCarousel16, AdCardContent, PopupAdInterstitial,
 });

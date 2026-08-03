@@ -332,7 +332,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
       {/* Scrollable area — the sponsored ad fades out as the room list scrolls */}
       <div className="phone-scroll" onScroll={e=> setScrollY(e.currentTarget.scrollTop)}
         style={{flex:1, overflowY:'auto', padding:'4px 18px 130px'}}>
-        {!query && (
+        {!query && window.BANNER_ADS_ENABLED && (
           <div style={{
             marginBottom: 14, opacity: adOpacity, willChange:'opacity',
             pointerEvents: adOpacity < 0.15 ? 'none' : 'auto',

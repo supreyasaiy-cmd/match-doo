@@ -747,6 +747,23 @@ function EmptyMatches() {
 function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
   const [context, setContext] = React.useState('friends');
   const [query, setQuery] = React.useState('');
+  const [pending, setPending] = React.useState(() => window.PENDING || []);
+
+  const acceptPending = (p) => {
+    const newFriend = {
+      id: p.id, name: p.name,
+      handle: p.handle || `@${p.name.toLowerCase().replace(/\s+/g,'')}`,
+      rel: 'friends', initials: p.initials || p.name.split(' ').map(n=>n[0]).join('').slice(0,2),
+      tone: p.tone, online: false, lastSeen: 'Just added', mutual: p.mutual || 0,
+    };
+    window.FRIENDS.friends = [newFriend, ...(window.FRIENDS.friends || [])];
+    window.PENDING = (window.PENDING || []).filter(x => x.id !== p.id);
+    setPending(window.PENDING);
+  };
+  const declinePending = (p) => {
+    window.PENDING = (window.PENDING || []).filter(x => x.id !== p.id);
+    setPending(window.PENDING);
+  };
 
   const list = (window.FRIENDS[context] || []).filter(f =>
     !query || f.name.toLowerCase().includes(query.toLowerCase()) || f.handle.includes(query.toLowerCase())
@@ -795,14 +812,14 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
       </div>
 
       {/* Pending requests */}
-      {window.PENDING.length > 0 && context==='friends' && (
+      {pending.length > 0 && context==='friends' && (
         <div style={{padding:'4px 18px 16px'}}>
           <div style={{
             fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase',
             color:'var(--muted)', marginBottom: 10,
           }}>Wants to add you</div>
           <div style={{display:'flex', flexDirection:'column', gap: 8}}>
-            {window.PENDING.map(p=>(
+            {pending.map(p=>(
               <div key={p.id} style={{
                 display:'flex', alignItems:'center', gap: 12,
                 background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
@@ -814,12 +831,12 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
                   <div style={{fontWeight: 600, fontSize: 14, color:'var(--cream)'}}>{p.name}</div>
                   <div style={{fontSize: 12, color:'var(--muted)'}}>{p.mutual} mutual friends</div>
                 </div>
-                <button style={{
+                <button onClick={()=> acceptPending(p)} style={{
                   appearance:'none', border:0, padding:'8px 14px', borderRadius: 999,
                   background:'var(--cream)', color:'var(--ink)',
                   fontFamily:'var(--sans)', fontWeight: 600, fontSize: 12,
                 }}>Accept</button>
-                <button style={{
+                <button onClick={()=> declinePending(p)} style={{
                   appearance:'none', border:0, padding:'8px 10px', borderRadius: 999,
                   background:'transparent', color:'var(--muted)',
                 }}>

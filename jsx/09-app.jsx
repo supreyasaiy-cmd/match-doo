@@ -69,6 +69,9 @@ function App() {
   const [search, setSearch]           = React.useState(null);  // { initialQuery }
   const [matchPopup, setMatchPopup]   = React.useState(null);
   const [roomDetail, setRoomDetail]   = React.useState(null);
+  // When a bottom-sheet inside Room Detail is open, lift the whole overlay
+  // above the nav bar so the sheet's action button isn't hidden behind it.
+  const [roomDetailModal, setRoomDetailModal] = React.useState(false);
   const [calendarOpen, setCalendarOpen] = React.useState(false);
   const [matchesOpen, setMatchesOpen] = React.useState(false);
   const [createRoom, setCreateRoom]   = React.useState(false);
@@ -347,7 +350,7 @@ function App() {
           // Switching tabs must return to that tab's root — dismiss any
           // full-screen overlay or sheet that's currently on top.
           setTab(t);
-          setRoomDetail(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null); setFriendsOpen(false);
+          setRoomDetail(null); setRoomDetailModal(false); setCreateRoom(false); setAddFriend(false); setFriendProfile(null); setFriendsOpen(false);
           setMovieDetail(null); setReadMore(null); setSearch(null);
           setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false); setMatchesOpen(false);
         }}/>
@@ -430,10 +433,11 @@ function App() {
             />
           )}
           {roomDetail && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: roomDetailModal ? 250 : 45}}>
               <RoomDetailScreen
                 room={roomDetail}
-                onBack={()=> setRoomDetail(null)}
+                onBack={()=> { setRoomDetailModal(false); setRoomDetail(null); }}
+                onModal={setRoomDetailModal}
                 onOpenMovie={(m, r)=> setMovieDetail({ movie: m })}
               />
             </div>

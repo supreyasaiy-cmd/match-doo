@@ -435,12 +435,18 @@ function hexA(hex, a) {
 }
 
 // ─── Room Detail (group profile) ────────────────────────────────────
-function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie }) {
+function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal }) {
   const [room, setRoom] = React.useState(initialRoom);
   const [showAddMembers, setShowAddMembers] = React.useState(false);
   const [showShare, setShowShare] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
   const [memberToast, setMemberToast] = React.useState('');
+
+  // Tell the host to lift this overlay above the nav bar while any bottom
+  // sheet is open, so the sheet's action button isn't hidden behind the nav.
+  React.useEffect(() => {
+    onModal?.(showAddMembers || showShare || showSettings);
+  }, [showAddMembers, showShare, showSettings]);
 
   // Movie-night date for this room (persisted)
   const dateKey = `matchdoo.roomdate.${initialRoom.id}`;

@@ -400,8 +400,10 @@ function RoomCard({ room, onClick }) {
           )}
         </div>
         <div style={{fontSize: 12, color:'var(--muted)', marginTop: 3, display:'flex', alignItems:'center', gap: 6}}>
-          <span style={{textTransform:'capitalize'}}>{room.type === 'couple' ? 'Partner' : room.type}</span>
-          <span>·</span>
+          {room.type && (<>
+            <span style={{textTransform:'capitalize'}}>{room.type === 'couple' ? 'Partner' : room.type}</span>
+            <span>·</span>
+          </>)}
           <span>{members.length} {members.length===1?'member':'members'}</span>
           <span>·</span>
           <span>{room.lastActivity}</span>
@@ -545,7 +547,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           color:'var(--cream)', letterSpacing:'-0.01em',
         }}>{room.name}</div>
         <div style={{fontSize: 12.5, color:'var(--muted)', marginTop: 5, textTransform:'capitalize'}}>
-          {room.type === 'couple' ? 'Partner' : room.type} · {members.length} {members.length===1?'member':'members'} · {room.lastActivity}
+          {room.type ? `${room.type === 'couple' ? 'Partner' : room.type} · ` : ''}{members.length} {members.length===1?'member':'members'} · {room.lastActivity}
         </div>
 
         {/* Member avatars in a row, with + Add */}
@@ -816,7 +818,6 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
 function CreateRoomScreen({ onBack, onCreate }) {
   const [name, setName] = React.useState('');
   const [emoji, setEmoji] = React.useState('🎬');
-  const [type, setType] = React.useState('friends');
   const [selected, setSelected] = React.useState(new Set());
   const [services, setServices] = React.useState(new Set(['Netflix','Prime']));
   const [genres, setGenres] = React.useState(new Set());
@@ -843,7 +844,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
     setGenres(next);
   };
 
-  const TONES = { couple:'#FF6D29', family:'#FDA65A', friends:'#E0955E' };
+  const tone = '#FF6D29';  // rooms use the brand tone now that Type is gone
 
   const canCreate = name.trim().length >= 2 && selected.size >= 1
     && services.size >= 1 && genres.size >= 3 && genres.size <= 5;
@@ -862,8 +863,8 @@ function CreateRoomScreen({ onBack, onCreate }) {
         }}>
           <div style={{
             width: 56, height: 56, borderRadius: 16,
-            background: `linear-gradient(135deg, ${hexA(TONES[type], 0.4)}, ${hexA(TONES[type], 0.1)})`,
-            border: `0.5px solid ${hexA(TONES[type], 0.4)}`,
+            background: `linear-gradient(135deg, ${hexA(tone, 0.4)}, ${hexA(tone, 0.1)})`,
+            border: `0.5px solid ${hexA(tone, 0.4)}`,
             display:'flex', alignItems:'center', justifyContent:'center',
             fontSize: 28, flexShrink: 0,
           }}>{emoji}</div>
@@ -896,30 +897,6 @@ function CreateRoomScreen({ onBack, onCreate }) {
           ))}
         </div>
 
-        {/* Type */}
-        <div style={{marginTop: 22}}>
-          <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 10}}>
-            Type
-          </div>
-          <div style={{display:'flex', gap: 6}}>
-            {[
-              { id:'friends', label:'Friends', tone:'#E0955E'},
-              { id:'family',  label:'Family',  tone:'#FDA65A'},
-              { id:'couple',  label:'Partner', tone:'#FF6D29'},
-            ].map(o=>{
-              const on = type === o.id;
-              return (
-                <button key={o.id} onClick={()=>setType(o.id)} style={{
-                  appearance:'none', border:`0.5px solid ${on? o.tone : 'rgba(var(--fg-rgb),0.12)'}`,
-                  background: on ? hexA(o.tone, 0.12) : 'rgba(var(--fg-rgb),0.03)',
-                  color: on ? o.tone : 'var(--cream)',
-                  flex:1, padding:'12px 8px', borderRadius: 12,
-                  fontFamily:'var(--sans)', fontWeight: 600, fontSize: 13,
-                }}>{o.label}</button>
-              );
-            })}
-          </div>
-        </div>
 
         {/* Streaming — the deck is drawn only from these services */}
         <div style={{marginTop: 22}}>
@@ -1043,10 +1020,9 @@ function CreateRoomScreen({ onBack, onCreate }) {
         position:'absolute', left: 16, right: 16, bottom: 26, zIndex: 5,
       }}>
         <PrimaryBtn full disabled={!canCreate} onClick={()=>{
-          const tone = TONES[type];
           const newRoom = {
             id: 'r' + Date.now(), name: name.trim(), emoji,
-            type, members: Array.from(selected), lastActivity: 'Just now',
+            members: Array.from(selected), lastActivity: 'Just now',
             tone, matchCount: 0,
             ownerId: 'me', votingDays,
             filters: { services: Array.from(services), genres: Array.from(genres) },

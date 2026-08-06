@@ -13,21 +13,29 @@ if (!window.ROOMS) {
       id: 'r1', name: 'Sofia & me', emoji: '🌸',
       type: 'couple', members: ['f1'], lastActivity: 'Active now',
       tone: '#FF6D29', matchCount: 5, watchDate: _isoSeed(_seedSat),
+      ownerId: 'me', votingDays: 2,
+      filters: { services: ['Netflix','Prime','Max'], genres: ['Drama','Thriller','Sci-Fi','Romance'] },
     },
     {
       id: 'r2', name: 'Family Night', emoji: '🍿',
       type: 'family', members: ['f2','f3','f4'], lastActivity: '2h ago',
       tone: '#FDA65A', matchCount: 3, watchDate: _isoSeed(_seedFri),
+      ownerId: 'me', votingDays: 3,
+      filters: { services: ['Netflix','Max','Hulu'], genres: ['Drama','Sci-Fi','Adventure','Animation','Crime'] },
     },
     {
       id: 'r3', name: 'Friday Crew', emoji: '🎬',
       type: 'friends', members: ['f5','f6','f7'], lastActivity: 'Yesterday',
       tone: '#E0955E', matchCount: 11,
+      ownerId: 'me', votingDays: 1,
+      filters: { services: ['Netflix','Prime','Apple TV+'], genres: ['Sci-Fi','Comedy','Drama','Action','Thriller'] },
     },
     {
       id: 'r4', name: 'Owen & Mira', emoji: '✨',
       type: 'friends', members: ['f5','f6'], lastActivity: '3d ago',
       tone: '#CC8050', matchCount: 7,
+      ownerId: 'me', votingDays: 2,
+      filters: { services: ['Netflix','Prime'], genres: ['Drama','Sci-Fi','Comedy','Romance'] },
     },
   ];
 }
@@ -435,18 +443,20 @@ function hexA(hex, a) {
 }
 
 // ─── Room Detail (group profile) ────────────────────────────────────
-function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal }) {
+function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onSwipeRoom }) {
   const [room, setRoom] = React.useState(initialRoom);
   const [showAddMembers, setShowAddMembers] = React.useState(false);
   const [showShare, setShowShare] = React.useState(false);
   const [showSettings, setShowSettings] = React.useState(false);
+  const [showGenreVote, setShowGenreVote] = React.useState(false);
+  const [roundTick, setRoundTick] = React.useState(0);
   const [memberToast, setMemberToast] = React.useState('');
 
   // Tell the host to lift this overlay above the nav bar while any bottom
   // sheet is open, so the sheet's action button isn't hidden behind the nav.
   React.useEffect(() => {
-    onModal?.(showAddMembers || showShare || showSettings);
-  }, [showAddMembers, showShare, showSettings]);
+    onModal?.(showAddMembers || showShare || showSettings || showGenreVote);
+  }, [showAddMembers, showShare, showSettings, showGenreVote]);
 
   // Movie-night date for this room (persisted)
   const dateKey = `matchdoo.roomdate.${initialRoom.id}`;
@@ -484,18 +494,18 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal }) {
   const removeMember = (id) => syncRoom({ ...room, members: (room.members || []).filter(x => x !== id) });
   const removeRoom = () => { window.ROOMS = (window.ROOMS || []).filter(r => r.id !== room.id); onBack(); };
 
-  // Compute room mutual likes = intersection across all members + me
-  const myLikes = new Set(['m1','m2','m9','m11']); // hardcoded sample; in app comes from state
-  const allLikes = members.map(m => new Set(window.MATCHES[m.id]?.movieIds || []));
-  const intersect = (window.MOVIES || []).filter(mov =>
-    myLikes.has(mov.id) && allLikes.every(s => s.has(mov.id))
-  );
-  // Things some but not all liked → "almost a match"
-  const partial = (window.MOVIES || []).filter(mov => {
-    if (intersect.find(i=>i.id===mov.id)) return false;
-    const count = (myLikes.has(mov.id)?1:0) + allLikes.filter(s => s.has(mov.id)).length;
-    return count >= 2 && count < members.length + 1;
-  }).slice(0, 8);
+  // ── Round data — the room's voting + swipe session (persisted) ──────
+  const RR = window.RoomRounds;
+  const roundResults = React.useMemo(() => RR.results(room), [room, roundTick]);
+  const activeGenres = React.useMemo(() => RR.activeGenres(room), [room, roundTick]);
+  const myVotes = (RR.ensure(room).myGenreVotes || []);
+  const deckLeft = React.useMemo(() => RR.deck(room).length, [room, roundTick]);
+  const totalVoters = members.length + 1;
+  const groupMatches = roundResults.filter(r => r.everyone);
+  const almost = roundResults.filter(r => !r.everyone && r.votes >= 2);
+  const daysLeft = watchDate
+    ? Math.ceil((new Date(watchDate + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000)
+    : null;
 
   return (
     <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
@@ -573,15 +583,114 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal }) {
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
           borderRadius: 16,
         }}>
-          <Stat label="Group matches" value={intersect.length}/>
+          <Stat label="Group matches" value={groupMatches.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label="Almost there" value={partial.length}/>
+          <Stat label="Almost there" value={almost.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
           <Stat label="Members" value={members.length}/>
         </div>
       </div>
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'0 0 130px'}}>
+        {/* ── This round — the room's voting + swipe session ── */}
+        <div style={{padding:'4px 18px 6px'}}>
+          <div style={{
+            borderRadius: 18, padding:'16px 16px 14px',
+            background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))',
+            border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+          }}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 12}}>
+              <div style={{fontFamily:'var(--serif)', fontSize: 19, color:'var(--cream)'}}>This round</div>
+              <div style={{
+                display:'inline-flex', alignItems:'center', gap: 6,
+                fontSize: 11, fontWeight: 700, padding:'5px 10px', borderRadius: 999,
+                background: hexA(room.tone, 0.14), color: room.tone,
+                border:`0.5px solid ${hexA(room.tone, 0.3)}`,
+              }}>
+                <Icon name="clock" size={12} color={room.tone}/>
+                {daysLeft == null ? `${room.votingDays || 3}-day window`
+                  : daysLeft > 0 ? `${daysLeft} day${daysLeft===1?'':'s'} to vote`
+                  : 'Voting closed'}
+              </div>
+            </div>
+
+            {/* Streaming scope */}
+            {(room.filters?.services || []).length > 0 && (
+              <div style={{display:'flex', alignItems:'center', gap: 6, marginBottom: 12, flexWrap:'wrap'}}>
+                <span style={{fontSize: 11, color:'var(--muted)', marginRight: 2}}>On</span>
+                {(room.filters.services).map(s => (
+                  <span key={s} style={{display:'inline-flex', alignItems:'center', gap:5, fontSize:11.5, fontWeight:600, color:'var(--cream)', padding:'3px 9px 3px 4px', borderRadius:999, background:'rgba(var(--fg-rgb),0.06)', border:'0.5px solid rgba(var(--fg-rgb),0.10)'}}>
+                    <ServiceChip name={s} size={14}/>{s}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Genre vote row */}
+            <button onClick={()=> setShowGenreVote(true)} className="tap-row" style={{
+              appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+              background:'rgba(var(--fg-rgb),0.04)', width:'100%', textAlign:'left',
+              borderRadius: 12, padding:'11px 12px', color:'var(--cream)',
+              display:'flex', alignItems:'center', gap: 10, marginBottom: 12,
+            }}>
+              <IconBadge icon="sparkle" size={34} tone={room.tone}/>
+              <div style={{flex:1, minWidth:0}}>
+                <div style={{fontSize: 13.5, fontWeight: 700}}>Vote genres</div>
+                <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>
+                  {myVotes.length ? `You voted: ${myVotes.join(', ')}` : `Pick from ${(room.filters?.genres||[]).length} genres the owner set`}
+                </div>
+              </div>
+              <Icon name="chev" size={14} color="var(--muted-2)"/>
+            </button>
+
+            {/* Winning genres */}
+            {activeGenres.length > 0 && (
+              <div style={{display:'flex', gap: 6, flexWrap:'wrap', marginBottom: 14}}>
+                {activeGenres.map(g => (
+                  <span key={g} style={{
+                    fontSize: 11.5, fontWeight: 600, padding:'5px 11px', borderRadius: 999,
+                    background:'rgba(255,109,41,0.12)', color:'var(--red)',
+                    border:'0.5px solid rgba(255,109,41,0.28)',
+                  }}>{g}</span>
+                ))}
+              </div>
+            )}
+
+            {/* Swipe CTA */}
+            <button onClick={()=> onSwipeRoom?.(room, ()=> setRoundTick(t=>t+1))} style={{
+              appearance:'none', border:0, width:'100%',
+              background:`linear-gradient(135deg, ${room.tone}, ${hexA(room.tone,0.75)})`,
+              color:'#fff', borderRadius: 14, padding:'14px', cursor:'pointer',
+              fontFamily:'var(--sans)', fontWeight: 700, fontSize: 15,
+              display:'flex', alignItems:'center', justifyContent:'center', gap: 9,
+              boxShadow:`0 10px 24px ${hexA(room.tone,0.4)}`,
+            }}>
+              <Icon name="cards" size={19} color="#fff" stroke={2.2}/>
+              {deckLeft > 0 ? 'Swipe together' : 'Review picks'}
+              <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
+                {deckLeft > 0 ? `· ${deckLeft} left` : '· deck done'}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Ranked round results — the movies everyone wants, most-wanted first */}
+        <Section title="Top picks this round" caption={
+          groupMatches.length
+            ? `Ranked by how many of you want it (${groupMatches.length} everyone-match${groupMatches.length===1?'':'es'})`
+            : 'Swipe together, then the most-wanted films rank here'
+        }>
+          {roundResults.length === 0 ? (
+            <EmptySectionRow text="No likes yet — hit “Swipe together” to start voting with your swipes."/>
+          ) : (
+            <div style={{display:'flex', flexDirection:'column', gap: 8, padding:'0 18px'}}>
+              {roundResults.slice(0, 8).map((r, i) => (
+                <RoundResultRow key={r.movie.id} rank={i+1} result={r} total={totalVoters} tone={room.tone} onTap={()=> onOpenMovie(r.movie, room)}/>
+              ))}
+            </div>
+          )}
+        </Section>
+
         {/* Movie night — pick a day to watch together */}
         <div style={{padding:'4px 18px 6px'}}>
           <div style={{
@@ -643,21 +752,11 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal }) {
           </div>
         </div>
 
-        <Section title="Group matches" caption={`Everyone in the room wants to watch these (${intersect.length})`}>
-          {intersect.length === 0 ? (
-            <EmptySectionRow text="No films yet — keep swiping. When everyone in the room likes the same title, it'll show up here."/>
-          ) : (
-            <PosterRow movies={intersect} onTap={(m)=>onOpenMovie(m, room)}/>
-          )}
-        </Section>
-
-        <Section title="Almost a match" caption="Most of the room wants these — convince the holdouts">
-          {partial.length === 0 ? (
-            <EmptySectionRow text="Once 2+ members agree, picks land here."/>
-          ) : (
-            <PosterRow movies={partial} onTap={(m)=>onOpenMovie(m, room)} dim/>
-          )}
-        </Section>
+        {almost.length > 0 && (
+          <Section title="Almost a match" caption="You want these — waiting on the rest of the room">
+            <PosterRow movies={almost.map(a=>a.movie)} onTap={(m)=>onOpenMovie(m, room)} dim/>
+          </Section>
+        )}
       </div>
 
       {showAddMembers && (
@@ -670,6 +769,14 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal }) {
 
       {showShare && (
         <ShareRoomSheet room={room} onClose={()=> setShowShare(false)}/>
+      )}
+
+      {showGenreVote && (
+        <RoomGenreVoteSheet
+          room={room}
+          onClose={()=> setShowGenreVote(false)}
+          onSaved={()=>{ setShowGenreVote(false); setRoundTick(t=>t+1); }}
+        />
       )}
 
       {showSettings && (
@@ -711,18 +818,35 @@ function CreateRoomScreen({ onBack, onCreate }) {
   const [emoji, setEmoji] = React.useState('🎬');
   const [type, setType] = React.useState('friends');
   const [selected, setSelected] = React.useState(new Set());
+  const [services, setServices] = React.useState(new Set(['Netflix','Prime']));
+  const [genres, setGenres] = React.useState(new Set());
+  const [votingDays, setVotingDays] = React.useState(3);
   const allFriends = ALL_FRIENDS();
   const EMOJI_OPTS = ['🎬','🍿','✨','🌸','🎟️','🎭','🌙','🍕','☕','🔥','🎉','💫'];
+  const SERVICE_OPTS = Object.keys(window.SERVICES || {});
+  const GENRE_OPTS = window.ROOM_GENRES || [];
 
   const toggle = (id) => {
     const next = new Set(selected);
     next.has(id) ? next.delete(id) : next.add(id);
     setSelected(next);
   };
+  const toggleService = (name) => {
+    const next = new Set(services);
+    next.has(name) ? next.delete(name) : next.add(name);
+    setServices(next);
+  };
+  const toggleGenre = (g) => {
+    const next = new Set(genres);
+    if (next.has(g)) next.delete(g);
+    else { if (next.size >= 5) return; next.add(g); }  // cap at 5
+    setGenres(next);
+  };
 
   const TONES = { couple:'#FF6D29', family:'#FDA65A', friends:'#E0955E' };
 
-  const canCreate = name.trim().length >= 2 && selected.size >= 1;
+  const canCreate = name.trim().length >= 2 && selected.size >= 1
+    && services.size >= 1 && genres.size >= 3 && genres.size <= 5;
 
   return (
     <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
@@ -797,6 +921,87 @@ function CreateRoomScreen({ onBack, onCreate }) {
           </div>
         </div>
 
+        {/* Streaming — the deck is drawn only from these services */}
+        <div style={{marginTop: 22}}>
+          <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', padding:'0 4px 10px'}}>
+            <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>
+              Streaming
+            </div>
+            <div style={{fontSize: 11, color:'var(--muted-2)'}}>picks come from these</div>
+          </div>
+          <div style={{display:'flex', gap: 7, flexWrap:'wrap'}}>
+            {SERVICE_OPTS.map(name=>{
+              const on = services.has(name);
+              const c = (window.SERVICES[name] || {}).color || '#888';
+              return (
+                <button key={name} onClick={()=>toggleService(name)} style={{
+                  appearance:'none', cursor:'pointer',
+                  display:'inline-flex', alignItems:'center', gap: 7,
+                  padding:'8px 12px', borderRadius: 999, fontSize: 12.5, fontWeight: 600,
+                  border:`0.5px solid ${on? hexA(c,0.6) : 'rgba(var(--fg-rgb),0.12)'}`,
+                  background: on ? hexA(c, 0.16) : 'rgba(var(--fg-rgb),0.03)',
+                  color: on ? 'var(--cream)' : 'var(--muted)',
+                }}>
+                  <ServiceChip name={name} size={16}/>
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Genre pool — owner nominates 3–5; members vote among these */}
+        <div style={{marginTop: 22}}>
+          <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', padding:'0 4px 10px'}}>
+            <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>
+              Genre pool
+            </div>
+            <div style={{fontSize: 11, color: genres.size>=3 && genres.size<=5 ? 'var(--green)' : 'var(--muted-2)'}}>
+              {genres.size}/5 · pick 3–5
+            </div>
+          </div>
+          <div style={{display:'flex', gap: 7, flexWrap:'wrap'}}>
+            {GENRE_OPTS.map(g=>{
+              const on = genres.has(g);
+              const dim = !on && genres.size >= 5;
+              return (
+                <button key={g} onClick={()=>toggleGenre(g)} style={{
+                  appearance:'none', cursor: dim ? 'default' : 'pointer',
+                  padding:'8px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 600,
+                  border:`0.5px solid ${on? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
+                  background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.03)',
+                  color: on ? 'var(--red)' : (dim ? 'var(--muted-2)' : 'var(--cream)'),
+                  opacity: dim ? 0.5 : 1,
+                }}>{g}</button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Voting window — how long members have to vote + swipe */}
+        <div style={{marginTop: 22}}>
+          <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 10}}>
+            Voting window
+          </div>
+          <div style={{display:'flex', gap: 6}}>
+            {[{d:1,l:'1 day'},{d:3,l:'3 days'},{d:7,l:'1 week'}].map(o=>{
+              const on = votingDays === o.d;
+              return (
+                <button key={o.d} onClick={()=>setVotingDays(o.d)} style={{
+                  appearance:'none', border:`0.5px solid ${on? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
+                  background: on ? 'rgba(255,109,41,0.12)' : 'rgba(var(--fg-rgb),0.03)',
+                  color: on ? 'var(--red)' : 'var(--cream)',
+                  flex:1, padding:'12px 8px', borderRadius: 12,
+                  fontFamily:'var(--sans)', fontWeight: 600, fontSize: 13,
+                }}>{o.l}</button>
+              );
+            })}
+          </div>
+          <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 8, paddingLeft: 4}}>
+            Members have this long to vote genres and swipe before the pick is locked.
+          </div>
+        </div>
+
         {/* Members picker */}
         <div style={{marginTop: 22}}>
           <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', padding:'0 4px 10px'}}>
@@ -843,6 +1048,8 @@ function CreateRoomScreen({ onBack, onCreate }) {
             id: 'r' + Date.now(), name: name.trim(), emoji,
             type, members: Array.from(selected), lastActivity: 'Just now',
             tone, matchCount: 0,
+            ownerId: 'me', votingDays,
+            filters: { services: Array.from(services), genres: Array.from(genres) },
           };
           window.ROOMS = [newRoom, ...window.ROOMS];
           onCreate(newRoom);
@@ -1204,4 +1411,203 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
   );
 }
 
-Object.assign(window, { RoomsScreen, RoomDetailScreen, CreateRoomScreen, ShareRoomSheet, RoomSettingsSheet, RoomsCalendar, CalendarSheet, collectMovieNights, roomCode, roomLink });
+// ─── Ranked round-result row ────────────────────────────────────────
+// One line in "Top picks this round": rank, poster thumb, title, and how
+// many of the room want it (with an "Everyone's in" badge for full matches).
+function RoundResultRow({ rank, result, total, tone, onTap }) {
+  const { movie, likers, votes, everyone } = result;
+  return (
+    <button onClick={onTap} className="tap-row" style={{
+      appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.08)',
+      background: everyone ? hexA(tone, 0.10) : 'rgba(var(--fg-rgb),0.04)',
+      borderRadius: 14, padding:'9px 12px 9px 9px', width:'100%', textAlign:'left',
+      display:'flex', alignItems:'center', gap: 11, color:'var(--cream)',
+    }}>
+      <div style={{
+        width: 22, textAlign:'center', flexShrink:0,
+        fontFamily:'var(--serif)', fontSize: 17,
+        color: rank === 1 ? tone : 'var(--muted)',
+      }}>{rank}</div>
+      <div style={{width: 40, height: 54, borderRadius: 8, overflow:'hidden', flexShrink:0, boxShadow:'0 4px 10px rgba(0,0,0,0.3)'}}>
+        <Poster movie={movie} size="lg" hideTitle/>
+      </div>
+      <div style={{flex:1, minWidth:0}}>
+        <div style={{fontWeight: 700, fontSize: 14, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{movie.title}</div>
+        <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 3, display:'flex', alignItems:'center', gap: 6}}>
+          {everyone
+            ? <span style={{color: tone, fontWeight: 700}}>Everyone's in</span>
+            : <span>{votes} of {total} want this</span>}
+          <span style={{opacity:0.5}}>·</span>
+          <span>{(movie.genres||[]).slice(0,2).join(', ')}</span>
+        </div>
+      </div>
+      {/* vote meter */}
+      <div style={{display:'flex', gap: 3, alignItems:'center', flexShrink:0}}>
+        {Array.from({length: total}).map((_, i) => (
+          <span key={i} style={{
+            width: 6, height: 18, borderRadius: 2,
+            background: i < votes ? tone : 'rgba(var(--fg-rgb),0.12)',
+          }}/>
+        ))}
+      </div>
+    </button>
+  );
+}
+
+// ─── Genre vote sheet — vote among the owner's genre pool ────────────
+function RoomGenreVoteSheet({ room, onClose, onSaved }) {
+  const RR = window.RoomRounds;
+  const pool = (room.filters && room.filters.genres) || [];
+  const [picked, setPicked] = React.useState(() => new Set(RR.ensure(room).myGenreVotes || []));
+  const tally = RR.genreTally(room);
+  const tallyMap = Object.fromEntries(tally.map(t => [t.genre, t.votes]));
+  const memberVotes = RR.memberGenreVotes(room);
+  // Members who voted a genre (excludes me) for the little face-count.
+  const votersFor = (g) => (room.members || []).filter(mid => (memberVotes[mid] || []).includes(g)).length;
+
+  const toggle = (g) => {
+    const next = new Set(picked);
+    next.has(g) ? next.delete(g) : next.add(g);
+    setPicked(next);
+  };
+  const save = () => { RR.setMyGenreVotes(room, Array.from(picked)); onSaved?.(); };
+
+  return (
+    <div style={{
+      position:'absolute', inset:0, zIndex: 200,
+      background:'rgba(var(--bg-rgb),0.7)',
+      backdropFilter:'blur(16px) saturate(140%)', WebkitBackdropFilter:'blur(16px) saturate(140%)',
+      display:'flex', flexDirection:'column', justifyContent:'flex-end',
+    }}>
+      <div className="rise" style={{
+        background:'var(--ink)', borderRadius:'28px 28px 0 0', padding:'14px 0 20px',
+        boxShadow:'0 -20px 40px rgba(0,0,0,0.5)',
+        border:'0.5px solid rgba(var(--fg-rgb),0.10)', borderBottom: 0,
+        display:'flex', flexDirection:'column', maxHeight:'82%',
+      }}>
+        <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 12px'}}/>
+        <div style={{padding:'0 20px 4px', display:'flex', alignItems:'flex-start', justifyContent:'space-between'}}>
+          <div style={{minWidth:0}}>
+            <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight:1.1}}>Vote genres</div>
+            <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>Pick what you're in the mood for — the top votes shape the deck.</div>
+          </div>
+          <button onClick={onClose} style={{
+            appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
+            width: 34, height: 34, borderRadius: 999, color:'var(--muted)', flexShrink:0,
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <Icon name="x" size={16}/>
+          </button>
+        </div>
+
+        <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'14px 20px 8px', display:'flex', flexDirection:'column', gap: 8}}>
+          {pool.map(g => {
+            const on = picked.has(g);
+            const others = votersFor(g);
+            return (
+              <button key={g} onClick={()=> toggle(g)} style={{
+                appearance:'none', border:`0.5px solid ${on? 'var(--red)':'rgba(var(--fg-rgb),0.12)'}`,
+                background: on ? 'rgba(255,109,41,0.12)' : 'rgba(var(--fg-rgb),0.04)',
+                borderRadius: 14, padding:'13px 14px', width:'100%', textAlign:'left',
+                display:'flex', alignItems:'center', gap: 12, color:'var(--cream)',
+              }}>
+                <div style={{
+                  width: 22, height: 22, borderRadius: '50%', flexShrink:0,
+                  border:`1.5px solid ${on? 'var(--red)':'rgba(var(--fg-rgb),0.22)'}`,
+                  background: on ? 'var(--red)' : 'transparent',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                }}>
+                  {on && <Icon name="check" size={12} color="#fff" stroke={3}/>}
+                </div>
+                <div style={{flex:1, fontWeight: 600, fontSize: 15, color: on ? 'var(--red)' : 'var(--cream)'}}>{g}</div>
+                <div style={{fontSize: 11.5, color:'var(--muted)'}}>
+                  {(tallyMap[g] || 0)} vote{(tallyMap[g]||0)===1?'':'s'}
+                  {others > 0 ? ` · ${others} member${others===1?'':'s'}` : ''}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{padding:'10px 20px 6px'}}>
+          <PrimaryBtn full onClick={save}>Save my votes{picked.size ? ` (${picked.size})` : ''}</PrimaryBtn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Room swipe — a room-scoped deck (owner's services ∩ voted genres) ─
+// Separate from the Profile swipe: each room keeps its own likes/passes/seen
+// (persisted). A like on a title a member also likes flashes a group-pick cue.
+function RoomSwipeScreen({ room, onBack, onReadMore }) {
+  const RR = window.RoomRounds;
+  const [tick, setTick] = React.useState(0);
+  const [flash, setFlash] = React.useState(null);
+  const deck = RR.deck(room);
+  const likedCount = (RR.ensure(room).likes || []).length;
+
+  const onSwipe = (dir, movie) => {
+    if (dir === 'up') { onReadMore?.(movie); return; }
+    if (dir === 'right') {
+      RR.like(room, movie.id);
+      const likers = RR.memberLikers(room, movie.id);
+      if (likers.length > 0) {
+        const total = (room.members || []).length + 1;
+        const everyone = likers.length + 1 >= total;
+        setFlash({ movie, n: likers.length + 1, total, everyone });
+        setTimeout(()=> setFlash(null), 1600);
+      }
+    } else if (dir === 'left') RR.pass(room, movie.id);
+    else if (dir === 'down') RR.seen(room, movie.id);
+    setTick(t => t + 1);
+  };
+
+  return (
+    <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
+      <TopBar title={room.name} subtitle={`Room swipe · ${likedCount} liked`} onBack={onBack} right={
+        <button onClick={()=>{ RR.undo(room); setTick(t=>t+1); }} aria-label="Undo" style={{
+          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
+          width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+        }}>
+          <Icon name="undo" size={16}/>
+        </button>
+      }/>
+
+      {/* winning-genre + service context strip */}
+      <div style={{padding:'0 18px 8px', display:'flex', gap: 6, flexWrap:'wrap', alignItems:'center'}}>
+        {RR.activeGenres(room).slice(0,4).map(g => (
+          <span key={g} style={{fontSize: 11, fontWeight: 600, padding:'4px 10px', borderRadius: 999, background:'rgba(255,109,41,0.12)', color:'var(--red)', border:'0.5px solid rgba(255,109,41,0.26)'}}>{g}</span>
+        ))}
+      </div>
+
+      <div style={{flex:1, position:'relative'}}>
+        <SwipeDeck
+          key={tick}
+          movies={deck}
+          onSwipe={onSwipe}
+          onTap={(m)=> onReadMore?.(m)}
+        />
+
+        {/* group-pick flash */}
+        {flash && (
+          <div className="pop" style={{
+            position:'absolute', left:'50%', top: 20, transform:'translateX(-50%)', zIndex: 300,
+            display:'inline-flex', alignItems:'center', gap: 8,
+            padding:'10px 16px', borderRadius: 999, whiteSpace:'nowrap',
+            background: flash.everyone ? room.tone : 'rgba(var(--bg-rgb),0.92)',
+            color: flash.everyone ? '#fff' : 'var(--cream)',
+            border:`0.5px solid ${flash.everyone ? room.tone : hexA(room.tone, 0.4)}`,
+            boxShadow:'0 12px 30px rgba(0,0,0,0.45)', fontSize: 13, fontWeight: 700,
+          }}>
+            <span style={{fontSize: 15}}>{flash.everyone ? '🎉' : '🍿'}</span>
+            {flash.everyone ? "Everyone's in on this!" : `Group pick · ${flash.n} of ${flash.total} want it`}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { RoomsScreen, RoomDetailScreen, CreateRoomScreen, ShareRoomSheet, RoomSettingsSheet, RoomsCalendar, CalendarSheet, collectMovieNights, roomCode, roomLink, RoundResultRow, RoomGenreVoteSheet, RoomSwipeScreen });

@@ -115,6 +115,133 @@ window.PENDING = [
   { id: 'p2', name: 'Ben Ortiz',   handle: '@bortiz',  initials: 'BO', tone: '#86A6DD', mutual: 1 },
 ];
 
+// Candidate genres an owner can nominate for a room round.
+window.ROOM_GENRES = ['Action','Adventure','Animation','Comedy','Crime','Drama','Family','Fantasy','Horror','Music','Mystery','Romance','Sci-Fi','Thriller'];
+
+// ─── Room "movie-night rounds" — per-room voting + swipe session ─────
+// A room runs rounds. At Create Room the owner picks the streaming services
+// to draw from, a pool of 3–5 candidate genres, and a voting window (days).
+// Members vote genres, then everyone swipes a deck filtered to the winning
+// genres on those services. Titles liked by everyone rank up as the round's
+// top pick. State is persisted per-room in localStorage so a multi-day
+// voting window survives reloads and return visits. Other members are
+// simulated deterministically from the seeded MATCHES + a hashed vote gen.
+window.RoomRounds = {
+  _key: (id) => `matchdoo.round.${id}`,
+  _hash(str) {
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return h >>> 0;
+  },
+  load(id) {
+    try { const raw = localStorage.getItem(this._key(id)); return raw ? JSON.parse(raw) : null; } catch { return null; }
+  },
+  save(id, state) {
+    try { localStorage.setItem(this._key(id), JSON.stringify(state)); } catch {}
+    return state;
+  },
+  // My genre votes + swipes live here; members are simulated on the fly.
+  ensure(room) {
+    let s = this.load(room.id);
+    if (!s) { s = { myGenreVotes: [], likes: [], passes: [], seen: [], history: [] }; this.save(room.id, s); }
+    return s;
+  },
+  // Simulated member genre votes — each member picks 1–2 from the owner's pool.
+  memberGenreVotes(room) {
+    const pool = (room.filters && room.filters.genres) || [];
+    const out = {};
+    (room.members || []).forEach(mid => {
+      if (!pool.length) { out[mid] = []; return; }
+      const h = this._hash(mid + '|' + pool.join(','));
+      const n = 1 + (h % 2);
+      const picks = [];
+      for (let i = 0; i < n; i++) picks.push(pool[(h >> (i * 3)) % pool.length]);
+      out[mid] = [...new Set(picks)];
+    });
+    return out;
+  },
+  // Tally votes (members + me) → each pool genre with its vote count, ranked.
+  genreTally(room) {
+    const pool = (room.filters && room.filters.genres) || [];
+    const s = this.ensure(room);
+    const votes = this.memberGenreVotes(room);
+    const count = {};
+    pool.forEach(g => count[g] = 0);
+    Object.values(votes).forEach(list => list.forEach(g => { if (g in count) count[g]++; }));
+    (s.myGenreVotes || []).forEach(g => { if (g in count) count[g]++; });
+    return pool.map(g => ({ genre: g, votes: count[g] })).sort((a, b) => b.votes - a.votes);
+  },
+  // Winning genres = the top-voted from the pool (whole pool if nobody voted).
+  activeGenres(room) {
+    const tally = this.genreTally(room);
+    if (!tally.length) return [];
+    if (!tally.some(t => t.votes > 0)) return tally.map(t => t.genre);
+    const max = tally[0].votes;
+    return tally.filter(t => t.votes >= max).map(t => t.genre);
+  },
+  setMyGenreVotes(room, genres) {
+    const s = this.ensure(room);
+    s.myGenreVotes = genres;
+    return this.save(room.id, s);
+  },
+  // Candidate list = movies on the owner's services ∩ the winning genres.
+  candidates(room) {
+    const movies = window.MOVIES || [];
+    const svc = (room.filters && room.filters.services) || [];
+    const genres = this.activeGenres(room);
+    return movies.filter(m => {
+      const okSvc = !svc.length || (m.where || []).some(w => svc.includes(w));
+      const okGenre = !genres.length || (m.genres || []).some(g => genres.includes(g));
+      return okSvc && okGenre;
+    });
+  },
+  // Deck = candidates minus anything I've already swiped in this room.
+  deck(room) {
+    const s = this.ensure(room);
+    const done = new Set([...(s.likes || []), ...(s.passes || []), ...(s.seen || [])]);
+    return this.candidates(room).filter(m => !done.has(m.id));
+  },
+  _add(room, bucket, movieId, dir) {
+    const s = this.ensure(room);
+    if (!s[bucket].includes(movieId)) s[bucket].push(movieId);
+    s.history = s.history || [];
+    s.history.push({ id: movieId, dir });
+    return this.save(room.id, s);
+  },
+  like(room, id) { return this._add(room, 'likes', id, 'right'); },
+  pass(room, id) { return this._add(room, 'passes', id, 'left'); },
+  seen(room, id) { return this._add(room, 'seen', id, 'down'); },
+  undo(room) {
+    const s = this.ensure(room);
+    const last = (s.history || []).pop();
+    if (!last) return this.save(room.id, s);
+    const bucket = last.dir === 'right' ? 'likes' : last.dir === 'left' ? 'passes' : 'seen';
+    s[bucket] = (s[bucket] || []).filter(x => x !== last.id);
+    return this.save(room.id, s);
+  },
+  // Which members like a given movie (from pre-seeded MATCHES).
+  memberLikers(room, movieId) {
+    return (room.members || []).filter(mid => (window.MATCHES[mid]?.movieIds || []).includes(movieId));
+  },
+  // Round results — movies I liked, ranked by how many members also want them.
+  results(room) {
+    const s = this.ensure(room);
+    const byId = Object.fromEntries((window.MOVIES || []).map(m => [m.id, m]));
+    const total = (room.members || []).length + 1; // members + me
+    return (s.likes || [])
+      .map(id => {
+        const movie = byId[id];
+        if (!movie) return null;
+        const likers = this.memberLikers(room, id);
+        const votes = likers.length + 1;
+        return { movie, likers, votes, everyone: total > 1 && votes >= total };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.votes - a.votes || a.movie.title.localeCompare(b.movie.title));
+  },
+  reset(room) { return this.save(room.id, { myGenreVotes: [], likes: [], passes: [], seen: [], history: [] }); },
+};
+
 // Streaming service swatches
 window.SERVICES = {
   'Netflix':   { color: '#e50914', short: 'N'  },

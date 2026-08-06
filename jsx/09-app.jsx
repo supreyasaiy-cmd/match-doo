@@ -72,6 +72,8 @@ function App() {
   // When a bottom-sheet inside Room Detail is open, lift the whole overlay
   // above the nav bar so the sheet's action button isn't hidden behind it.
   const [roomDetailModal, setRoomDetailModal] = React.useState(false);
+  // Room-scoped swipe session — { room, onDone } — rendered as a full modal.
+  const [roomSwipe, setRoomSwipe]     = React.useState(null);
   const [calendarOpen, setCalendarOpen] = React.useState(false);
   const [matchesOpen, setMatchesOpen] = React.useState(false);
   const [createRoom, setCreateRoom]   = React.useState(false);
@@ -350,7 +352,7 @@ function App() {
           // Switching tabs must return to that tab's root — dismiss any
           // full-screen overlay or sheet that's currently on top.
           setTab(t);
-          setRoomDetail(null); setRoomDetailModal(false); setCreateRoom(false); setAddFriend(false); setFriendProfile(null); setFriendsOpen(false);
+          setRoomDetail(null); setRoomDetailModal(false); setRoomSwipe(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null); setFriendsOpen(false);
           setMovieDetail(null); setReadMore(null); setSearch(null);
           setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false); setMatchesOpen(false);
         }}/>
@@ -438,7 +440,17 @@ function App() {
                 room={roomDetail}
                 onBack={()=> { setRoomDetailModal(false); setRoomDetail(null); }}
                 onModal={setRoomDetailModal}
+                onSwipeRoom={(room, onDone)=> setRoomSwipe({ room, onDone })}
                 onOpenMovie={(m, r)=> setMovieDetail({ movie: m })}
+              />
+            </div>
+          )}
+          {roomSwipe && (
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 240}}>
+              <RoomSwipeScreen
+                room={roomSwipe.room}
+                onReadMore={(m)=> setReadMore({ movie: m })}
+                onBack={()=> { roomSwipe.onDone?.(); setRoomSwipe(null); }}
               />
             </div>
           )}

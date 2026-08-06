@@ -999,7 +999,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
                   <Avatar person={f} size={42}/>
                   <div style={{flex:1, minWidth:0}}>
                     <div style={{fontWeight: 600, fontSize: 14.5}}>{f.name}</div>
-                    <div style={{fontSize: 12, color:'var(--muted)', textTransform:'capitalize'}}>{f.rel}</div>
+                    <div style={{fontSize: 12, color:'var(--muted)'}}>{f.handle}</div>
                   </div>
                   <div style={{
                     width: 22, height: 22, borderRadius: '50%',

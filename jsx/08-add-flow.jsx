@@ -1,76 +1,4 @@
-// add-flow.jsx — Category picker for adding friends + Add room members sheet
-
-// ─── Category picker bottom-sheet ───────────────────────────────────
-function CategoryPickerSheet({ person, onClose, onPick }) {
-  if (!person) return null;
-  const OPTIONS = [
-    { id:'friends', label:'Friend',  desc:"Casual movie nights, weekend hangs.", tone:'#E0955E', icon:'users' },
-    { id:'family',  label:'Family',  desc:"Parents, siblings, cousins.",          tone:'#FDA65A', icon:'home' },
-    { id:'couple',  label:'Partner', desc:"Just the two of you.",                 tone:'#FF6D29', icon:'heart' },
-  ];
-
-  return (
-    <div onClick={onClose} style={{
-      position:'absolute', inset:0, zIndex: 200,
-      background:'rgba(var(--bg-rgb),0.7)',
-      backdropFilter:'blur(16px) saturate(140%)',
-      WebkitBackdropFilter:'blur(16px) saturate(140%)',
-      display:'flex', flexDirection:'column', justifyContent:'flex-end',
-    }}>
-      <div onClick={e=>e.stopPropagation()} className="rise" style={{
-        background:'var(--ink)',
-        borderRadius:'28px 28px 0 0',
-        padding:'14px 20px 26px',
-        boxShadow:'0 -20px 40px rgba(0,0,0,0.5)',
-        border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-        borderBottom: 0,
-      }}>
-        <div style={{
-          width: 42, height: 4, borderRadius: 2,
-          background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px',
-        }}/>
-
-        <div style={{display:'flex', alignItems:'center', gap: 12, marginBottom: 6}}>
-          <Avatar person={person} size={48}/>
-          <div style={{flex:1, minWidth:0}}>
-            <div style={{fontFamily:'var(--serif)', fontSize: 22, lineHeight: 1.1, color:'var(--cream)'}}>{person.name}</div>
-            <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>{person.handle || person.phone}</div>
-          </div>
-        </div>
-
-        <div style={{
-          fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase',
-          color:'var(--muted)', margin:'18px 0 10px',
-        }}>Add as…</div>
-
-        <div style={{display:'flex', flexDirection:'column', gap: 8}}>
-          {OPTIONS.map(o => (
-            <button key={o.id} onClick={()=>onPick(o.id)} style={{
-              appearance:'none', border:`0.5px solid ${hexA(o.tone, 0.35)}`,
-              background: hexA(o.tone, 0.10),
-              padding:'14px 14px', borderRadius: 14, textAlign:'left',
-              display:'flex', alignItems:'center', gap: 12,
-              color:'var(--cream)',
-            }}>
-              <IconBadge icon={o.icon} size={38} tone={o.tone}/>
-              <div style={{flex:1, minWidth: 0}}>
-                <div style={{fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15, color: o.tone}}>{o.label}</div>
-                <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>{o.desc}</div>
-              </div>
-              <Icon name="chev" size={14} color="var(--muted-2)"/>
-            </button>
-          ))}
-        </div>
-
-        <button onClick={onClose} style={{
-          appearance:'none', border:0, background:'transparent',
-          marginTop: 14, width:'100%', padding:'10px',
-          color:'var(--muted)', fontFamily:'var(--sans)', fontSize: 14,
-        }}>Cancel</button>
-      </div>
-    </div>
-  );
-}
+// add-flow.jsx — Add room members sheet
 
 // helper
 function hexA(hex, a) {
@@ -176,7 +104,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
                 <Avatar person={f} size={42}/>
                 <div style={{flex:1, minWidth:0}}>
                   <div style={{fontWeight: 600, fontSize: 14.5}}>{f.name}</div>
-                  <div style={{fontSize: 12, color:'var(--muted)', textTransform:'capitalize'}}>{f.rel}</div>
+                  <div style={{fontSize: 12, color:'var(--muted)'}}>{f.handle}</div>
                 </div>
                 <div style={{
                   width: 22, height: 22, borderRadius: '50%',
@@ -210,4 +138,4 @@ function ALL_FRIENDS_LIST_HELPER() {
   ];
 }
 
-Object.assign(window, { CategoryPickerSheet, AddRoomMembersSheet });
+Object.assign(window, { AddRoomMembersSheet });

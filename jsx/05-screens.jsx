@@ -642,10 +642,7 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
 }
 
 function FriendMatchSection({ friend, matched, watched, onOpen, onOpenMovie }) {
-  // Subtle dot color per relationship
-  const relTone = friend.rel === 'couple' ? 'var(--red)'
-                : friend.rel === 'family' ? 'var(--gold)'
-                : 'var(--cream)';
+  const relTone = friend.tone || 'var(--cream)';
   return (
     <div style={{padding:'18px 18px 8px'}}>
       <button onClick={onOpen} style={{
@@ -671,10 +668,8 @@ function FriendMatchSection({ friend, matched, watched, onOpen, onOpenMovie }) {
               background:'rgba(var(--fg-rgb),0.07)',
             }}>{matched.length} match{matched.length===1?'':'es'}</span>
           </div>
-          <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2,
-            textTransform:'capitalize',
-          }}>
-            {friend.rel === 'couple' ? 'Partner' : friend.rel === 'family' ? 'Family' : 'Friend'} · {friend.lastSeen}
+          <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>
+            {friend.lastSeen}
           </div>
         </div>
         <Icon name="chev" size={16} color="var(--muted-2)"/>
@@ -745,7 +740,6 @@ function EmptyMatches() {
 
 // ─── Friends ────────────────────────────────────────────────────────
 function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
-  const [context, setContext] = React.useState('friends');
   const [query, setQuery] = React.useState('');
   const [pending, setPending] = React.useState(() => window.PENDING || []);
 
@@ -765,7 +759,8 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
     setPending(window.PENDING);
   };
 
-  const list = (window.FRIENDS[context] || []).filter(f =>
+  const ALL = [...(window.FRIENDS.couple || []), ...(window.FRIENDS.family || []), ...(window.FRIENDS.friends || [])];
+  const list = ALL.filter(f =>
     !query || f.name.toLowerCase().includes(query.toLowerCase()) || f.handle.includes(query.toLowerCase())
   );
 
@@ -786,10 +781,6 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
           </button>
         }
       />
-
-      <div style={{padding:'4px 18px 12px'}}>
-        <ContextSwitcher value={context} onChange={setContext}/>
-      </div>
 
       <div style={{padding:'0 18px 12px'}}>
         <div style={{
@@ -812,7 +803,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
       </div>
 
       {/* Pending requests */}
-      {pending.length > 0 && context==='friends' && (
+      {pending.length > 0 && (
         <div style={{padding:'4px 18px 16px'}}>
           <div style={{
             fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase',
@@ -895,23 +886,17 @@ function FriendRow({ friend, onClick }) {
 // ─── Add Friend modal ───────────────────────────────────────────────
 function AddFriendScreen({ onBack }) {
   const [method, setMethod] = React.useState('search');
-  const [pickFor, setPickFor] = React.useState(null);   // person being added
   const [addedToast, setAddedToast] = React.useState('');
 
-  const handleAdd = (person, category) => {
-    // Push into the right relationship bucket
-    const tones = { friends:'#E0955E', family:'#FDA65A', couple:'#FF6D29' };
+  const handleAdd = (person) => {
     const id = 'fnew_' + Date.now();
     const newFriend = {
       id, name: person.name, handle: person.handle || `@${person.name.toLowerCase().replace(/\s+/g,'')}`,
-      rel: category, initials: person.initials || person.name.split(' ').map(n=>n[0]).join('').slice(0,2),
-      tone: person.tone || tones[category], online: false, lastSeen: 'Just added', mutual: person.mutual || 0,
+      initials: person.initials || person.name.split(' ').map(n=>n[0]).join('').slice(0,2),
+      tone: person.tone || '#E0955E', online: false, lastSeen: 'Just added', mutual: person.mutual || 0,
     };
-    if (!window.FRIENDS[category]) window.FRIENDS[category] = [];
-    window.FRIENDS[category] = [newFriend, ...window.FRIENDS[category]];
-    setPickFor(null);
-    const labels = { friends:'Friend', family:'Family', couple:'Partner' };
-    setAddedToast(`Added ${person.name} as ${labels[category]}`);
+    window.FRIENDS.friends = [newFriend, ...(window.FRIENDS.friends || [])];
+    setAddedToast(`Added ${person.name}`);
     setTimeout(()=> setAddedToast(''), 2000);
   };
 
@@ -944,18 +929,10 @@ function AddFriendScreen({ onBack }) {
       </div>
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'4px 18px 120px'}}>
-        {method === 'search' && <SearchUsername onAdd={(p)=> setPickFor(p)}/>}
-        {method === 'contacts' && <ContactsList onAdd={(p)=> setPickFor(p)}/>}
+        {method === 'search' && <SearchUsername onAdd={handleAdd}/>}
+        {method === 'contacts' && <ContactsList onAdd={handleAdd}/>}
         {method === 'qr' && <QRPanel/>}
       </div>
-
-      {pickFor && (
-        <CategoryPickerSheet
-          person={pickFor}
-          onClose={()=> setPickFor(null)}
-          onPick={(cat)=> handleAdd(pickFor, cat)}
-        />
-      )}
 
       {addedToast && (
         <div className="rise" style={{
@@ -1134,7 +1111,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
           color:'var(--cream)', letterSpacing:'-0.01em',
         }}>{friend.name}</div>
         <div style={{fontSize: 13, color:'var(--muted)', marginTop: 4}}>
-          {friend.handle} · {friend.rel === 'couple' ? 'Partner' : friend.rel === 'family' ? 'Family' : 'Friend'}
+          {friend.handle}
         </div>
 
         <div style={{

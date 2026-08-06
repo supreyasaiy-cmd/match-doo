@@ -282,35 +282,6 @@ function ServiceChip({ name, size = 22 }) {
   );
 }
 
-// ─── Context switcher (Friends / Family / Couple) ───────────────────
-function ContextSwitcher({ value, onChange, compact=false }) {
-  const opts = [
-    { id: 'friends', label: 'Friends'},
-    { id: 'family',  label: 'Family' },
-    { id: 'couple',  label: 'Couple' },
-  ];
-  return (
-    <div style={{
-      display:'inline-flex', padding: 3,
-      background:'rgba(var(--fg-rgb),0.07)', borderRadius: 999,
-      border:'0.5px solid rgba(var(--fg-rgb),0.1)',
-    }}>
-      {opts.map(o=>{
-        const on = o.id === value;
-        return (
-          <button key={o.id} onClick={()=>onChange(o.id)} style={{
-            appearance:'none', border:0, background: on ? 'var(--cream)' : 'transparent',
-            color: on ? 'var(--ink)' : 'var(--muted)',
-            fontFamily:'var(--sans)', fontWeight: 600, fontSize: compact? 12:13,
-            padding: compact? '5px 12px' : '7px 14px', borderRadius: 999,
-            letterSpacing:'-0.01em', transition:'all .18s ease',
-          }}>{o.label}</button>
-        );
-      })}
-    </div>
-  );
-}
-
 // ─── Tab bar (bottom nav) ───────────────────────────────────────────
 function TabBar({ active, onChange }) {
   const tabs = [
@@ -451,4 +422,4 @@ function PrimaryBtn({ children, onClick, full=false, secondary=false, disabled=f
   );
 }
 
-Object.assign(window, { Icon, IconBadge, Poster, PosterArt, Avatar, ServiceChip, ContextSwitcher, TabBar, TopBar, PrimaryBtn });
+Object.assign(window, { Icon, IconBadge, Poster, PosterArt, Avatar, ServiceChip, TabBar, TopBar, PrimaryBtn });

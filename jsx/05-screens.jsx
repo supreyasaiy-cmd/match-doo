@@ -1080,10 +1080,21 @@ function QRArt() {
       {corner(0,0)}
       {corner(140,0)}
       {corner(0,140)}
-      {/* logo */}
+      {/* logo — popcorn (movie-night cue) */}
       <g transform="translate(80,80)">
         <rect width="24" height="24" rx="6" fill="#FF6D29"/>
-        <path d="M12 18 L7 13 a3 3 0 1 1 5 -3 a3 3 0 1 1 5 3 z" fill="#fff"/>
+        {/* popped kernels spilling over the rim */}
+        <g fill="#fff">
+          <circle cx="8.8" cy="9.4" r="2.2"/>
+          <circle cx="12" cy="7.1" r="2.6"/>
+          <circle cx="15.2" cy="9.4" r="2.2"/>
+          <circle cx="12" cy="10.2" r="2.3"/>
+        </g>
+        {/* box */}
+        <path d="M7.4 11.2 H16.6 L15.5 19.6 A1 1 0 0 1 14.5 20.5 H9.5 A1 1 0 0 1 8.5 19.6 Z" fill="#fff"/>
+        {/* box stripes */}
+        <rect x="10.7" y="11.2" width="0.9" height="9.3" fill="#FF6D29"/>
+        <rect x="13.4" y="11.2" width="0.9" height="9.3" fill="#FF6D29"/>
       </g>
     </svg>
   );

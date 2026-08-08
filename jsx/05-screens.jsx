@@ -1318,7 +1318,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
         </SettingsGroup>
 
         <SettingsGroup title="App">
-          <SettingsRow icon="settings" label="Customize design" detail={theme === 'light' ? 'Light' : 'Dark'} onClick={()=> setShowTheme(true)}/>
+          <SettingsRow icon="settings" label="Themes" detail={theme === 'light' ? 'Light' : 'Dark'} onClick={()=> setShowTheme(true)}/>
           <SettingsRow icon="x" label="Sign out" onClick={onSignOut} danger/>
         </SettingsGroup>
 

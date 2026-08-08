@@ -652,6 +652,17 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
 
   const totalMatched = new Set(matches.flatMap(m => m.matched.map(x => x.id))).size;
 
+  const [genre, setGenre] = React.useState(null);  // null = all
+  const genreOptions = React.useMemo(() => {
+    const count = {};
+    matches.forEach(m => [...m.matched, ...m.watched].forEach(mov => (mov.genres || []).forEach(g => { count[g] = (count[g] || 0) + 1; })));
+    return Object.keys(count).sort((a, b) => count[b] - count[a] || a.localeCompare(b));
+  }, [matches.length]);
+  const byGenre = (arr) => genre ? arr.filter(m => (m.genres || []).includes(genre)) : arr;
+  const shown = matches
+    .map(m => ({ ...m, matched: byGenre(m.matched), watched: byGenre(m.watched) }))
+    .filter(m => m.matched.length || m.watched.length);
+
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar
@@ -661,10 +672,27 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
         subtitle={totalMatched ? `${totalMatched} films on your shared queue` : 'Films you both want to watch'}
       />
 
+      {genreOptions.length > 0 && (
+        <div className="phone-scroll" style={{flexShrink:0, display:'flex', gap: 7, overflowX:'auto', padding:'2px 18px 10px', WebkitOverflowScrolling:'touch'}}>
+          {[null, ...genreOptions].map(g => {
+            const on = genre === g;
+            return (
+              <button key={g || 'all'} onClick={()=> setGenre(g)} style={{
+                appearance:'none', flexShrink:0, cursor:'pointer',
+                padding:'7px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 600, whiteSpace:'nowrap',
+                border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
+                background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
+                color: on ? 'var(--red)' : 'var(--cream)',
+              }}>{g || 'All'}</button>
+            );
+          })}
+        </div>
+      )}
+
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', paddingBottom: 120}}>
-        {matches.length === 0 ? (
+        {shown.length === 0 ? (
           <EmptyMatches/>
-        ) : matches.map(({friend, matched, watched})=>(
+        ) : shown.map(({friend, matched, watched})=>(
           <FriendMatchSection
             key={friend.id}
             friend={friend}
@@ -1684,6 +1712,15 @@ function ProfileStatCard({ label, value, accent, onClick }) {
 
 // ─── Movie list (poster grid) — opened from the profile stat cards ──
 function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }) {
+  const [genre, setGenre] = React.useState(null);  // null = all
+  // Genres present in this list, ranked by frequency then alphabetically.
+  const genreOptions = React.useMemo(() => {
+    const count = {};
+    movies.forEach(m => (m.genres || []).forEach(g => { count[g] = (count[g] || 0) + 1; }));
+    return Object.keys(count).sort((a, b) => count[b] - count[a] || a.localeCompare(b));
+  }, [movies]);
+  const shown = genre ? movies.filter(m => (m.genres || []).includes(genre)) : movies;
+
   return (
     <div className="fade-in" style={{
       position:'absolute', inset: 0, zIndex: 120,
@@ -1691,11 +1728,29 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
     }}>
       <TopBar title={title} onBack={onClose} right={
         <div style={{fontSize: 12.5, color:'var(--muted)', paddingRight: 4}}>
-          {movies.length} {movies.length === 1 ? 'title' : 'titles'}
+          {shown.length} {shown.length === 1 ? 'title' : 'titles'}
         </div>
       }/>
 
-      {movies.length === 0 ? (
+      {/* Genre filter */}
+      {genreOptions.length > 0 && (
+        <div className="phone-scroll" style={{flexShrink:0, display:'flex', gap: 7, overflowX:'auto', padding:'2px 18px 12px', WebkitOverflowScrolling:'touch'}}>
+          {[null, ...genreOptions].map(g => {
+            const on = genre === g;
+            return (
+              <button key={g || 'all'} onClick={()=> setGenre(g)} style={{
+                appearance:'none', flexShrink:0, cursor:'pointer',
+                padding:'7px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 600, whiteSpace:'nowrap',
+                border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
+                background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
+                color: on ? 'var(--red)' : 'var(--cream)',
+              }}>{g || 'All'}</button>
+            );
+          })}
+        </div>
+      )}
+
+      {shown.length === 0 ? (
         <div style={{
           flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
           gap: 12, color:'var(--muted)', textAlign:'center', padding:'0 40px',
@@ -1708,7 +1763,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
           <div style={{
             display:'grid', gridTemplateColumns:'repeat(3, minmax(0, 1fr))', gap: 12,
           }}>
-            {movies.map(m => (
+            {shown.map(m => (
               <button key={m.id} onClick={()=> onOpenMovie?.(m)} style={{
                 appearance:'none', border:0, background:'transparent', padding:0,
                 textAlign:'left', cursor:'pointer', color:'var(--cream)',

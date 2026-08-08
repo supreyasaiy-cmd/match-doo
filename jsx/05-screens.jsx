@@ -1310,7 +1310,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
   const [listView, setListView] = React.useState(null);
   const [showTheme, setShowTheme] = React.useState(false);
   const [profileName, setProfileName] = React.useState(user.name || 'Alex Carter');
-  const [handle, setHandle] = React.useState('alex');
+  const [handle, setHandle] = React.useState(user.username || 'alex');
+  const userId = user.userId || 'MD-XXXXXXXX';  // permanent unique key (read-only)
   const [avatarSrc, setAvatarSrc] = React.useState((window.AVATAR_POOL || [])[0] || null);
   const [customPics, setCustomPics] = React.useState([]); // user-added photos (data URLs)
   const [showProfileEdit, setShowProfileEdit] = React.useState(false);
@@ -1342,6 +1343,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
               lineHeight: 1.05, letterSpacing:'-0.01em',
             }}>{profileName || 'Alex Carter'}</div>
             <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>@{handle} · joined May 2026</div>
+            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 3, fontFamily:'var(--sans)', letterSpacing:'0.02em'}}>ID {userId}</div>
           </div>
           <div style={{
             width: 34, height: 34, borderRadius: 999, flexShrink: 0,
@@ -1429,7 +1431,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
 
       {showProfileEdit && (
         <ProfileEditSheet
-          name={profileName} handle={handle}
+          name={profileName} handle={handle} userId={userId}
           avatarSrc={avatarSrc}
           pool={window.AVATAR_POOL || []}
           customPics={customPics}
@@ -1895,7 +1897,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
 }
 
 // ─── Edit profile (name + handle) ──────────────────────────────────
-function ProfileEditSheet({ name, handle, avatarSrc, pool = [], customPics = [], onAddPic, onSave, onClose }) {
+function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], customPics = [], onAddPic, onSave, onClose }) {
   const [n, setN] = React.useState(name);
   const [h, setH] = React.useState(handle);
   const [src, setSrc] = React.useState(avatarSrc || pool[0] || null);
@@ -2005,9 +2007,31 @@ function ProfileEditSheet({ name, handle, avatarSrc, pool = [], customPics = [],
           </div>
         </div>
 
-        <div style={{display:'flex', flexDirection:'column', gap: 16, marginBottom: 20}}>
+        <div style={{display:'flex', flexDirection:'column', gap: 16, marginBottom: 8}}>
           {field('Name', n, setN, null, true)}
-          {field('Username', h, setH, '@', false)}
+          <div>
+            {field('Username', h, setH, '@', false)}
+            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 6, paddingLeft: 2}}>Your unique @username — people can find you by it.</div>
+          </div>
+          {/* User ID — permanent unique account key, not editable */}
+          <div>
+            <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 8px 2px'}}>User ID</div>
+            <div style={{
+              display:'flex', alignItems:'center', gap: 8,
+              background:'rgba(var(--fg-rgb),0.04)', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+              borderRadius: 14, padding:'12px 14px',
+            }}>
+              <span style={{flex:1, color:'var(--muted)', fontFamily:'var(--sans)', fontSize: 15, letterSpacing:'0.02em'}}>{userId}</span>
+              <button onClick={()=>{ try { navigator.clipboard.writeText(userId); } catch {} }} aria-label="Copy User ID" style={{
+                appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.08)',
+                borderRadius: 8, padding:'6px 8px', color:'var(--muted)', cursor:'pointer',
+                display:'flex', alignItems:'center', gap: 5, fontSize: 11.5, fontWeight: 600,
+              }}>
+                <Icon name="copy" size={13}/> Copy
+              </button>
+            </div>
+            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 6, paddingLeft: 2}}>Your permanent account key. It never changes.</div>
+          </div>
         </div>
 
         <PrimaryBtn full disabled={!n.trim() || !h.trim()} onClick={()=> onSave(n.trim(), h.trim(), src)}>

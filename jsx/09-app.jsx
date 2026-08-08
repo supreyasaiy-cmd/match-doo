@@ -45,7 +45,10 @@ function App() {
   }, []);
 
   const [authMode, setAuthMode] = React.useState('signin');
-  const [user, setUser] = React.useState({ name: 'Alex Carter' });
+  // Identity model: userId is the permanent unique system key; username
+  // (the @handle) is also unique but user-editable. userId never changes.
+  const genUserId = () => 'MD-' + Array.from({ length: 8 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+  const [user, setUser] = React.useState(() => ({ name: 'Alex Carter', username: 'alex', userId: genUserId() }));
   const [prefs, setPrefs] = React.useState({ contentType: 'both', services: ['Netflix','Prime'], genres: ['Drama','Comedy','Thriller'] });
 
   // Main tabs

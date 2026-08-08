@@ -144,13 +144,13 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
             letterSpacing:'-0.005em',
           }}>
             <Icon name="film" size={14} color="currentColor"/>
-            Less choosing. More watching together.
+            {tr('welcome.badge','Less choosing. More watching together.')}
           </div>
 
           <div style={{
             marginTop: 18, color:'var(--muted)', fontSize: 15.5, lineHeight: 1.55, maxWidth: 320,
           }}>
-            Discover movies and series together. Swipe, match, and turn your shared picks into your next movie night.
+            {tr('welcome.desc','Discover movies and series together. Swipe, match, and turn your shared picks into your next movie night.')}
           </div>
         </div>
 
@@ -158,11 +158,11 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
           <PrimaryBtn full onClick={onSignIn} style={{height: 50, fontSize: 16}}>
             <span style={{display:'inline-flex', alignItems:'center', gap: 8}}>
               <Icon name="arrow" size={14} stroke={2.4} color="var(--ink)"/>
-              Sign In
+              {tr('welcome.signin','Sign In')}
             </span>
           </PrimaryBtn>
           <PrimaryBtn full secondary onClick={onSignUp} style={{height: 50, fontSize: 16}}>
-            Create account
+            {tr('welcome.create','Create account')}
           </PrimaryBtn>
 
           <div style={{
@@ -1280,7 +1280,7 @@ function EmptySectionRow({ text }) {
 }
 
 // ─── Profile / Settings ─────────────────────────────────────────────
-function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb, onOpenLegal }) {
+function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb, onOpenLegal, lang = 'en', onSetLang }) {
   const tmdbDetail = !tmdbConnected ? 'Not connected'
     : tmdbStatus === 'loading' ? 'Loading real posters…'
     : tmdbStatus === 'error' ? 'Connected · fetch failed'
@@ -1326,7 +1326,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
 
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%', position:'relative'}}>
-      <TopBar title="You" large/>
+      <TopBar title={tr('profile.you','You')} large/>
 
       <div style={{padding:'10px 18px 14px'}}>
         <button onClick={()=> setShowProfileEdit(true)} className="tap-row" style={{
@@ -1357,12 +1357,12 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'18px 0 130px'}}>
         <div style={{display:'flex', gap: 10, padding:'0 18px 18px'}}>
-          <ProfileStatCard label="Watchlist" value={likedMovies.length} accent="var(--red)"
-            onClick={()=> setListView({ title:'Watchlist', movies: likedMovies })}/>
-          <ProfileStatCard label="Matches" value={matchedMovies.length} accent="var(--green)"
+          <ProfileStatCard label={tr('profile.watchlist','Watchlist')} value={likedMovies.length} accent="var(--red)"
+            onClick={()=> setListView({ title: tr('profile.watchlist','Watchlist'), movies: likedMovies })}/>
+          <ProfileStatCard label={tr('profile.matches','Matches')} value={matchedMovies.length} accent="var(--green)"
             onClick={()=> onOpenMatches && onOpenMatches()}/>
-          <ProfileStatCard label="Seen" value={seenMovies.length} accent="var(--gold)"
-            onClick={()=> setListView({ title:'Seen', movies: seenMovies })}/>
+          <ProfileStatCard label={tr('profile.seen','Seen')} value={seenMovies.length} accent="var(--gold)"
+            onClick={()=> setListView({ title: tr('profile.seen','Seen'), movies: seenMovies })}/>
         </div>
 
         <SettingsGroup title="Taste">
@@ -1371,34 +1371,35 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
           <SettingsRow icon="clock" label="Run time preference" detail={runtime} onClick={()=> setSheet('runtime')}/>
         </SettingsGroup>
 
-        <SettingsGroup title="Account">
-          <SettingsRow icon="mail" label="Email" detail={email} onClick={()=> setSheet('email')}/>
-          <SettingsRow icon="calendar" label="Birthday" detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
-          <SettingsRow icon="user" label="Gender" detail={gender} onClick={()=> setSheet('gender')}/>
-          <SettingsRow icon="bell" label="Notifications" detail={`${notifOn} on`} onClick={()=> setSheet('notifications')}/>
+        <SettingsGroup title={tr('profile.group.account','Account')}>
+          <SettingsRow icon="mail" label={tr('profile.email','Email')} detail={email} onClick={()=> setSheet('email')}/>
+          <SettingsRow icon="calendar" label={tr('profile.birthday','Birthday')} detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
+          <SettingsRow icon="user" label={tr('profile.gender','Gender')} detail={gender} onClick={()=> setSheet('gender')}/>
+          <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={`${notifOn} on`} onClick={()=> setSheet('notifications')}/>
         </SettingsGroup>
 
-        <SettingsGroup title="Films">
-          <SettingsRow icon="film" label="TMDB integration"
+        <SettingsGroup title={tr('profile.group.films','Films')}>
+          <SettingsRow icon="film" label={tr('profile.tmdb','TMDB integration')}
             detail={tmdbDetail}
             onClick={onOpenTmdb}/>
         </SettingsGroup>
 
-        <SettingsGroup title="App">
-          <SettingsRow icon="settings" label="Themes" detail={theme === 'light' ? 'Light' : 'Dark'} onClick={()=> setShowTheme(true)}/>
-          <SettingsRow icon="x" label="Sign out" onClick={onSignOut} danger/>
+        <SettingsGroup title={tr('profile.group.app','App')}>
+          <SettingsRow icon="sparkle" label={tr('profile.language','Language')} detail={lang === 'th' ? 'ไทย' : 'English'} onClick={()=> onSetLang?.(lang === 'en' ? 'th' : 'en')}/>
+          <SettingsRow icon="settings" label={tr('profile.themes','Themes')} detail={theme === 'light' ? 'Light' : 'Dark'} onClick={()=> setShowTheme(true)}/>
+          <SettingsRow icon="x" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
         </SettingsGroup>
 
-        <SettingsGroup title="Legal">
-          <SettingsRow icon="bookmark" label="Terms & Conditions" onClick={()=> onOpenLegal?.('terms')}/>
-          <SettingsRow icon="user" label="Privacy Policy" onClick={()=> onOpenLegal?.('privacy')}/>
+        <SettingsGroup title={tr('profile.group.legal','Legal')}>
+          <SettingsRow icon="bookmark" label={tr('profile.terms','Terms & Conditions')} onClick={()=> onOpenLegal?.('terms')}/>
+          <SettingsRow icon="user" label={tr('profile.privacy','Privacy Policy')} onClick={()=> onOpenLegal?.('privacy')}/>
         </SettingsGroup>
 
         <div style={{
           textAlign:'center', padding:'24px 18px', fontSize: 11, color:'var(--muted-2)',
           fontFamily:'var(--serif)', fontStyle:'italic', fontSize: 14,
         }}>
-          Match Doo · made for movie nights
+          {tr('profile.tagline','Match Doo · made for movie nights')}
         </div>
       </div>
 

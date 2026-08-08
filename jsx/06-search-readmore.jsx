@@ -383,4 +383,99 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
 }
 
 
+// ─── Search overlay ─────────────────────────────────────────────────
+function SearchOverlay({ onClose, onPick }) {
+  const [query, setQuery] = React.useState('');
+  const inputRef = React.useRef(null);
+  React.useEffect(() => { const t = setTimeout(() => inputRef.current?.focus(), 60); return () => clearTimeout(t); }, []);
+
+  const all = window.MOVIES || [];
+  const q = query.trim().toLowerCase();
+  const results = q
+    ? all.filter(m => (m.title || '').toLowerCase().includes(q) || (m.genres || []).some(g => g.toLowerCase().includes(q))).slice(0, 40)
+    : all.slice(0, 8);
+
+  return (
+    <div className="fade-in" style={{
+      position:'absolute', inset:0, zIndex: 300,
+      background:'rgba(var(--bg-rgb),0.92)',
+      backdropFilter:'blur(28px) saturate(150%)', WebkitBackdropFilter:'blur(28px) saturate(150%)',
+      display:'flex', flexDirection:'column',
+    }}>
+      {/* Close (X) top-right */}
+      <div style={{display:'flex', justifyContent:'flex-end', padding:'16px 18px 0'}}>
+        <button onClick={onClose} aria-label="Close search" style={{
+          appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
+          width: 40, height: 40, borderRadius: 999, color:'var(--cream)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+        }}>
+          <Icon name="x" size={20}/>
+        </button>
+      </div>
+
+      {/* Big centered input */}
+      <div style={{padding:'18px 24px 10px'}}>
+        <div style={{fontSize: 11, letterSpacing:'0.2em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 12}}>Search</div>
+        <div style={{
+          display:'flex', alignItems:'center', gap: 12,
+          borderBottom:'2px solid var(--red)', paddingBottom: 12,
+        }}>
+          <Icon name="search" size={26} color="var(--red)"/>
+          <input
+            ref={inputRef}
+            placeholder="Films & series…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            style={{
+              flex:1, background:'transparent', border:0, outline:0,
+              color:'var(--cream)', fontFamily:'var(--serif)', fontSize: 30,
+              letterSpacing:'-0.02em',
+            }}
+          />
+          {query && (
+            <button onClick={()=> setQuery('')} style={{
+              appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.1)',
+              width: 28, height: 28, borderRadius: 999, color:'var(--muted)',
+              display:'flex', alignItems:'center', justifyContent:'center', flexShrink: 0,
+            }}>
+              <Icon name="x" size={14}/>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'8px 18px 40px'}}>
+        <div style={{fontSize: 12, color:'var(--muted)', padding:'6px 6px 12px'}}>
+          {q ? `${results.length} result${results.length===1?'':'s'}` : 'Popular right now'}
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap: 8}}>
+          {results.map(m => (
+            <button key={m.id} onClick={()=> onPick(m)} style={{
+              appearance:'none', border:0, background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
+              borderRadius: 14, padding:'8px 10px', textAlign:'left',
+              display:'flex', alignItems:'center', gap: 12, width:'100%', color:'var(--cream)', cursor:'pointer',
+            }}>
+              <div style={{width: 52, height: 78, borderRadius: 9, overflow:'hidden', flexShrink:0}}>
+                <Poster movie={m} size="sm" hideTitle style={{width:'100%', height:'100%'}}/>
+              </div>
+              <div style={{flex:1, minWidth:0}}>
+                <div style={{fontFamily:'var(--serif)', fontSize: 19, lineHeight: 1.05, letterSpacing:'-0.01em', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.title}</div>
+                <div style={{fontSize: 11, color:'var(--muted)', marginTop: 4, letterSpacing:'0.05em', textTransform:'uppercase'}}>
+                  {m.year} · {m.type === 'series' ? `${m.seasons||1} seasons` : (m.genres?.[0] || 'Film')} · {m.rt}% RT
+                </div>
+              </div>
+              <Icon name="chev" size={14} color="var(--muted-2)"/>
+            </button>
+          ))}
+        </div>
+        {q && results.length === 0 && (
+          <div style={{textAlign:'center', padding:'40px 20px', color:'var(--muted)', fontSize: 13}}>
+            No results for "<span style={{color:'var(--cream)'}}>{query}</span>". Try another title or genre.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 Object.assign(window, { ReadMoreSheet, SearchOverlay });

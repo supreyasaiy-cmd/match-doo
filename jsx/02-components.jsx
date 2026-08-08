@@ -335,9 +335,9 @@ function ServiceChip({ name, size = 22 }) {
 // ─── Tab bar (bottom nav) ───────────────────────────────────────────
 function TabBar({ active, onChange }) {
   const tabs = [
-    { id: 'rooms',   icon: 'sofa',  label: 'Rooms'   },
+    { id: 'rooms',   icon: 'sofa',  label: window.tr ? tr('nav.rooms','Rooms') : 'Rooms' },
     { id: 'swipe',   icon: 'cards', label: 'MatchDoo', center: true },
-    { id: 'profile', icon: 'user',  label: 'Profile' },
+    { id: 'profile', icon: 'user',  label: window.tr ? tr('nav.profile','Profile') : 'Profile' },
   ];
   const ACCENT = '#FF6D29';
 

@@ -87,6 +87,12 @@ function App() {
   const [tmdbSheetOpen, setTmdbSheetOpen] = React.useState(false);
   const [legal, setLegal] = React.useState(null);  // 'terms' | 'privacy' — full-screen legal overlay
 
+  // Language — 'en' | 'th', persisted. Changing it re-renders the whole tree
+  // so every tr() call re-reads the active language.
+  const [lang, setLangState] = React.useState(() => (window.I18N ? window.I18N.lang : 'en'));
+  const setLang = (l) => { if (window.I18N) window.I18N.setLang(l); setLangState(l); };
+  React.useEffect(() => { if (window.I18N) window.I18N.lang = lang; }, [lang]);
+
   // Appearance — Dark / Light theme, persisted
   const [theme, setTheme] = React.useState(() => {
     try { return localStorage.getItem('matchdoo.theme') || 'dark'; } catch { return 'dark'; }
@@ -345,6 +351,7 @@ function App() {
         tmdbStatus={tmdbStatus}
         onOpenTmdb={()=> setTmdbSheetOpen(true)}
         onOpenLegal={setLegal}
+        lang={lang} onSetLang={setLang}
       />;
     }
     content = (

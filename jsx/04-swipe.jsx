@@ -224,7 +224,7 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
             transition: drag?.releasing ? 'opacity .28s ease, transform .28s ease' : 'none',
             pointerEvents:'none',
           }}>
-            {SWIPE_LABELS[activeLabel].text}
+            {({ right: tr('swipe.watchlist','WATCHLIST'), left: tr('swipe.pass','PASS'), up: tr('swipe.readmore','READ MORE'), down: tr('swipe.seen','SEEN') })[activeLabel] || SWIPE_LABELS[activeLabel].text}
           </div>
         )}
       </div>
@@ -320,10 +320,10 @@ function SwipeDeck({ movies, onSwipe, onTap, density='regular', ads=[], adCadenc
           display:'flex', justifyContent:'center', alignItems:'flex-end', gap: 16,
           pointerEvents:'none',
         }}>
-          <ActionBtn label="Pass"      icon="x"        color="#5F7A8C" size={60} onClick={()=>programmatic('left')} />
-          <ActionBtn label="More"      icon="chevup"   color="#FDA65A" size={48} onClick={()=>programmatic('up')} />
-          <ActionBtn label="Seen"      icon="eye"      color="#E0955E" size={48} onClick={()=>programmatic('down')} />
-          <ActionBtn label="Watchlist" icon="bookmark" color="#FF6D29" size={60} onClick={()=>programmatic('right')} filled/>
+          <ActionBtn label={tr('swipe.pass','Pass')}           icon="x"        color="#5F7A8C" size={60} onClick={()=>programmatic('left')} />
+          <ActionBtn label={tr('swipe.more','More')}           icon="chevup"   color="#FDA65A" size={48} onClick={()=>programmatic('up')} />
+          <ActionBtn label={tr('swipe.seen','Seen')}           icon="eye"      color="#E0955E" size={48} onClick={()=>programmatic('down')} />
+          <ActionBtn label={tr('swipe.watchlist','Watchlist')} icon="bookmark" color="#FF6D29" size={60} onClick={()=>programmatic('right')} filled/>
         </div>
       )}
     </div>

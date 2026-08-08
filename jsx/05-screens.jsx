@@ -100,7 +100,8 @@ function FilmReelBG() {
 }
 
 // ─── Welcome (Sign in / Sign up) ────────────────────────────────────
-function WelcomeScreen({ onSignIn, onSignUp }) {
+function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
+  const legalLink = { color:'var(--cream)', textDecoration:'underline', cursor:'pointer' };
   return (
     <div className="fade-in" style={{
       position:'relative', overflow:'hidden',
@@ -167,7 +168,7 @@ function WelcomeScreen({ onSignIn, onSignUp }) {
           <div style={{
             textAlign:'center', marginTop: 12, fontSize: 11, color:'var(--muted-2)', lineHeight: 1.5,
           }}>
-            By continuing you agree to our Terms<br/>and Privacy Policy.
+            By continuing you agree to our <span style={legalLink} onClick={()=> onOpenLegal?.('terms')}>Terms</span><br/>and <span style={legalLink} onClick={()=> onOpenLegal?.('privacy')}>Privacy Policy</span>.
           </div>
         </div>
       </div>
@@ -176,7 +177,7 @@ function WelcomeScreen({ onSignIn, onSignUp }) {
 }
 
 // ─── Sign-in / sign-up (SSO only) ───────────────────────────────────
-function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth }) {
+function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal }) {
   const [mode, setMode] = React.useState(initialMode);
   const [busy, setBusy] = React.useState(null); // 'google' | 'apple' | 'email'
   const [name, setName]   = React.useState('');
@@ -296,7 +297,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth }) {
 
           {isSignup && (
             <div style={{fontSize: 11.5, color:'var(--muted)', lineHeight: 1.5, margin:'14px 2px 0'}}>
-              By creating an account you agree to our <span style={{color:'var(--cream)'}}>Terms</span> & <span style={{color:'var(--cream)'}}>Privacy Policy</span>.
+              By creating an account you agree to our <span onClick={()=> onOpenLegal?.('terms')} style={{color:'var(--cream)', textDecoration:'underline', cursor:'pointer'}}>Terms</span> & <span onClick={()=> onOpenLegal?.('privacy')} style={{color:'var(--cream)', textDecoration:'underline', cursor:'pointer'}}>Privacy Policy</span>.
             </div>
           )}
 
@@ -1214,7 +1215,7 @@ function EmptySectionRow({ text }) {
 }
 
 // ─── Profile / Settings ─────────────────────────────────────────────
-function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb }) {
+function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb, onOpenLegal }) {
   const tmdbDetail = !tmdbConnected ? 'Not connected'
     : tmdbStatus === 'loading' ? 'Loading real posters…'
     : tmdbStatus === 'error' ? 'Connected · fetch failed'
@@ -1319,6 +1320,11 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
         <SettingsGroup title="App">
           <SettingsRow icon="settings" label="Customize design" detail={theme === 'light' ? 'Light' : 'Dark'} onClick={()=> setShowTheme(true)}/>
           <SettingsRow icon="x" label="Sign out" onClick={onSignOut} danger/>
+        </SettingsGroup>
+
+        <SettingsGroup title="Legal">
+          <SettingsRow icon="bookmark" label="Terms & Conditions" onClick={()=> onOpenLegal?.('terms')}/>
+          <SettingsRow icon="user" label="Privacy Policy" onClick={()=> onOpenLegal?.('privacy')}/>
         </SettingsGroup>
 
         <div style={{
@@ -2329,10 +2335,53 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
   );
 }
 
+// ─── Legal (Terms & Privacy) — real EN/TH content from window.LEGAL ──
+function LegalScreen({ doc = 'terms', lang: initialLang = 'en', onBack }) {
+  const [lang, setLang] = React.useState(initialLang);
+  const L = window.LEGAL || {};
+  const text = (L[doc] && L[doc][lang]) || '';
+  const TITLES = {
+    terms:   { en: 'Terms & Conditions', th: 'ข้อกำหนดและเงื่อนไข' },
+    privacy: { en: 'Privacy Policy',     th: 'นโยบายความเป็นส่วนตัว' },
+  };
+  const isMeta    = (l) => /^(Effective Date|Last Updated|วันที่มีผลบังคับใช้|ปรับปรุงล่าสุด)/.test(l);
+  const isHeading = (l) => /^\d+\.\s+\S/.test(l) && !/^\d+\.\d/.test(l);
+  const lines = text.split('\n').filter(l => l.trim() !== '');
+
+  return (
+    <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
+      <TopBar title={TITLES[doc][lang]} onBack={onBack} right={
+        <div style={{display:'inline-flex', padding: 3, background:'rgba(var(--fg-rgb),0.08)', borderRadius: 999, border:'0.5px solid rgba(var(--fg-rgb),0.10)'}}>
+          {['en','th'].map(lc => (
+            <button key={lc} onClick={()=> setLang(lc)} style={{
+              appearance:'none', border:0, borderRadius: 999,
+              background: lang===lc ? 'var(--cream)' : 'transparent',
+              color: lang===lc ? 'var(--ink)' : 'var(--muted)',
+              fontFamily:'var(--sans)', fontWeight: 700, fontSize: 12,
+              padding:'5px 11px', cursor:'pointer', textTransform:'uppercase',
+            }}>{lc}</button>
+          ))}
+        </div>
+      }/>
+      <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'6px 20px 40px'}}>
+        {lines.map((line, i) => {
+          if (isMeta(line)) return <div key={i} style={{fontSize: 11.5, color:'var(--muted-2)', marginTop: i?2:0}}>{line}</div>;
+          if (isHeading(line)) return <div key={i} style={{fontFamily:'var(--sans)', fontWeight: 700, fontSize: 15, color:'var(--cream)', marginTop: 20, marginBottom: 2, lineHeight: 1.3}}>{line}</div>;
+          return <div key={i} style={{fontSize: 13, color:'var(--muted)', lineHeight: 1.65, marginTop: 8}}>{line}</div>;
+        })}
+        <div style={{height: 20}}/>
+        <div style={{fontSize: 11.5, color:'var(--muted-2)', lineHeight: 1.6, borderTop:'0.5px solid var(--line)', paddingTop: 16}}>
+          {lang === 'th' ? 'ติดต่อ: Matchdoosupport@gmail.com' : 'Contact: Matchdoosupport@gmail.com'}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 Object.assign(window, {
   WelcomeScreen, AuthScreen,
   OnboardingScreen, MatchesScreen,
   FriendsScreen, AddFriendScreen, FriendProfileScreen, ProfileScreen,
   MovieDetailSheet, MatchCelebration, Wordmark, Logomark, TmdbConnectSheet,
-  Stat, Section, PosterRow, EmptySectionRow, RatingCard,
+  Stat, Section, PosterRow, EmptySectionRow, RatingCard, LegalScreen,
 });

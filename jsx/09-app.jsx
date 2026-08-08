@@ -82,6 +82,7 @@ function App() {
   const [friendProfile, setFriendProfile] = React.useState(null);
   const [toast, setToast]             = React.useState(null);
   const [tmdbSheetOpen, setTmdbSheetOpen] = React.useState(false);
+  const [legal, setLegal] = React.useState(null);  // 'terms' | 'privacy' — full-screen legal overlay
 
   // Appearance — Dark / Light theme, persisted
   const [theme, setTheme] = React.useState(() => {
@@ -266,11 +267,13 @@ function App() {
     content = <WelcomeScreen
       onSignIn={()=>{ setAuthMode('signin'); setScreen('auth'); }}
       onSignUp={()=>{ setAuthMode('signup'); setScreen('auth'); }}
+      onOpenLegal={setLegal}
     />;
   } else if (screen === 'auth') {
     content = <AuthScreen
       mode={authMode}
       onBack={()=> setScreen('welcome')}
+      onOpenLegal={setLegal}
       onAuth={(u, submittedMode)=>{
         setUser({...user, ...u});
         // Sign-up flow → onboarding; Sign-in → main (mode reflects any in-screen switch)
@@ -338,6 +341,7 @@ function App() {
         tmdbConnected={!!tmdbKey}
         tmdbStatus={tmdbStatus}
         onOpenTmdb={()=> setTmdbSheetOpen(true)}
+        onOpenLegal={setLegal}
       />;
     }
     content = (
@@ -389,6 +393,12 @@ function App() {
               onDisconnect={handleTmdbDisconnect}
               onClose={()=> setTmdbSheetOpen(false)}
             />
+          )}
+          {legal && (
+            <div style={{position:'absolute', inset:0, zIndex: 300,
+              background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)'}}>
+              <LegalScreen doc={legal} onBack={()=> setLegal(null)}/>
+            </div>
           )}
           {readMore && (
             <ReadMoreSheet

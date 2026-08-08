@@ -1225,7 +1225,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
   const [services, setServices] = React.useState(new Set(['Netflix','Prime','Max']));
   const [runtime, setRuntime] = React.useState('90–150 min');
   const [email, setEmail] = React.useState('alex@cinema.com');
-  const [phone, setPhone] = React.useState('+1 (555) 010-2025');
+  const [birthday, setBirthday] = React.useState('1996-04-12');
+  const [gender, setGender] = React.useState('Prefer not to say');
   const [notif, setNotif] = React.useState({ matches:true, newFriends:true, reminders:false });
   const [sheet, setSheet] = React.useState(null);
   const [toast, setToast] = React.useState('');
@@ -1252,8 +1253,9 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
   const allFriendsList = [...(window.FRIENDS?.couple||[]), ...(window.FRIENDS?.family||[]), ...(window.FRIENDS?.friends||[])];
   const friendsForMovie = (mid) => allFriendsList.filter(f => (window.MATCHES[f.id]?.movieIds||[]).includes(mid));
 
+  const fmtBirthday = (v) => { try { return new Date(v + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch { return v; } };
   const settingsState = { genres, setGenres, services, setServices, runtime, setRuntime,
-    email, setEmail, phone, setPhone, notif, setNotif };
+    email, setEmail, birthday, setBirthday, gender, setGender, notif, setNotif };
 
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%', position:'relative'}}>
@@ -1287,8 +1289,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'18px 0 130px'}}>
         <div style={{display:'flex', gap: 10, padding:'0 18px 18px'}}>
-          <ProfileStatCard label="Like" value={likedMovies.length} accent="var(--red)"
-            onClick={()=> setListView({ title:'Like', movies: likedMovies })}/>
+          <ProfileStatCard label="Watchlist" value={likedMovies.length} accent="var(--red)"
+            onClick={()=> setListView({ title:'Watchlist', movies: likedMovies })}/>
           <ProfileStatCard label="Matches" value={matchedMovies.length} accent="var(--green)"
             onClick={()=> onOpenMatches && onOpenMatches()}/>
           <ProfileStatCard label="Seen" value={seenMovies.length} accent="var(--gold)"
@@ -1303,7 +1305,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
 
         <SettingsGroup title="Account">
           <SettingsRow icon="mail" label="Email" detail={email} onClick={()=> setSheet('email')}/>
-          <SettingsRow icon="phone" label="Phone" detail={phone} onClick={()=> setSheet('phone')}/>
+          <SettingsRow icon="calendar" label="Birthday" detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
+          <SettingsRow icon="user" label="Gender" detail={gender} onClick={()=> setSheet('gender')}/>
           <SettingsRow icon="bell" label="Notifications" detail={`${notifOn} on`} onClick={()=> setSheet('notifications')}/>
         </SettingsGroup>
 
@@ -1396,8 +1399,10 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
   const [sDraft, setSDraft] = React.useState(new Set(state.services));
   const [rDraft, setRDraft] = React.useState(state.runtime);
   const [eDraft, setEDraft] = React.useState(state.email);
-  const [pDraft, setPDraft] = React.useState(state.phone);
+  const [bDraft, setBDraft] = React.useState(state.birthday);
+  const [genderDraft, setGenderDraft] = React.useState(state.gender);
   const [nDraft, setNDraft] = React.useState({ ...state.notif });
+  const GENDER_OPTS = ['Male','Female','Prefer not to say'];
 
   const toggleSet = (set, val) => {
     const next = new Set(set);
@@ -1410,7 +1415,8 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
     services:      { title:'Streaming services',  save:()=>{ state.setServices(sDraft);   onSaved('Services updated'); } },
     runtime:       { title:'Run time preference', save:()=>{ state.setRuntime(rDraft);    onSaved('Preference saved'); } },
     email:         { title:'Email',               save:()=>{ state.setEmail(eDraft.trim()); onSaved('Email saved'); } },
-    phone:         { title:'Phone',               save:()=>{ state.setPhone(pDraft.trim()); onSaved('Phone saved'); } },
+    birthday:      { title:'Birthday',            save:()=>{ state.setBirthday(bDraft);   onSaved('Birthday saved'); } },
+    gender:        { title:'Gender',              save:()=>{ state.setGender(genderDraft); onSaved('Gender saved'); } },
     notifications: { title:'Notifications',       save:()=>{ state.setNotif(nDraft);      onSaved('Notifications saved'); } },
   }[kind];
 
@@ -1474,16 +1480,15 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
         })}
       </div>
     );
-  } else if (kind === 'email' || kind === 'phone') {
-    const isEmail = kind === 'email';
+  } else if (kind === 'email') {
     body = (
       <input
         autoFocus
-        type={isEmail ? 'email' : 'tel'}
-        inputMode={isEmail ? 'email' : 'tel'}
-        value={isEmail ? eDraft : pDraft}
-        onChange={e => isEmail ? setEDraft(e.target.value) : setPDraft(e.target.value)}
-        placeholder={isEmail ? 'you@email.com' : '+1 (555) 000-0000'}
+        type="email"
+        inputMode="email"
+        value={eDraft}
+        onChange={e => setEDraft(e.target.value)}
+        placeholder="you@email.com"
         style={{
           width:'100%', background:'rgba(var(--fg-rgb),0.07)',
           border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius: 14,
@@ -1491,6 +1496,42 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
           fontFamily:'var(--sans)', fontSize: 16,
         }}
       />
+    );
+  } else if (kind === 'birthday') {
+    body = (
+      <input
+        autoFocus
+        type="date"
+        max={new Date().toISOString().slice(0,10)}
+        value={bDraft}
+        onChange={e => setBDraft(e.target.value)}
+        style={{
+          width:'100%', background:'rgba(var(--fg-rgb),0.07)',
+          border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius: 14,
+          padding:'14px 16px', color:'var(--cream)', outline:0,
+          fontFamily:'var(--sans)', fontSize: 16, colorScheme:'dark',
+        }}
+      />
+    );
+  } else if (kind === 'gender') {
+    body = (
+      <div style={{display:'flex', flexDirection:'column', gap: 8}}>
+        {GENDER_OPTS.map(o => {
+          const on = genderDraft === o;
+          return (
+            <button key={o} onClick={()=> setGenderDraft(o)} style={{
+              appearance:'none', border:`0.5px solid ${on ? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
+              background: on ? 'rgba(var(--fg-rgb),0.08)' : 'rgba(var(--fg-rgb),0.03)',
+              padding:'14px 16px', borderRadius: 14, textAlign:'left',
+              display:'flex', alignItems:'center', justifyContent:'space-between',
+              color:'var(--cream)', fontFamily:'var(--sans)', fontWeight: 500, fontSize: 14,
+            }}>
+              {o}
+              {on && <Icon name="check" size={16} color="var(--cream)"/>}
+            </button>
+          );
+        })}
+      </div>
     );
   } else if (kind === 'notifications') {
     const ROWS = [

@@ -183,6 +183,8 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
   const [name, setName]   = React.useState('');
   const [email, setEmail] = React.useState('');
   const [pw, setPw]       = React.useState('');
+  const [birthday, setBirthday] = React.useState('');
+  const [gender, setGender] = React.useState('');
   const [showPw, setShowPw]   = React.useState(false);
   const [touched, setTouched] = React.useState(false);
 
@@ -190,7 +192,10 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const pwOk    = pw.length >= 6;
   const nameOk  = name.trim().length >= 2;
-  const canSubmit = emailOk && pwOk && (!isSignup || nameOk);
+  const ageFrom = (iso) => { if (!iso) return null; const d = new Date(iso + 'T00:00:00'); if (isNaN(d)) return null; const t = new Date(); let a = t.getFullYear() - d.getFullYear(); const m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) a--; return a; };
+  const age = ageFrom(birthday);
+  const bdayOk = !!birthday && age !== null && age >= 15;  // MatchDoo Terms: 15+
+  const canSubmit = emailOk && pwOk && (!isSignup || (nameOk && bdayOk));
 
   const sso = (provider) => {
     if (busy) return;
@@ -205,7 +210,8 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
     if (!canSubmit || busy) return;
     setBusy('email');
     setTimeout(() => {
-      onAuth?.({ provider:'email', name: isSignup ? name.trim() : (email.split('@')[0] || 'You'), email: email.trim() }, mode);
+      onAuth?.({ provider:'email', name: isSignup ? name.trim() : (email.split('@')[0] || 'You'), email: email.trim(),
+        ...(isSignup ? { birthday, gender: gender || 'Prefer not to say' } : {}) }, mode);
     }, 950);
   };
   const swap = () => { setMode(isSignup ? 'signin' : 'signup'); setTouched(false); };
@@ -293,6 +299,37 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
                 </button>
               </div>
             </label>
+            {isSignup && (
+              <label style={{display:'block'}}>
+                <div style={fieldLabel}>Birthday</div>
+                <input type="date" max={new Date().toISOString().slice(0,10)}
+                  value={birthday} onChange={e=>setBirthday(e.target.value)}
+                  style={{...inputStyle(touched && !bdayOk), colorScheme:'dark'}}/>
+                {touched && birthday && age !== null && age < 15 && (
+                  <div style={{fontSize:11, color:'#E8798A', marginTop:6, paddingLeft:2}}>You must be at least 15 to use MatchDoo.</div>
+                )}
+              </label>
+            )}
+            {isSignup && (
+              <div>
+                <div style={fieldLabel}>Gender</div>
+                <div style={{display:'flex', gap: 6}}>
+                  {['Male','Female','Prefer not to say'].map(g => {
+                    const on = gender === g;
+                    return (
+                      <button key={g} type="button" onClick={()=> setGender(g)} style={{
+                        appearance:'none', flex:1, padding:'11px 6px', borderRadius: 12,
+                        border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
+                        background: on ? 'rgba(255,109,41,0.12)' : 'rgba(var(--fg-rgb),0.06)',
+                        color: on ? 'var(--red)' : 'var(--cream)',
+                        fontFamily:'var(--sans)', fontWeight: 600, fontSize: 12.5, lineHeight: 1.2,
+                        cursor:'pointer',
+                      }}>{g === 'Prefer not to say' ? 'Prefer not' : g}</button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {isSignup && (
@@ -1226,8 +1263,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
   const [services, setServices] = React.useState(new Set(['Netflix','Prime','Max']));
   const [runtime, setRuntime] = React.useState('90–150 min');
   const [email, setEmail] = React.useState('alex@cinema.com');
-  const [birthday, setBirthday] = React.useState('1996-04-12');
-  const [gender, setGender] = React.useState('Prefer not to say');
+  const [birthday, setBirthday] = React.useState(user.birthday || '1996-04-12');
+  const [gender, setGender] = React.useState(user.gender || 'Prefer not to say');
   const [notif, setNotif] = React.useState({ matches:true, newFriends:true, reminders:false });
   const [sheet, setSheet] = React.useState(null);
   const [toast, setToast] = React.useState('');

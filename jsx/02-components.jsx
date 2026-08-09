@@ -190,57 +190,8 @@ function PosterArt({ art, fg, bg, small }) {
 // ─── Avatar ─────────────────────────────────────────────────────────
 // Glass-gradient profile pictures live in assets/Profiles. Each person
 // gets a stable one (by id hash) unless a specific `photo` is provided.
-// ─── Cute character avatars — inline SVG data-URIs (no binary assets) ──
-// One friendly template (round head, dot eyes, blush, smile) varied by
-// colour + ears, in the MatchDoo warm palette. Data-URIs render straight
-// into Avatar's backgroundImage.
-function mmCharAvatar({ bg1, bg2, body, ears = '', patch = '', mouth }) {
-  const face =
-    `<circle cx='40' cy='55' r='4.4' fill='#2a1c16'/><circle cx='60' cy='55' r='4.4' fill='#2a1c16'/>` +
-    `<circle cx='41.6' cy='53.4' r='1.5' fill='#fff'/><circle cx='61.6' cy='53.4' r='1.5' fill='#fff'/>` +
-    `<ellipse cx='33' cy='63' rx='4.6' ry='3' fill='#ff7a7a' opacity='.45'/><ellipse cx='67' cy='63' rx='4.6' ry='3' fill='#ff7a7a' opacity='.45'/>` +
-    (mouth || `<path d='M44 63 q6 5.5 12 0' fill='none' stroke='#2a1c16' stroke-width='2.4' stroke-linecap='round'/>`);
-  const svg =
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>` +
-    `<defs><radialGradient id='g' cx='34%' cy='26%' r='95%'><stop offset='0' stop-color='${bg1}'/><stop offset='1' stop-color='${bg2}'/></radialGradient></defs>` +
-    `<rect width='100' height='100' fill='url(#g)'/>` +
-    ears +
-    `<ellipse cx='50' cy='58' rx='28' ry='26' fill='${body}'/>` +
-    patch + face +
-    `</svg>`;
-  return 'data:image/svg+xml,' + encodeURIComponent(svg);
-}
-
-const AVATAR_POOL = [
-  // Cat — coral
-  mmCharAvatar({ bg1:'#FFB48A', bg2:'#E8794F', body:'#FF8C5A',
-    ears:"<path d='M28 45 L33 23 L47 36 Z' fill='#FF8C5A'/><path d='M72 45 L67 23 L53 36 Z' fill='#FF8C5A'/><path d='M32 41 L34.6 30 L41.5 37 Z' fill='#ffc2b0'/><path d='M68 41 L65.4 30 L58.5 37 Z' fill='#ffc2b0'/>" }),
-  // Bear — amber
-  mmCharAvatar({ bg1:'#FDC98A', bg2:'#E8945F', body:'#C79A72',
-    ears:"<circle cx='31' cy='37' r='9' fill='#C79A72'/><circle cx='69' cy='37' r='9' fill='#C79A72'/><circle cx='31' cy='37' r='4.4' fill='#efd7c2'/><circle cx='69' cy='37' r='4.4' fill='#efd7c2'/>" }),
-  // Bunny — periwinkle
-  mmCharAvatar({ bg1:'#B7C4F0', bg2:'#8FA0E0', body:'#F3E9E2',
-    ears:"<ellipse cx='41' cy='23' rx='6' ry='16' fill='#F3E9E2'/><ellipse cx='59' cy='23' rx='6' ry='16' fill='#F3E9E2'/><ellipse cx='41' cy='24' rx='2.6' ry='11' fill='#f7b8bf'/><ellipse cx='59' cy='24' rx='2.6' ry='11' fill='#f7b8bf'/>" }),
-  // Fox — orange with white muzzle
-  mmCharAvatar({ bg1:'#F4A06A', bg2:'#D9662F', body:'#EE7C42',
-    ears:"<path d='M26 46 L30 24 L47 35 Z' fill='#EE7C42'/><path d='M74 46 L70 24 L53 35 Z' fill='#EE7C42'/><path d='M31 42 L32.6 30 L41 36 Z' fill='#7a3f24'/><path d='M69 42 L67.4 30 L59 36 Z' fill='#7a3f24'/>",
-    patch:"<ellipse cx='50' cy='66' rx='17' ry='13' fill='#F7EFE7'/>" }),
-  // Mouse — rose, big ears
-  mmCharAvatar({ bg1:'#F0AEB6', bg2:'#D97F8C', body:'#B9AEB2',
-    ears:"<circle cx='30' cy='34' r='12' fill='#B9AEB2'/><circle cx='70' cy='34' r='12' fill='#B9AEB2'/><circle cx='30' cy='34' r='6.5' fill='#f7b8bf'/><circle cx='70' cy='34' r='6.5' fill='#f7b8bf'/>" }),
-  // Chick — gold, beak
-  mmCharAvatar({ bg1:'#FDD98A', bg2:'#F0AC55', body:'#FFD35C',
-    ears:"<path d='M46 30 q4 -7 8 0 q-4 -2 -8 0 Z' fill='#FFD35C'/>",
-    mouth:"<path d='M45.5 63 L54.5 63 L50 69.5 Z' fill='#EE8B2E'/>" }),
-  // Puppy — green, floppy ears
-  mmCharAvatar({ bg1:'#A8D9AE', bg2:'#79B889', body:'#D8C0A6',
-    ears:"<ellipse cx='27' cy='52' rx='9' ry='16' fill='#B89877'/><ellipse cx='73' cy='52' rx='9' ry='16' fill='#B89877'/>",
-    patch:"<ellipse cx='50' cy='66' rx='13' ry='11' fill='#efe0cf'/>" }),
-  // Koala — slate, big ears + nose
-  mmCharAvatar({ bg1:'#AEBED0', bg2:'#7F94AC', body:'#A7ADB5',
-    ears:"<circle cx='27' cy='41' r='12' fill='#A7ADB5'/><circle cx='73' cy='41' r='12' fill='#A7ADB5'/><circle cx='27' cy='41' r='6.5' fill='#cfc0d0'/><circle cx='73' cy='41' r='6.5' fill='#cfc0d0'/>",
-    mouth:"<ellipse cx='50' cy='64' rx='6.5' ry='8.5' fill='#4a3b40'/>" }),
-];
+// ─── Avatar pool — colourful gradient images (assets/Profiles) ──────
+const AVATAR_POOL = Array.from({ length: 11 }, (_, i) => `assets/Profiles/avatar-${i + 1}.png`);
 window.AVATAR_POOL = AVATAR_POOL;
 function pickAvatar(person) {
   const key = String(person.id || person.initials || person.name || '');

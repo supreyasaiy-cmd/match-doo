@@ -1312,8 +1312,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
   const [profileName, setProfileName] = React.useState(user.name || 'Alex Carter');
   const [handle, setHandle] = React.useState(user.username || 'alex');
   const userId = user.userId || 'MD-XXXXXXXX';  // permanent unique key (read-only)
-  const [avatarSrc, setAvatarSrc] = React.useState(null); // default: clean initials (no character); pick one in Edit profile
-  const [customPics, setCustomPics] = React.useState([]); // user-added photos (data URLs)
+  const [avatarSrc, setAvatarSrc] = React.useState((window.AVATAR_POOL || [])[0] || null); // gradient avatar
   const [showProfileEdit, setShowProfileEdit] = React.useState(false);
   const avatarPhoto = avatarSrc;
   // Which friends also want a given movie (for the Matches list)
@@ -1435,8 +1434,6 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
           name={profileName} handle={handle} userId={userId}
           avatarSrc={avatarSrc}
           pool={window.AVATAR_POOL || []}
-          customPics={customPics}
-          onAddPic={(url)=> setCustomPics(p => p.includes(url) ? p : [url, ...p])}
           onSave={(n, h, src)=>{ setProfileName(n); setHandle(h); setAvatarSrc(src); setShowProfileEdit(false); flash('Profile updated'); }}
           onClose={()=> setShowProfileEdit(false)}
         />
@@ -1898,26 +1895,12 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
 }
 
 // ─── Edit profile (name + handle) ──────────────────────────────────
-function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], customPics = [], onAddPic, onSave, onClose }) {
+function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, onClose }) {
   const [n, setN] = React.useState(name);
   const [h, setH] = React.useState(handle);
-  const [src, setSrc] = React.useState(avatarSrc || null); // null = plain initials
-  const fileRef = React.useRef(null);
-  const initials = (n || 'A').slice(0, 2).toUpperCase();
+  const [src, setSrc] = React.useState(avatarSrc || pool[0] || null);
 
-  // Add a picture from the user's device — read locally as a data URL,
-  // select it, and hand it up so it persists in the picker.
-  const onFile = (e) => {
-    const file = e.target.files && e.target.files[0];
-    e.target.value = '';               // allow re-picking the same file
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = () => { const url = reader.result; onAddPic && onAddPic(url); setSrc(url); };
-    reader.readAsDataURL(file);
-  };
-
-  // Slider order: Add first, then the user's photos, then the default set.
-  const pics = [...customPics, ...pool];
+  const pics = pool;
   const field = (label, value, setValue, prefix, autoFocus) => (
     <div>
       <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 8px 2px'}}>{label}</div>
@@ -1966,7 +1949,6 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], customPi
 
         <div style={{marginBottom: 20}}>
           <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px'}}>Profile picture</div>
-          <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{display:'none'}}/>
           <div
             className="phone-scroll"
             onWheel={(e)=>{ const el = e.currentTarget; if (el.scrollWidth > el.clientWidth && Math.abs(e.deltaY) >= Math.abs(e.deltaX)) el.scrollLeft += e.deltaY; }}
@@ -1974,25 +1956,6 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], customPi
               display:'flex', gap: 12, overflowX:'auto', padding:'2px 2px 6px',
               touchAction:'pan-x', WebkitOverflowScrolling:'touch', overscrollBehaviorX:'contain',
             }}>
-            {/* Add — always first */}
-            <button onClick={()=> fileRef.current && fileRef.current.click()} aria-label="Add photo" style={{
-              appearance:'none', cursor:'pointer', flexShrink: 0, padding: 0,
-              width: 56, height: 56, borderRadius:'50%',
-              background:'rgba(var(--fg-rgb),0.07)',
-              border:'1.5px dashed rgba(var(--fg-rgb),0.30)', color:'var(--muted)',
-              display:'flex', alignItems:'center', justifyContent:'center',
-            }}>
-              <Icon name="plus" size={20} stroke={2}/>
-            </button>
-            {/* Initials — the plain no-picture option */}
-            <button onClick={()=> setSrc(null)} aria-label="Use initials" style={{
-              appearance:'none', cursor:'pointer', flexShrink: 0, padding: 0,
-              width: 56, height: 56, borderRadius:'50%', background:'#CC8050',
-              color:'var(--ink)', fontFamily:'var(--sans)', fontWeight: 700, fontSize: 18,
-              border: !src ? '2px solid var(--red)' : '2px solid transparent',
-              boxShadow: !src ? '0 0 0 2px var(--ink), 0 0 0 3.5px var(--red)' : 'inset 0 0 0 0.5px rgba(0,0,0,0.1)',
-              display:'flex', alignItems:'center', justifyContent:'center',
-            }}>{initials}</button>
             {pics.map((p, i) => {
               const on = p === src;
               return (

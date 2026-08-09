@@ -68,6 +68,45 @@ window.I18N = {
 
       // ── Search ──
       'search.placeholder':   'ค้นหาหนังหรือซีรีส์',
+
+      // ── Auth ──
+      'auth.signupDesc': 'สร้างบัญชีเพื่อเริ่มจับคู่หนังกับคนที่คุณดูด้วยจริงๆ',
+      'auth.signinDesc': 'เข้าสู่ระบบเพื่อไปต่อจากที่ค้างไว้',
+      'auth.orEmail':    'หรือด้วยอีเมล',
+      'auth.fullName':   'ชื่อ-นามสกุล',
+      'auth.email':      'อีเมล',
+      'auth.password':   'รหัสผ่าน',
+      'auth.birthday':   'วันเกิด',
+      'auth.gender':     'เพศ',
+      'auth.continueWith': 'ดำเนินการต่อด้วย',
+      'auth.haveAccount': 'มีบัญชีอยู่แล้ว?',
+      'auth.newHere':    'เพิ่งเคยใช้?',
+      'auth.under15':    'คุณต้องมีอายุอย่างน้อย 15 ปีจึงจะใช้ MatchDoo ได้',
+      'gender.male':     'ชาย',
+      'gender.female':   'หญิง',
+      'gender.na':       'ไม่ระบุ',
+      'gender.naShort':  'ไม่ระบุ',
+
+      // ── Friends ──
+      'friends.title':    'เพื่อน',
+      'friends.subtitle': 'แตะที่เพื่อนเพื่อดูแมตช์ของคุณ',
+      'friends.search':   'ค้นหาเพื่อน',
+      'friends.wantsToAdd': 'ต้องการเพิ่มคุณ',
+      'friends.accept':   'ยอมรับ',
+      'friends.mutual':   'เพื่อนร่วมกัน',
+      'friends.addTitle': 'เพิ่มเพื่อน',
+      'addfriend.username': 'ชื่อผู้ใช้',
+      'addfriend.contacts': 'รายชื่อติดต่อ',
+      'addfriend.qr':     'QR / ลิงก์',
+
+      // ── Swipe coach ──
+      'coach.k1': 'วิธีใช้งาน',        'coach.t1': 'ปัดเพื่อเลือก',
+      'coach.x1': 'ปัดการ์ดไปทางที่ต้องการ — ขวาเพื่อบันทึกลงรายการอยากดู ซ้ายเพื่อผ่าน ขึ้นเพื่อดูรายละเอียด และลงถ้าเคยดูแล้ว',
+      'coach.k2': 'หรือแค่แตะ',        'coach.t2': 'เหมือนกัน แค่แตะครั้งเดียว',
+      'coach.x2': 'ไม่ถนัดปัด? ปุ่มเหล่านี้ทำแบบเดียวกัน — ผ่าน อ่านต่อ เคยดู และอยากดู',
+      'coach.k3': 'ส่วนที่สนุก',       'coach.t3': 'ดูด้วยกัน',
+      'coach.x3': 'สร้างห้องเพื่อจับคู่กับเพื่อนหรือครอบครัว แล้วดูทุกเรื่องที่คุณถูกใจได้ในโปรไฟล์',
+      'coach.next': 'ถัดไป', 'coach.skip': 'ข้าม', 'coach.gotit': 'เข้าใจแล้ว!',
       'profile.email':          'อีเมล',
       'profile.birthday':       'วันเกิด',
       'profile.gender':         'เพศ',

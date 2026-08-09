@@ -91,7 +91,10 @@ function App() {
   // so every tr() call re-reads the active language.
   const [lang, setLangState] = React.useState(() => (window.I18N ? window.I18N.lang : 'en'));
   const setLang = (l) => { if (window.I18N) window.I18N.setLang(l); setLangState(l); };
-  React.useEffect(() => { if (window.I18N) window.I18N.lang = lang; }, [lang]);
+  React.useEffect(() => {
+    if (window.I18N) window.I18N.lang = lang;
+    document.documentElement.setAttribute('data-lang', lang); // CSS switches head titles to Kanit in Thai
+  }, [lang]);
 
   // Appearance — Dark / Light theme, persisted
   const [theme, setTheme] = React.useState(() => {

@@ -388,15 +388,15 @@ function EmptyDeck() {
 function SwipeCoach({ onDone }) {
   const STEPS = [
     { sel:'[data-coach="card"]',    pad: 6, radius: 22, place:'bottom',
-      kicker:'How it works', title:'Swipe to pick',
-      text:'Swipe a card whichever way feels right — right to save to your watchlist, left to pass, up for details, and down if you’ve already seen it.',
+      kicker:tr('coach.k1','How it works'), title:tr('coach.t1','Swipe to pick'),
+      text:tr('coach.x1','Swipe a card whichever way feels right — right to save to your watchlist, left to pass, up for details, and down if you’ve already seen it.'),
       gestures: true },
     { sel:'[data-coach="actions"]', pad: 12, radius: 40, place:'above',
-      kicker:'Or just tap', title:'Same thing, one tap',
-      text:'Not a swiper? These buttons do exactly the same — Pass, More, Seen, and Like.' },
+      kicker:tr('coach.k2','Or just tap'), title:tr('coach.t2','Same thing, one tap'),
+      text:tr('coach.x2','Not a swiper? These buttons do exactly the same — Pass, More, Seen, and Watchlist.') },
     { sel:'[data-coach="nav"]',     pad: 8, radius: 34, place:'above',
-      kicker:'The fun part', title:'Watch together',
-      text:'Create a Room to match with friends or family, then find everything you liked over in Profile.' },
+      kicker:tr('coach.k3','The fun part'), title:tr('coach.t3','Watch together'),
+      text:tr('coach.x3','Create a Room to match with friends or family, then find everything you liked over in Profile.') },
   ];
 
   const [i, setI] = React.useState(0);
@@ -523,14 +523,14 @@ function SwipeCoach({ onDone }) {
                   <button onClick={onDone} style={{
                     appearance:'none', border:0, background:'transparent', color:'var(--muted)',
                     fontSize: 13, fontWeight: 600, padding:'8px 6px', cursor:'pointer',
-                  }}>Skip</button>
+                  }}>{tr('coach.skip','Skip')}</button>
                 )}
                 <button onClick={next} style={{
                   appearance:'none', border:0, background:'var(--red)', color:'#fff',
                   fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14, padding:'9px 18px', borderRadius: 999,
                   boxShadow:'0 6px 18px rgba(255,109,41,0.4)', cursor:'pointer', display:'inline-flex', alignItems:'center', gap: 6,
                 }}>
-                  {last ? 'Got it!' : 'Next'}
+                  {last ? tr('coach.gotit','Got it!') : tr('coach.next','Next')}
                   {!last && <Icon name="arrow" size={14} color="#fff" stroke={2.4}/>}
                 </button>
               </div>

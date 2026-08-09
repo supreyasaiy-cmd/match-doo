@@ -25,6 +25,12 @@
   --sans: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
 }
 
+/* Thai: head titles (the --serif display var) render in Kanit for proper,
+   attractive Thai letterforms. Body text (--sans) keeps its stack. */
+:root[data-lang="th"]{
+  --serif: 'Kanit', 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+}
+
 /* ─── Light theme ─────────────────────────────────────────────────────
    Keeps the semantic roles: --ink = app surface, --cream = primary text.
    Foreground overlays (rgba(var(--fg-rgb),a)) become subtle dark tints,

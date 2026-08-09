@@ -254,8 +254,8 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
           </div>
           <div style={{marginTop: 12, color:'var(--muted)', fontSize: 14, lineHeight: 1.5, maxWidth: 320, marginBottom: 22}}>
             {isSignup
-              ? 'Create your account to start matching movies with the people you actually watch with.'
-              : 'Sign in to pick up right where you left off.'}
+              ? tr('auth.signupDesc','Create your account to start matching movies with the people you actually watch with.')
+              : tr('auth.signinDesc','Sign in to pick up right where you left off.')}
           </div>
 
           {/* One-tap SSO */}
@@ -267,7 +267,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
           {/* divider */}
           <div style={{display:'flex', alignItems:'center', gap: 12, margin:'20px 0'}}>
             <div style={{flex:1, height:0.5, background:'rgba(var(--fg-rgb),0.14)'}}/>
-            <div style={{fontSize: 11, color:'var(--muted-2)', letterSpacing:'0.06em'}}>or with email</div>
+            <div style={{fontSize: 11, color:'var(--muted-2)', letterSpacing:'0.06em'}}>{tr('auth.orEmail','or with email')}</div>
             <div style={{flex:1, height:0.5, background:'rgba(var(--fg-rgb),0.14)'}}/>
           </div>
 
@@ -275,17 +275,17 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
           <div style={{display:'flex', flexDirection:'column', gap: 14}}>
             {isSignup && (
               <label style={{display:'block'}}>
-                <div style={fieldLabel}>Full name</div>
+                <div style={fieldLabel}>{tr('auth.fullName','Full name')}</div>
                 <input value={name} onChange={e=>setName(e.target.value)} placeholder="Alex Carter" style={inputStyle(touched && !nameOk)}/>
               </label>
             )}
             <label style={{display:'block'}}>
-              <div style={fieldLabel}>Email</div>
+              <div style={fieldLabel}>{tr('auth.email','Email')}</div>
               <input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off"
                 value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@email.com" style={inputStyle(touched && !emailOk)}/>
             </label>
             <label style={{display:'block'}}>
-              <div style={fieldLabel}>Password</div>
+              <div style={fieldLabel}>{tr('auth.password','Password')}</div>
               <div style={{position:'relative'}}>
                 <input type={showPw ? 'text' : 'password'} value={pw} onChange={e=>setPw(e.target.value)}
                   placeholder={isSignup ? 'At least 6 characters' : 'Your password'}
@@ -301,21 +301,22 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
             </label>
             {isSignup && (
               <label style={{display:'block'}}>
-                <div style={fieldLabel}>Birthday</div>
+                <div style={fieldLabel}>{tr('auth.birthday','Birthday')}</div>
                 <input type="date" max={new Date().toISOString().slice(0,10)}
                   value={birthday} onChange={e=>setBirthday(e.target.value)}
                   style={{...inputStyle(touched && !bdayOk), colorScheme:'dark'}}/>
                 {touched && birthday && age !== null && age < 15 && (
-                  <div style={{fontSize:11, color:'#E8798A', marginTop:6, paddingLeft:2}}>You must be at least 15 to use MatchDoo.</div>
+                  <div style={{fontSize:11, color:'#E8798A', marginTop:6, paddingLeft:2}}>{tr('auth.under15','You must be at least 15 to use MatchDoo.')}</div>
                 )}
               </label>
             )}
             {isSignup && (
               <div>
-                <div style={fieldLabel}>Gender</div>
+                <div style={fieldLabel}>{tr('auth.gender','Gender')}</div>
                 <div style={{display:'flex', gap: 6}}>
                   {['Male','Female','Prefer not to say'].map(g => {
                     const on = gender === g;
+                    const gLabel = { 'Male': tr('gender.male','Male'), 'Female': tr('gender.female','Female'), 'Prefer not to say': tr('gender.naShort','Prefer not') }[g];
                     return (
                       <button key={g} type="button" onClick={()=> setGender(g)} style={{
                         appearance:'none', flex:1, padding:'11px 6px', borderRadius: 12,
@@ -324,7 +325,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
                         color: on ? 'var(--red)' : 'var(--cream)',
                         fontFamily:'var(--sans)', fontWeight: 600, fontSize: 12.5, lineHeight: 1.2,
                         cursor:'pointer',
-                      }}>{g === 'Prefer not to say' ? 'Prefer not' : g}</button>
+                      }}>{gLabel}</button>
                     );
                   })}
                 </div>
@@ -353,16 +354,16 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
                 border:'2px solid rgba(255,255,255,0.35)', borderTopColor:'#fff',
                 animation:'mm-spin .8s linear infinite',
               }}/>
-            ) : (isSignup ? 'Create account' : 'Sign in')}
+            ) : (isSignup ? tr('welcome.create','Create account') : tr('welcome.signin','Sign In'))}
           </button>
 
           <div style={{textAlign:'center', marginTop: 16, fontSize: 13, color:'var(--muted)'}}>
-            {isSignup ? 'Already have an account?' : 'New here?'}{' '}
+            {isSignup ? tr('auth.haveAccount','Already have an account?') : tr('auth.newHere','New here?')}{' '}
             <button onClick={swap} style={{
               appearance:'none', border:0, background:'transparent', color:'var(--cream)',
               fontWeight: 600, textDecoration:'underline', textUnderlineOffset: 3, fontSize: 13, cursor:'pointer',
             }}>
-              {isSignup ? 'Sign in' : 'Create one'}
+              {isSignup ? tr('welcome.signin','Sign In') : tr('welcome.create','Create account')}
             </button>
           </div>
         </div>
@@ -402,7 +403,7 @@ function SsoButton({ kind, loading, disabled, onClick }) {
           <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
         </svg>
       )}
-      Continue with {isApple ? 'Apple' : 'Google'}
+      {tr('auth.continueWith','Continue with')} {isApple ? 'Apple' : 'Google'}
     </button>
   );
 }
@@ -833,9 +834,9 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
   return (
     <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar
-        title="Friends" large
+        title={tr('friends.title','Friends')} large
         onBack={onBack}
-        subtitle="Tap a friend to see your matches"
+        subtitle={tr('friends.subtitle','Tap a friend to see your matches')}
         right={
           <button onClick={onOpenAdd} style={{
             appearance:'none', border:0, background:'var(--red)',
@@ -857,7 +858,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
         }}>
           <Icon name="search" size={16} color="var(--muted)"/>
           <input
-            placeholder="Search friends"
+            placeholder={tr('friends.search','Search friends')}
             value={query}
             onChange={e=>setQuery(e.target.value)}
             style={{
@@ -874,7 +875,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
           <div style={{
             fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase',
             color:'var(--muted)', marginBottom: 10,
-          }}>Wants to add you</div>
+          }}>{tr('friends.wantsToAdd','Wants to add you')}</div>
           <div style={{display:'flex', flexDirection:'column', gap: 8}}>
             {pending.map(p=>(
               <div key={p.id} style={{
@@ -886,13 +887,13 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
                 <Avatar person={p} size={40}/>
                 <div style={{flex:1, minWidth:0}}>
                   <div style={{fontWeight: 600, fontSize: 14, color:'var(--cream)'}}>{p.name}</div>
-                  <div style={{fontSize: 12, color:'var(--muted)'}}>{p.mutual} mutual friends</div>
+                  <div style={{fontSize: 12, color:'var(--muted)'}}>{p.mutual} {tr('friends.mutual','mutual friends')}</div>
                 </div>
                 <button onClick={()=> acceptPending(p)} style={{
                   appearance:'none', border:0, padding:'8px 14px', borderRadius: 999,
                   background:'var(--cream)', color:'var(--ink)',
                   fontFamily:'var(--sans)', fontWeight: 600, fontSize: 12,
-                }}>Accept</button>
+                }}>{tr('friends.accept','Accept')}</button>
                 <button onClick={()=> declinePending(p)} style={{
                   appearance:'none', border:0, padding:'8px 10px', borderRadius: 999,
                   background:'transparent', color:'var(--muted)',
@@ -968,7 +969,7 @@ function AddFriendScreen({ onBack }) {
 
   return (
     <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
-      <TopBar title="Add a friend" onBack={onBack}/>
+      <TopBar title={tr('friends.addTitle','Add a friend')} onBack={onBack}/>
       <div style={{padding:'8px 18px 14px'}}>
         <div style={{
           display:'flex', padding: 3, gap: 2,
@@ -976,9 +977,9 @@ function AddFriendScreen({ onBack }) {
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
         }}>
           {[
-            {id:'search', label:'Username'},
-            {id:'contacts', label:'Contacts'},
-            {id:'qr', label:'QR / Link'},
+            {id:'search', label:tr('addfriend.username','Username')},
+            {id:'contacts', label:tr('addfriend.contacts','Contacts')},
+            {id:'qr', label:tr('addfriend.qr','QR / Link')},
           ].map(o=>{
             const on = method===o.id;
             return (

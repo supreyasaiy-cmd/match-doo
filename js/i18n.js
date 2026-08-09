@@ -40,10 +40,34 @@ window.I18N = {
       'profile.watchlist':      'อยากดู',
       'profile.matches':        'แมตช์',
       'profile.seen':           'เคยดู',
+      'profile.group.taste':    'รสนิยม',
+      'profile.genres':         'แนวหนัง',
+      'profile.streaming':      'บริการสตรีมมิง',
+      'profile.runtime':        'ความยาวที่ชอบ',
       'profile.group.account':  'บัญชี',
       'profile.group.films':    'ภาพยนตร์',
       'profile.group.app':      'แอป',
       'profile.group.legal':    'ข้อกฎหมาย',
+
+      // ── Rooms ──
+      'rooms.title':    'ห้อง',
+      'rooms.subtitle': 'รวมกลุ่มเพื่อน ปัดหนังไปด้วยกัน',
+      'rooms.create':   'สร้างห้อง',
+      'rooms.friends':  'เพื่อน',
+      'rooms.search':   'ค้นหาห้อง',
+      'rooms.round':          'รอบนี้',
+      'rooms.voteGenres':     'โหวตแนวหนัง',
+      'rooms.swipeTogether':  'ปัดด้วยกัน',
+      'rooms.topPicks':       'ตัวเลือกยอดนิยมรอบนี้',
+      'rooms.everyoneIn':     'ทุกคนอยากดู',
+
+      // ── Matches ──
+      'matches.title':        'แมตช์',
+      'matches.subtitleN':    'เรื่องในคิวที่อยากดูร่วมกัน',
+      'matches.subtitle0':    'หนังที่คุณทั้งคู่อยากดู',
+
+      // ── Search ──
+      'search.placeholder':   'ค้นหาหนังหรือซีรีส์',
       'profile.email':          'อีเมล',
       'profile.birthday':       'วันเกิด',
       'profile.gender':         'เพศ',

@@ -258,8 +258,8 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar
-        title="Rooms" large
-        subtitle="Group your people, swipe together"
+        title={tr('rooms.title','Rooms')} large
+        subtitle={tr('rooms.subtitle','Group your people, swipe together')}
         right={onNotif && (
           <button onClick={onNotif} aria-label="Notifications" style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
@@ -290,7 +290,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
           boxShadow:'0 6px 18px rgba(255,109,41,0.35)',
         }}>
           <Icon name="plus" size={16} stroke={2.4} color="#fff"/>
-          Create room
+          {tr('rooms.create','Create room')}
         </button>
         <button onClick={onOpenCalendar} aria-label="Movie nights calendar" style={{
           appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.18)',
@@ -310,7 +310,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
         }}>
           <Icon name="user" size={15}/>
-          Friends
+          {tr('rooms.friends','Friends')}
         </button>
       </div>
 
@@ -326,7 +326,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
         }}>
           <Icon name="search" size={16} color="var(--muted)"/>
           <input
-            placeholder="Search rooms"
+            placeholder={tr('rooms.search','Search rooms')}
             value={query}
             onChange={e=>setQuery(e.target.value)}
             style={{
@@ -602,7 +602,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
             border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           }}>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 12}}>
-              <div style={{fontFamily:'var(--serif)', fontSize: 19, color:'var(--cream)'}}>This round</div>
+              <div style={{fontFamily:'var(--serif)', fontSize: 19, color:'var(--cream)'}}>{tr('rooms.round','This round')}</div>
               <div style={{
                 display:'inline-flex', alignItems:'center', gap: 6,
                 fontSize: 11, fontWeight: 700, padding:'5px 10px', borderRadius: 999,
@@ -637,7 +637,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
             }}>
               <IconBadge icon="sparkle" size={34} tone={room.tone}/>
               <div style={{flex:1, minWidth:0}}>
-                <div style={{fontSize: 13.5, fontWeight: 700}}>Vote genres</div>
+                <div style={{fontSize: 13.5, fontWeight: 700}}>{tr('rooms.voteGenres','Vote genres')}</div>
                 <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>
                   {myVotes.length ? `You voted: ${myVotes.join(', ')}` : `Pick from ${(room.filters?.genres||[]).length} genres the owner set`}
                 </div>
@@ -668,7 +668,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
               boxShadow:`0 10px 24px ${hexA(room.tone,0.4)}`,
             }}>
               <Icon name="cards" size={19} color="#fff" stroke={2.2}/>
-              {deckLeft > 0 ? 'Swipe together' : 'Review picks'}
+              {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
               <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
                 {deckLeft > 0 ? `· ${deckLeft} left` : '· deck done'}
               </span>
@@ -677,7 +677,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         </div>
 
         {/* Ranked round results — the movies everyone wants, most-wanted first */}
-        <Section title="Top picks this round" caption={
+        <Section title={tr('rooms.topPicks','Top picks this round')} caption={
           groupMatches.length
             ? `Ranked by how many of you want it (${groupMatches.length} everyone-match${groupMatches.length===1?'':'es'})`
             : 'Swipe together, then the most-wanted films rank here'
@@ -1464,7 +1464,7 @@ function RoomGenreVoteSheet({ room, onClose, onSaved }) {
         <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 12px'}}/>
         <div style={{padding:'0 20px 4px', display:'flex', alignItems:'flex-start', justifyContent:'space-between'}}>
           <div style={{minWidth:0}}>
-            <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight:1.1}}>Vote genres</div>
+            <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight:1.1}}>{tr('rooms.voteGenres','Vote genres')}</div>
             <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>Pick what you're in the mood for — the top votes shape the deck.</div>
           </div>
           <button onClick={onClose} style={{

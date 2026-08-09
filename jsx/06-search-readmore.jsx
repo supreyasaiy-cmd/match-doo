@@ -423,7 +423,7 @@ function SearchOverlay({ onClose, onPick }) {
           <Icon name="search" size={26} color="var(--red)"/>
           <input
             ref={inputRef}
-            placeholder="Films & series…"
+            placeholder={window.tr ? tr('search.placeholder','Films & series…') : 'Films & series…'}
             value={query}
             onChange={e => setQuery(e.target.value)}
             style={{

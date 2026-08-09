@@ -666,10 +666,10 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
   return (
     <div style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar
-        title="Matches"
+        title={tr('matches.title','Matches')}
         large
         onBack={onBack}
-        subtitle={totalMatched ? `${totalMatched} films on your shared queue` : 'Films you both want to watch'}
+        subtitle={totalMatched ? `${totalMatched} ${tr('matches.subtitleN','films on your shared queue')}` : tr('matches.subtitle0','Films you both want to watch')}
       />
 
       {genreOptions.length > 0 && (
@@ -1364,10 +1364,10 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
             onClick={()=> setListView({ title: tr('profile.seen','Seen'), movies: seenMovies })}/>
         </div>
 
-        <SettingsGroup title="Taste">
-          <SettingsRow icon="sparkle" label="Genres" detail={`${genres.size} selected`} onClick={()=> setSheet('genres')}/>
-          <SettingsRow icon="film" label="Streaming services" detail={servicesDetail} onClick={()=> setSheet('services')}/>
-          <SettingsRow icon="clock" label="Run time preference" detail={runtime} onClick={()=> setSheet('runtime')}/>
+        <SettingsGroup title={tr('profile.group.taste','Taste')}>
+          <SettingsRow icon="sparkle" label={tr('profile.genres','Genres')} detail={`${genres.size} selected`} onClick={()=> setSheet('genres')}/>
+          <SettingsRow icon="film" label={tr('profile.streaming','Streaming services')} detail={servicesDetail} onClick={()=> setSheet('services')}/>
+          <SettingsRow icon="clock" label={tr('profile.runtime','Run time preference')} detail={runtime} onClick={()=> setSheet('runtime')}/>
         </SettingsGroup>
 
         <SettingsGroup title={tr('profile.group.account','Account')}>

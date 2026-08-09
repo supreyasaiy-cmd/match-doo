@@ -1312,7 +1312,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
   const [profileName, setProfileName] = React.useState(user.name || 'Alex Carter');
   const [handle, setHandle] = React.useState(user.username || 'alex');
   const userId = user.userId || 'MD-XXXXXXXX';  // permanent unique key (read-only)
-  const [avatarSrc, setAvatarSrc] = React.useState((window.AVATAR_POOL || [])[0] || null);
+  const [avatarSrc, setAvatarSrc] = React.useState(null); // default: clean initials (no character); pick one in Edit profile
   const [customPics, setCustomPics] = React.useState([]); // user-added photos (data URLs)
   const [showProfileEdit, setShowProfileEdit] = React.useState(false);
   const avatarPhoto = avatarSrc;
@@ -1336,7 +1336,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           display:'flex', alignItems:'center', gap: 16, color:'var(--cream)',
         }}>
-          <Avatar person={{initials: (profileName||'A').slice(0,2).toUpperCase(), photo: avatarPhoto}} size={62}/>
+          <Avatar person={{initials: (profileName||'A').slice(0,2).toUpperCase(), photo: avatarPhoto, noPhoto: !avatarPhoto}} size={62}/>
           <div style={{flex:1, minWidth:0}}>
             <div style={{
               fontFamily:'var(--serif)', fontSize: 26, color:'var(--cream)',
@@ -1901,8 +1901,9 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
 function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], customPics = [], onAddPic, onSave, onClose }) {
   const [n, setN] = React.useState(name);
   const [h, setH] = React.useState(handle);
-  const [src, setSrc] = React.useState(avatarSrc || pool[0] || null);
+  const [src, setSrc] = React.useState(avatarSrc || null); // null = plain initials
   const fileRef = React.useRef(null);
+  const initials = (n || 'A').slice(0, 2).toUpperCase();
 
   // Add a picture from the user's device — read locally as a data URL,
   // select it, and hand it up so it persists in the picker.
@@ -1983,6 +1984,15 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], customPi
             }}>
               <Icon name="plus" size={20} stroke={2}/>
             </button>
+            {/* Initials — the plain no-picture option */}
+            <button onClick={()=> setSrc(null)} aria-label="Use initials" style={{
+              appearance:'none', cursor:'pointer', flexShrink: 0, padding: 0,
+              width: 56, height: 56, borderRadius:'50%', background:'#CC8050',
+              color:'var(--ink)', fontFamily:'var(--sans)', fontWeight: 700, fontSize: 18,
+              border: !src ? '2px solid var(--red)' : '2px solid transparent',
+              boxShadow: !src ? '0 0 0 2px var(--ink), 0 0 0 3.5px var(--red)' : 'inset 0 0 0 0.5px rgba(0,0,0,0.1)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+            }}>{initials}</button>
             {pics.map((p, i) => {
               const on = p === src;
               return (

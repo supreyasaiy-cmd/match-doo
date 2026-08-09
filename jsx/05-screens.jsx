@@ -2160,7 +2160,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
   if (!movie) return null;
   return (
     <div className="fade-in" style={{
-      position:'absolute', inset: 0, zIndex: 50,
+      position:'absolute', inset: 0, zIndex: 250,   // full modal — above the nav bar so the "Watched together" action isn't covered
       background:'var(--ink)', display:'flex', flexDirection:'column',
     }}>
       {/* Poster header */}

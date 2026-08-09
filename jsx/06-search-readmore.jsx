@@ -366,7 +366,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
         }}>
-          <Icon name="x" size={16}/> Pass
+          <Icon name="x" size={16}/> {window.tr ? tr('swipe.pass','Pass') : 'Pass'}
         </button>
         <button onClick={onLike} style={{
           appearance:'none', flex: 1, height: 52, borderRadius: 999, pointerEvents:'auto',
@@ -375,7 +375,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
           boxShadow:'0 8px 24px rgba(255,109,41,0.45)',
         }}>
-          <Icon name="heart" size={16} color="#fff"/> Like
+          <Icon name="bookmark" size={16} color="#fff"/> {window.tr ? tr('swipe.watchlist','Watchlist') : 'Watchlist'}
         </button>
       </div>
     </div>
@@ -461,7 +461,7 @@ function SearchOverlay({ onClose, onPick }) {
               <div style={{flex:1, minWidth:0}}>
                 <div style={{fontFamily:'var(--serif)', fontSize: 19, lineHeight: 1.05, letterSpacing:'-0.01em', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.title}</div>
                 <div style={{fontSize: 11, color:'var(--muted)', marginTop: 4, letterSpacing:'0.05em', textTransform:'uppercase'}}>
-                  {m.year} · {m.type === 'series' ? `${m.seasons||1} seasons` : (m.genres?.[0] || 'Film')} · {m.rt}% RT
+                  {m.year} · {m.type === 'series' ? `${m.seasons||1} season${(m.seasons||1)>1?'s':''}` : (m.genres?.[0] || 'Film')} · {m.rt}% RT
                 </div>
               </div>
               <Icon name="chev" size={14} color="var(--muted-2)"/>

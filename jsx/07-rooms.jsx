@@ -680,10 +680,10 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         <Section title={tr('rooms.topPicks','Top picks this round')} caption={
           groupMatches.length
             ? `Ranked by how many of you want it (${groupMatches.length} everyone-match${groupMatches.length===1?'':'es'})`
-            : 'Swipe together, then the most-wanted films rank here'
+            : tr('rooms.swipePrompt','Swipe together — your most-wanted films climb to the top')
         }>
           {roundResults.length === 0 ? (
-            <EmptySectionRow text="No likes yet — hit “Swipe together” to start voting with your swipes."/>
+            <EmptySectionRow text={tr('rooms.noPicks','No picks yet — tap “Swipe together” and let your swipes do the voting. 🍿')}/>
           ) : (
             <div style={{display:'flex', flexDirection:'column', gap: 8, padding:'0 18px'}}>
               {roundResults.slice(0, 8).map((r, i) => (

@@ -372,10 +372,10 @@ function EmptyDeck() {
         <Icon name="film" size={28} color="var(--cream)"/>
       </div>
       <div style={{fontFamily:'var(--serif)', fontSize: 28, color:'var(--cream)', lineHeight:1.1}}>
-        That's the reel, friend.
+        {tr('empty.deckTitle',"That's the whole reel! 🎬")}
       </div>
       <div style={{fontSize: 13, lineHeight:1.5}}>
-        We're loading more films you might love. Check back in a bit.
+        {tr('empty.deckSub',"You've swiped through every pick for now — fresh films are loading. Grab some popcorn. 🍿")}
       </div>
     </div>
   );

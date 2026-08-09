@@ -491,7 +491,7 @@ function App() {
             <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
               <CreateRoomScreen
                 onBack={()=> setCreateRoom(false)}
-                onCreate={(r)=>{ setCreateRoom(false); setRoomDetail(r); showToast('Room created'); }}
+                onCreate={(r)=>{ setCreateRoom(false); setRoomDetail(r); showToast(tr('toast.roomCreated','Room’s ready — let’s find your film. 🍿')); }}
               />
             </div>
           )}

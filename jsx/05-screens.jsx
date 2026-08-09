@@ -796,10 +796,10 @@ function EmptyMatches() {
         <Logomark size={36}/>
       </div>
       <div style={{fontFamily:'var(--serif)', fontSize: 22, color:'var(--cream)', lineHeight:1.1, marginBottom: 8}}>
-        No matches yet.
+        {tr('empty.matchesTitle','No matches — yet! 💫')}
       </div>
       <div style={{fontSize: 13, lineHeight:1.5}}>
-        Keep swiping — once both of you<br/>want the same film, it'll show up here.
+        {tr('empty.matchesSub',"Keep swiping. The moment you both love the same film, the magic happens right here.")}
       </div>
     </div>
   );
@@ -963,7 +963,7 @@ function AddFriendScreen({ onBack }) {
       tone: person.tone || '#E0955E', online: false, lastSeen: 'Just added', mutual: person.mutual || 0,
     };
     window.FRIENDS.friends = [newFriend, ...(window.FRIENDS.friends || [])];
-    setAddedToast(`Added ${person.name}`);
+    setAddedToast(tr('toast.friendAdded',"{name}’s in! 🎉").replace('{name}', person.name));
     setTimeout(()=> setAddedToast(''), 2000);
   };
 
@@ -1210,7 +1210,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
         {/* Matched */}
         <Section title="On your shared queue" caption={`${matched.length} films you both want to watch`}>
           {matched.length === 0 ? (
-            <EmptySectionRow text="No mutual films yet — keep swiping!"/>
+            <EmptySectionRow text={tr('empty.sharedQueue','No shared picks yet — keep swiping! 🍿')}/>
           ) : (
             <PosterRow movies={matched} onTap={(m)=>onOpenMovie(m, friend)}/>
           )}
@@ -1435,7 +1435,7 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
           name={profileName} handle={handle} userId={userId}
           avatarSrc={avatarSrc}
           pool={window.AVATAR_POOL || []}
-          onSave={(n, h, src)=>{ setProfileName(n); setHandle(h); setAvatarSrc(src); setShowProfileEdit(false); flash('Profile updated'); }}
+          onSave={(n, h, src)=>{ setProfileName(n); setHandle(h); setAvatarSrc(src); setShowProfileEdit(false); flash(tr('toast.profileSaved','Looking sharp! ✨')); }}
           onClose={()=> setShowProfileEdit(false)}
         />
       )}
@@ -1757,7 +1757,8 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
           gap: 12, color:'var(--muted)', textAlign:'center', padding:'0 40px',
         }}>
           <Icon name="film" size={30} color="var(--muted)"/>
-          <div style={{fontSize: 14, lineHeight: 1.5}}>Nothing here yet — keep swiping to fill this list.</div>
+          <div style={{fontFamily:'var(--serif)', fontSize: 18, color:'var(--cream)'}}>{tr('empty.listTitle','This list is feeling lonely 🍿')}</div>
+          <div style={{fontSize: 13.5, lineHeight: 1.5}}>{tr('empty.listSub','Swipe right on films you love and they’ll land right here.')}</div>
         </div>
       ) : (
         <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'8px 18px 130px'}}>

@@ -56,7 +56,7 @@ function collectMovieNights() {
     let d = null;
     try { d = localStorage.getItem(`matchdoo.roomdate.${r.id}`); } catch {}
     if (!d) d = r.watchDate || null;
-    if (d) out.push({ date: d, kind: 'room', room: r, tone: r.tone || '#FF6D29', title: r.name, sub: 'Movie night', emoji: r.emoji || '🎬' });
+    if (d) out.push({ date: d, kind: 'room', room: r, tone: r.tone || '#FF6D29', title: r.name, sub: tr('cal.movieNightSub','Movie night'), emoji: r.emoji || '🎬' });
   }
   try {
     for (let i = 0; i < localStorage.length; i++) {
@@ -66,7 +66,7 @@ function collectMovieNights() {
       if (!d) continue;
       const id = k.slice('matchdoo.schedule.'.length);
       const m = (window.MOVIES || []).find(x => x.id === id);
-      out.push({ date: d, kind: 'movie', movie: m, tone: '#F0B24A', title: m ? m.title : 'A film', sub: 'Watching solo', emoji: '🎬' });
+      out.push({ date: d, kind: 'movie', movie: m, tone: '#F0B24A', title: m ? m.title : tr('cal.aFilm','A film'), sub: tr('cal.watchingSolo','Watching solo'), emoji: '🎬' });
     }
   } catch {}
   return out.sort((a, b) => a.date.localeCompare(b.date));
@@ -117,7 +117,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
       <div style={{display:'flex', alignItems:'center', gap: 10, marginBottom: 12}}>
         <Icon name="calendar" size={16} color="var(--red)"/>
         <div style={{flex: 1, fontWeight: 600, fontSize: 14, letterSpacing:'-0.01em', color:'var(--cream)'}}>
-          Movie nights
+          {tr("cal.movieNights","Movie nights")}
         </div>
         <button onClick={()=>shift(-1)} aria-label="Previous month" style={{
           appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
@@ -181,7 +181,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
         }}>{listTitle}</div>
         {list.length === 0 ? (
           <div style={{fontSize: 12.5, color:'var(--muted)', padding:'2px 2px 4px'}}>
-            No movie nights scheduled — pick a date inside a room.
+            {tr("cal.noScheduled","No movie nights scheduled — pick a date inside a room.")}
           </div>
         ) : (
           <div style={{display:'flex', flexDirection:'column', gap: 6}}>

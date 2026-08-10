@@ -1219,7 +1219,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
         {/* Watched */}
         <Section title="Watched together" caption={`${watched.length} films you've seen with ${friend.name.split(' ')[0]}`}>
           {watched.length === 0 ? (
-            <EmptySectionRow text="Once you watch a match, tap “Watched” to log it here."/>
+            <EmptySectionRow text={tr("ms.logWatched","Once you watch a match, tap “Watched” to log it here.")}/>
           ) : (
             <PosterRow movies={watched} dim onTap={(m)=>onOpenMovie(m, friend)}/>
           )}
@@ -1282,10 +1282,10 @@ function EmptySectionRow({ text }) {
 
 // ─── Profile / Settings ─────────────────────────────────────────────
 function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb, onOpenLegal, lang = 'en', onSetLang }) {
-  const tmdbDetail = !tmdbConnected ? 'Not connected'
-    : tmdbStatus === 'loading' ? 'Loading real posters…'
-    : tmdbStatus === 'error' ? 'Connected · fetch failed'
-    : 'Connected · real posters';
+  const tmdbDetail = !tmdbConnected ? tr('tmdb.notConnected','Not connected')
+    : tmdbStatus === 'loading' ? tr('tmdb.connecting','Loading real posters…')
+    : tmdbStatus === 'error' ? tr('tmdb.fetchFailed','Connected · fetch failed')
+    : tr('tmdb.realPosters','Connected · real posters');
 
   // Editable profile settings (local prototype state)
   const [genres, setGenres] = React.useState(new Set(['Drama','Romance','Sci-Fi','Thriller','Mystery','Comedy']));
@@ -2090,27 +2090,25 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
           <IconBadge icon="film" size={44} tone="#E0955E"/>
           <div style={{flex:1, minWidth:0}}>
             <div style={{fontFamily:'var(--serif)', fontSize: 24, lineHeight: 1.1, color:'var(--cream)'}}>
-              TMDB integration
+              {tr('tmdb.title','TMDB integration')}
             </div>
             <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>
-              {status === 'error' ? "Key saved, but the request failed"
-                : status === 'loading' ? 'Connecting…'
-                : connected ? 'Connected · pulling real posters'
-                : 'Not connected · showing illustrated posters'}
+              {status === 'error' ? tr('tmdb.stError',"Key saved, but the request failed")
+                : status === 'loading' ? tr('tmdb.stLoading','Connecting…')
+                : connected ? tr('tmdb.stConnected','Connected · pulling real posters')
+                : tr('tmdb.stNot','Not connected · showing illustrated posters')}
             </div>
           </div>
         </div>
 
         <div style={{fontSize: 13, color:'var(--muted)', lineHeight: 1.5, margin:'14px 0'}}>
-          Paste a free TMDB API key (v3 auth or v4 read token) to replace the
-          illustrated posters with real ones, pulled live from TMDB's own
-          servers. Your key stays on this device only.
+          {tr('tmdb.desc',"Paste a free TMDB API key to replace the illustrated posters with real ones, pulled live from TMDB. Your key stays on this device only.")}
         </div>
 
         <input
           value={key}
           onChange={e=>{ setKey(e.target.value); setTouched(true); }}
-          placeholder="Paste your TMDB API key"
+          placeholder={tr("tmdb.paste","Paste your TMDB API key")}
           autoCapitalize="off" autoCorrect="off" spellCheck={false}
           style={{
             width:'100%', background:'rgba(var(--fg-rgb),0.07)',
@@ -2123,7 +2121,7 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
 
         {errored && (
           <div style={{fontSize: 12, color:'#E8798A', marginBottom: 8}}>
-            Couldn't connect — double check the key and try again.
+            {tr('tmdb.errMsg',"Couldn't connect — double check the key and try again.")}
           </div>
         )}
 
@@ -2132,7 +2130,7 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
             display:'inline-flex', alignItems:'center', gap: 6,
             fontSize: 12.5, color:'#E0955E', marginBottom: 18, textDecoration:'none',
           }}>
-          Get a free API key at themoviedb.org
+          {tr("tmdb.getKey","Get a free API key at themoviedb.org")}
           <Icon name="link" size={12} color="#E0955E"/>
         </a>
 
@@ -2142,12 +2140,12 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
               appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)', background:'transparent',
               color:'var(--muted)', borderRadius: 999, padding:'13px 18px',
               fontFamily:'var(--sans)', fontWeight: 500, fontSize: 14,
-            }}>Disconnect</button>
+            }}>{tr("tmdb.disconnect","Disconnect")}</button>
           )}
           <PrimaryBtn full onClick={()=> key.trim() && onSave(key.trim())}
             disabled={!key.trim() || loading}
             style={{opacity: (!key.trim() || loading) ? 0.5 : 1}}>
-            {loading ? 'Connecting…' : connected ? 'Update key' : 'Connect'}
+            {loading ? tr('tmdb.stLoading','Connecting…') : connected ? tr('tmdb.update','Update key') : tr('tmdb.connect','Connect')}
           </PrimaryBtn>
         </div>
       </div>

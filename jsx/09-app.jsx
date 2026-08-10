@@ -120,13 +120,14 @@ function App() {
   const notifications = React.useMemo(() => {
     const fr = ALL_FRIENDS_LIST();
     const list = [];
-    if (fr[0]) list.push({ id:'n1', type:'match',    person: fr[0], text: `You and ${fr[0].name.split(' ')[0]} both want to watch a film`, time:'2m' });
-    if (fr[2]) list.push({ id:'n2', type:'friend',   person: fr[2], text: `${fr[2].name.split(' ')[0]} added you as a friend`, time:'1h' });
-    list.push({ id:'n3', type:'reminder', text: 'Movie night with Family Night is tonight', time:'3h' });
-    if (fr[1]) list.push({ id:'n4', type:'match',    person: fr[1], text: `${fr[1].name.split(' ')[0]} liked a film you like too`, time:'Yesterday' });
-    list.push({ id:'n5', type:'new', text: 'New titles added on your Disney+ picks', time:'2d' });
+    const nm = (f) => f.name.split(' ')[0];
+    if (fr[0]) list.push({ id:'n1', type:'match',    person: fr[0], text: tr('notif.match1',`You and ${nm(fr[0])} both want the same film 🍿`).replace('{name}', nm(fr[0])), time:'2m' });
+    if (fr[2]) list.push({ id:'n2', type:'friend',   person: fr[2], text: tr('notif.friend',`${nm(fr[2])} added you — say hi! 👋`).replace('{name}', nm(fr[2])), time:'1h' });
+    list.push({ id:'n3', type:'reminder', text: tr('notif.reminder','Movie night with Family Night is tonight 🎬'), time:'3h' });
+    if (fr[1]) list.push({ id:'n4', type:'match',    person: fr[1], text: tr('notif.match2',`${nm(fr[1])} liked a film you love too 💫`).replace('{name}', nm(fr[1])), time:'Yesterday' });
+    list.push({ id:'n5', type:'new', text: tr('notif.new','Fresh titles just landed on your picks ✨'), time:'2d' });
     return list;
-  }, []);
+  }, [lang]);
   const openNotif = () => { setNotifOpen(true); setNotifSeen(true); };
   // Tapping a notification jumps to the relevant place.
   const openNotifTarget = (n) => {

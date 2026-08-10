@@ -121,6 +121,12 @@ window.I18N = {
       'toast.profileSaved': 'ดูดีขึ้นเยอะ! ✨',
       'toast.roomCreated':  'สร้างห้องแล้ว — ไปหาหนังกันเลย! 🍿',
       'toast.friendAdded':  'เพิ่ม {name} เข้ากลุ่มแล้ว! 🎉',
+      // Notifications (fun tone)
+      'notif.match1':  'คุณกับ {name} อยากดูเรื่องเดียวกัน 🍿',
+      'notif.friend':  '{name} เพิ่มคุณเป็นเพื่อนแล้ว — ทักไปสิ! 👋',
+      'notif.reminder':'คืนดูหนังกับ Family Night คืนนี้! 🎬',
+      'notif.match2':  '{name} ถูกใจหนังที่คุณชอบเหมือนกัน 💫',
+      'notif.new':     'มีหนังใหม่มาให้เลือกแล้ว ✨',
 
       // ── Onboarding ──
       'onb.hi':        'สวัสดี',
@@ -176,6 +182,10 @@ window.I18N = {
       'cr.addMembers': 'เพิ่มสมาชิก',
       'cr.selected':   'เลือกแล้ว',
       'cr.create':     'สร้างห้อง',
+      'cr.streamHint2':'หนังจะมาจากบริการเหล่านี้',
+      'cr.pick35':     'เลือก 3–5',
+      'cr.votingHint': 'สมาชิกมีเวลาเท่านี้ในการโหวตแนวและปัดก่อนล็อกผลลัพธ์',
+      'cr.day1':'1 วัน', 'cr.day3':'3 วัน', 'cr.week1':'1 สัปดาห์',
       'profile.email':          'อีเมล',
       'profile.birthday':       'วันเกิด',
       'profile.gender':         'เพศ',

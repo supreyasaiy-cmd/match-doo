@@ -851,7 +851,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
 
   return (
     <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
-      <TopBar title="New room" onBack={onBack}/>
+      <TopBar title={tr("cr.newRoom","New room")} onBack={onBack}/>
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'4px 18px 110px'}}>
         {/* Emoji + name */}
@@ -869,7 +869,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
             fontSize: 28, flexShrink: 0,
           }}>{emoji}</div>
           <input
-            placeholder="Room name"
+            placeholder={tr("cr.roomName","Room name")}
             value={name} onChange={e=>setName(e.target.value)}
             style={{
               flex:1, background:'transparent', border:0, outline:0,
@@ -902,9 +902,9 @@ function CreateRoomScreen({ onBack, onCreate }) {
         <div style={{marginTop: 22}}>
           <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', padding:'0 4px 10px'}}>
             <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>
-              Streaming
+              {tr("cr.streaming","Streaming")}
             </div>
-            <div style={{fontSize: 11, color:'var(--muted-2)'}}>picks come from these</div>
+            <div style={{fontSize: 11, color:'var(--muted-2)'}}>{tr('cr.streamHint2','picks come from these')}</div>
           </div>
           <div style={{display:'flex', gap: 7, flexWrap:'wrap'}}>
             {SERVICE_OPTS.map(name=>{
@@ -931,10 +931,10 @@ function CreateRoomScreen({ onBack, onCreate }) {
         <div style={{marginTop: 22}}>
           <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', padding:'0 4px 10px'}}>
             <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>
-              Genre pool
+              {tr("cr.genrePool","Genre pool")}
             </div>
             <div style={{fontSize: 11, color: genres.size>=3 && genres.size<=5 ? 'var(--green)' : 'var(--muted-2)'}}>
-              {genres.size}/5 · pick 3–5
+              {genres.size}/5 · {tr("cr.pick35","pick 3–5")}
             </div>
           </div>
           <div style={{display:'flex', gap: 7, flexWrap:'wrap'}}>
@@ -958,10 +958,10 @@ function CreateRoomScreen({ onBack, onCreate }) {
         {/* Voting window — how long members have to vote + swipe */}
         <div style={{marginTop: 22}}>
           <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 10}}>
-            Voting window
+            {tr("cr.votingWindow","Voting window")}
           </div>
           <div style={{display:'flex', gap: 6}}>
-            {[{d:1,l:'1 day'},{d:3,l:'3 days'},{d:7,l:'1 week'}].map(o=>{
+            {[{d:1,l:tr('cr.day1','1 day')},{d:3,l:tr('cr.day3','3 days')},{d:7,l:tr('cr.week1','1 week')}].map(o=>{
               const on = votingDays === o.d;
               return (
                 <button key={o.d} onClick={()=>setVotingDays(o.d)} style={{
@@ -975,7 +975,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
             })}
           </div>
           <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 8, paddingLeft: 4}}>
-            Members have this long to vote genres and swipe before the pick is locked.
+            {tr('cr.votingHint','Members have this long to vote genres and swipe before the pick is locked.')}
           </div>
         </div>
 
@@ -983,9 +983,9 @@ function CreateRoomScreen({ onBack, onCreate }) {
         <div style={{marginTop: 22}}>
           <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', padding:'0 4px 10px'}}>
             <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>
-              Add members
+              {tr("cr.addMembers","Add members")}
             </div>
-            <div style={{fontSize: 11, color:'var(--muted-2)'}}>{selected.size} selected</div>
+            <div style={{fontSize: 11, color:'var(--muted-2)'}}>{selected.size} {tr("cr.selected","selected")}</div>
           </div>
           <div style={{display:'flex', flexDirection:'column', gap: 4}}>
             {allFriends.map(f=>{
@@ -1030,7 +1030,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
           window.ROOMS = [newRoom, ...window.ROOMS];
           onCreate(newRoom);
         }}>
-          Create room
+          {tr("cr.create","Create room")}
         </PrimaryBtn>
       </div>
     </div>
@@ -1348,7 +1348,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
           ))}
         </div>
         <button onClick={onAddMembers} style={{appearance:'none', border:'0.5px dashed rgba(var(--fg-rgb),0.22)', background:'transparent', borderRadius:12, padding:'11px', width:'100%', color:'var(--cream)', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, fontSize:13.5, fontWeight:600, marginBottom:14}}>
-          <Icon name="plus" size={15} stroke={2.2}/> Add members
+          <Icon name="plus" size={15} stroke={2.2}/> {tr("cr.addMembers","Add members")}
         </button>
 
         {/* share shortcut */}

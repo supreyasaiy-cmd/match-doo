@@ -247,7 +247,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         </div>
 
         {/* Movie night — pick a date to watch */}
-        <Section title="Movie night">
+        <Section title={window.tr ? tr("rm.movieNight","Movie night") : "Movie night"}>
           <div style={{display:'flex', alignItems:'center', gap: 10}}>
             <label style={{
               position:'relative', flex: 1, cursor:'pointer',
@@ -258,7 +258,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
             }}>
               <Icon name="clock" size={18} color={sched ? 'var(--green)' : 'var(--muted)'}/>
               <span style={{flex:1, fontSize: 14, fontWeight: 600, color: sched ? 'var(--cream)' : 'var(--muted)'}}>
-                {sched ? `Watching · ${schedLabel}` : 'Schedule a date to watch'}
+                {sched ? `${window.tr?tr('rm.watching','Watching'):'Watching'} · ${schedLabel}` : (window.tr?tr('rm.schedule','Schedule a date to watch'):'Schedule a date to watch')}
               </span>
               {!sched && <Icon name="chev" size={14} color="var(--muted-2)"/>}
               <input
@@ -282,7 +282,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         </Section>
 
         {/* Synopsis */}
-        <Section title="Synopsis">
+        <Section title={window.tr ? tr("rm.synopsis","Synopsis") : "Synopsis"}>
           <p style={{
             margin: 0, fontSize: 14.5, lineHeight: 1.55, color:'var(--cream-2)',
             textWrap:'pretty',
@@ -324,7 +324,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         </Section>
 
         {/* Cast */}
-        <Section title="Cast">
+        <Section title={window.tr ? tr("rm.cast","Cast") : "Cast"}>
           <div style={{
             display:'flex', gap: 12, overflowX:'auto',
             marginLeft: -24, marginRight: -24, padding:'0 24px 4px',

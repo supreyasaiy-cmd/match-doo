@@ -401,7 +401,7 @@ function RoomCard({ room, onClick }) {
         </div>
         <div style={{fontSize: 12, color:'var(--muted)', marginTop: 3, display:'flex', alignItems:'center', gap: 6}}>
           {room.type && (<>
-            <span style={{textTransform:'capitalize'}}>{room.type === 'couple' ? 'Partner' : room.type}</span>
+            <span style={{textTransform:'capitalize'}}>{room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')}</span>
             <span>·</span>
           </>)}
           <span>{members.length} {members.length===1?'member':'members'}</span>
@@ -469,9 +469,9 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
   const _tod = new Date(); const _tom = new Date(_tod); _tom.setDate(_tod.getDate()+1);
   const _sat = new Date(_tod); _sat.setDate(_tod.getDate() + ((6 - _tod.getDay() + 7) % 7));
   const QUICK_DATES = [
-    { label:'Tonight',      value: isoLocal(_tod) },
-    { label:'Tomorrow',     value: isoLocal(_tom) },
-    { label:'This weekend', value: isoLocal(_sat) },
+    { label:tr('room.tonight','Tonight'),      value: isoLocal(_tod) },
+    { label:tr('room.tomorrow','Tomorrow'),     value: isoLocal(_tom) },
+    { label:tr('room.weekend','This weekend'), value: isoLocal(_sat) },
   ];
 
   const allFriends = ALL_FRIENDS();
@@ -547,7 +547,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           color:'var(--cream)', letterSpacing:'-0.01em',
         }}>{room.name}</div>
         <div style={{fontSize: 12.5, color:'var(--muted)', marginTop: 5, textTransform:'capitalize'}}>
-          {room.type ? `${room.type === 'couple' ? 'Partner' : room.type} · ` : ''}{members.length} {members.length===1?'member':'members'} · {room.lastActivity}
+          {room.type ? `${room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')} · ` : ''}{members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')} · {room.lastActivity}
         </div>
 
         {/* Member avatars in a row, with + Add */}
@@ -585,11 +585,11 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
           borderRadius: 16,
         }}>
-          <Stat label="Group matches" value={groupMatches.length}/>
+          <Stat label={tr('room.groupMatches','Group matches')} value={groupMatches.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label="Almost there" value={almost.length}/>
+          <Stat label={tr('room.almostThere','Almost there')} value={almost.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label="Members" value={members.length}/>
+          <Stat label={tr('room.membersStat','Members')} value={members.length}/>
         </div>
       </div>
 
@@ -610,16 +610,16 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
                 border:`0.5px solid ${hexA(room.tone, 0.3)}`,
               }}>
                 <Icon name="clock" size={12} color={room.tone}/>
-                {daysLeft == null ? `${room.votingDays || 3}-day window`
-                  : daysLeft > 0 ? `${daysLeft} day${daysLeft===1?'':'s'} to vote`
-                  : 'Voting closed'}
+                {daysLeft == null ? (window.I18N && window.I18N.lang==='th' ? tr('room.dayWindow','').replace('{n}', room.votingDays || 3) : `${room.votingDays || 3}-day window`)
+                  : daysLeft > 0 ? (window.I18N && window.I18N.lang==='th' ? `${daysLeft} ${tr('room.daysToVote','days to vote')}` : `${daysLeft} day${daysLeft===1?'':'s'} to vote`)
+                  : tr('room.votingClosed','Voting closed')}
               </div>
             </div>
 
             {/* Streaming scope */}
             {(room.filters?.services || []).length > 0 && (
               <div style={{display:'flex', alignItems:'center', gap: 6, marginBottom: 12, flexWrap:'wrap'}}>
-                <span style={{fontSize: 11, color:'var(--muted)', marginRight: 2}}>On</span>
+                <span style={{fontSize: 11, color:'var(--muted)', marginRight: 2}}>{tr('room.streamOn','On')}</span>
                 {(room.filters.services).map(s => (
                   <span key={s} style={{display:'inline-flex', alignItems:'center', gap:5, fontSize:11.5, fontWeight:600, color:'var(--cream)', padding:'3px 9px 3px 4px', borderRadius:999, background:'rgba(var(--fg-rgb),0.06)', border:'0.5px solid rgba(var(--fg-rgb),0.10)'}}>
                     <ServiceChip name={s} size={14}/>{s}
@@ -639,7 +639,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
               <div style={{flex:1, minWidth:0}}>
                 <div style={{fontSize: 13.5, fontWeight: 700}}>{tr('rooms.voteGenres','Vote genres')}</div>
                 <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>
-                  {myVotes.length ? `You voted: ${myVotes.join(', ')}` : `Pick from ${(room.filters?.genres||[]).length} genres the owner set`}
+                  {myVotes.length ? `${tr('room.youVoted','You voted:')} ${myVotes.join(', ')}` : (window.I18N && window.I18N.lang==='th' ? tr('room.pickFromGenres','').replace('{n}', (room.filters?.genres||[]).length) : `Pick from ${(room.filters?.genres||[]).length} genres the owner set`)}
                 </div>
               </div>
               <Icon name="chev" size={14} color="var(--muted-2)"/>
@@ -670,7 +670,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
               <Icon name="cards" size={19} color="#fff" stroke={2.2}/>
               {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
               <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
-                {deckLeft > 0 ? `· ${deckLeft} left` : '· deck done'}
+                {deckLeft > 0 ? (window.I18N && window.I18N.lang==='th' ? `· ${tr('room.left','left')} ${deckLeft}` : `· ${deckLeft} left`) : `· ${tr('room.deckDone','deck done')}`}
               </span>
             </button>
           </div>
@@ -703,12 +703,12 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
             <div style={{display:'flex', alignItems:'center', gap: 12}}>
               <IconBadge icon="clock" size={40} tone={room.tone}/>
               <div style={{flex:1, minWidth:0}}>
-                <div style={{fontWeight:700, fontSize:15, color:'var(--cream)'}}>Movie night</div>
+                <div style={{fontWeight:700, fontSize:15, color:'var(--cream)'}}>{tr('room.movieNight','Movie night')}</div>
                 <div style={{
                   fontSize:12.5, marginTop:2,
                   color: watchDate ? room.tone : 'var(--muted)', fontWeight: watchDate ? 700 : 400,
                 }}>
-                  {watchDate ? fmtWatch(watchDate) : 'Pick a day to watch together'}
+                  {watchDate ? fmtWatch(watchDate) : tr('room.pickDay','Pick a day to watch together')}
                 </div>
               </div>
               {watchDate && (
@@ -742,7 +742,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
                 border:'0.5px solid rgba(var(--fg-rgb),0.12)',
               }}>
                 <Icon name="clock" size={14}/>
-                Pick a date
+                {tr('room.pickDate','Pick a date')}
                 <input
                   type="date"
                   value={watchDate}
@@ -755,7 +755,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         </div>
 
         {almost.length > 0 && (
-          <Section title="Almost a match" caption="You want these — waiting on the rest of the room">
+          <Section title={tr('room.almostMatch','Almost a match')} caption={tr('room.almostCap','You want these — waiting on the rest of the room')}>
             <PosterRow movies={almost.map(a=>a.movie)} onTap={(m)=>onOpenMovie(m, room)} dim/>
           </Section>
         )}
@@ -1411,8 +1411,8 @@ function RoundResultRow({ rank, result, total, tone, onTap }) {
         <div style={{fontWeight: 700, fontSize: 14, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{movie.title}</div>
         <div style={{fontSize: 11.5, color:'var(--muted)', marginTop: 3, display:'flex', alignItems:'center', gap: 6}}>
           {everyone
-            ? <span style={{color: tone, fontWeight: 700}}>Everyone's in</span>
-            : <span>{votes} of {total} want this</span>}
+            ? <span style={{color: tone, fontWeight: 700}}>{tr('room.everyoneIn',"Everyone's in")}</span>
+            : <span>{votes} {tr('room.ofN','of')} {total} {tr('room.wantThis','want this')}</span>}
           <span style={{opacity:0.5}}>·</span>
           <span>{(movie.genres||[]).slice(0,2).join(', ')}</span>
         </div>
@@ -1578,7 +1578,7 @@ function RoomSwipeScreen({ room, onBack, onReadMore }) {
             boxShadow:'0 12px 30px rgba(0,0,0,0.45)', fontSize: 13, fontWeight: 700,
           }}>
             <span style={{fontSize: 15}}>{flash.everyone ? '🎉' : '🍿'}</span>
-            {flash.everyone ? "Everyone's in on this!" : `Group pick · ${flash.n} of ${flash.total} want it`}
+            {flash.everyone ? tr('room.everyoneOnThis',"Everyone's in on this!") : `${tr('room.groupPick','Group pick')} · ${flash.n} ${tr('room.ofN','of')} ${flash.total} ${tr('room.wantIt','want it')}`}
           </div>
         )}
       </div>

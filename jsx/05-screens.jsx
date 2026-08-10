@@ -480,15 +480,15 @@ function OnboardingScreen({ initialName = '', onDone }) {
 
   const steps = [
     {
-      title: <>What are you<br/><em style={{fontStyle:'italic'}}>here for?</em></>,
-      sub: 'Pick the one that fits — you can change it later.',
+      title: (window.I18N && window.I18N.lang === 'th') ? tr('onb.t1','') : <>What are you<br/><em style={{fontStyle:'italic'}}>here for?</em></>,
+      sub: tr('onb.sub1','Pick the one that fits — you can change it later.'),
       can: !!contentType,
       body: (
         <div style={{display:'flex', flexDirection:'column', gap: 10}}>
           {[
-            { id:'movies', label:'Movies',  desc:'Films only — feature-length picks.', icon:'film' },
-            { id:'series', label:'Series',  desc:'Shows only — episodic stories.',     icon:'cards' },
-            { id:'both',   label:'Both',    desc:'Mix it up. Show me everything.',     icon:'sparkle' },
+            { id:'movies', label:tr('onb.movies','Movies'),  desc:tr('onb.moviesDesc','Films only — feature-length picks.'), icon:'film' },
+            { id:'series', label:tr('onb.series','Series'),  desc:tr('onb.seriesDesc','Shows only — episodic stories.'),     icon:'cards' },
+            { id:'both',   label:tr('onb.both','Both'),    desc:tr('onb.bothDesc','Mix it up. Show me everything.'),     icon:'sparkle' },
           ].map(o => {
             const on = contentType === o.id;
             return (
@@ -529,8 +529,8 @@ function OnboardingScreen({ initialName = '', onDone }) {
       ),
     },
     {
-      title: <>Where do you<br/><em style={{fontStyle:'italic'}}>stream?</em></>,
-      sub: "We'll show titles you can actually watch tonight.",
+      title: (window.I18N && window.I18N.lang === 'th') ? tr('onb.t2','') : <>Where do you<br/><em style={{fontStyle:'italic'}}>stream?</em></>,
+      sub: tr('onb.sub2',"We'll show titles you can actually watch tonight."),
       can: services.size >= 1,
       body: (
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap: 10}}>
@@ -555,8 +555,8 @@ function OnboardingScreen({ initialName = '', onDone }) {
       ),
     },
     {
-      title: <>Pick a few<br/><em style={{fontStyle:'italic'}}>genres.</em></>,
-      sub: `Pick at least 3 so we can learn your taste — ${genres.size} so far.`,
+      title: (window.I18N && window.I18N.lang === 'th') ? tr('onb.t3','') : <>Pick a few<br/><em style={{fontStyle:'italic'}}>genres.</em></>,
+      sub: (window.I18N && window.I18N.lang === 'th') ? `${tr('onb.sub3a','Pick at least 3 so we can learn your taste —')} ${genres.size} ${tr('onb.sub3b','so far.')}` : `Pick at least 3 so we can learn your taste — ${genres.size} so far.`,
       can: genres.size >= 3,
       body: (
         <div style={{display:'flex', flexWrap:'wrap', gap: 8}}>
@@ -604,7 +604,7 @@ function OnboardingScreen({ initialName = '', onDone }) {
           fontSize: 13, color:'var(--gold)', letterSpacing:'0.06em',
           textTransform:'uppercase', fontWeight: 600, marginBottom: 12,
         }}>
-          Hi {initialName.split(' ')[0]}
+          {tr('onb.hi','Hi')} {initialName.split(' ')[0]}
         </div>
       )}
 
@@ -619,13 +619,13 @@ function OnboardingScreen({ initialName = '', onDone }) {
 
       <div style={{marginTop:'auto', display:'flex', gap: 10}}>
         {step > 0 && (
-          <PrimaryBtn secondary onClick={()=>setStep(s=>s-1)}>Back</PrimaryBtn>
+          <PrimaryBtn secondary onClick={()=>setStep(s=>s-1)}>{tr('onb.back','Back')}</PrimaryBtn>
         )}
         <PrimaryBtn full disabled={!cur.can} onClick={()=>{
           if (step < steps.length - 1) setStep(s=>s+1);
           else onDone({ contentType, services, genres });
         }}>
-          {step < steps.length - 1 ? 'Continue' : 'Start matching'}
+          {step < steps.length - 1 ? tr('onb.continue','Continue') : tr('onb.start','Start matching')}
         </PrimaryBtn>
       </div>
     </div>
@@ -2362,7 +2362,7 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
         fontSize: 11, letterSpacing:'0.3em', textTransform:'uppercase',
         color:'var(--gold)', marginBottom: 14, position:'relative', zIndex:1,
       }}>
-        ✦ &nbsp;A mutual match&nbsp; ✦
+        ✦ &nbsp;{tr('celebrate.mutual','A mutual match')}&nbsp; ✦
       </div>
 
       <div className="rise" style={{
@@ -2371,7 +2371,9 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
         textAlign:'center', color:'var(--cream)', letterSpacing:'-0.02em',
         position:'relative', zIndex:1, marginBottom: 24, whiteSpace:'nowrap',
       }}>
-        It's a <em style={{fontStyle:'italic'}}>match.</em>
+        {window.I18N && window.I18N.lang === 'th'
+          ? <>{tr('celebrate.itsA','It\'s a')} <em style={{fontStyle:'italic'}}>{tr('celebrate.match','match.')}</em></>
+          : <>It's a <em style={{fontStyle:'italic'}}>match.</em></>}
       </div>
 
       {/* Stacked poster + avatars */}

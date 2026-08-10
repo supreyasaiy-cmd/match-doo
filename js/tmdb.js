@@ -70,12 +70,38 @@
     try { localStorage.removeItem(KEY_STORAGE); } catch {}
   }
 
+  const PROXY = '/api/tmdb';
+  let proxyDown = false;  // once we learn the server proxy isn't there, stop retrying it this session
+
   async function call(path, params = {}) {
+    // 1) Server proxy — holds the key server-side, so everyone gets real data
+    //    with no personal key. This is the default path in production.
+    if (!proxyDown) {
+      try {
+        const url = new URL(PROXY, location.origin);
+        url.searchParams.set('path', path);
+        for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
+        const r = await fetch(url.toString(), { headers: { accept: 'application/json' } });
+        if (r.ok) return r.json();
+        // 503 = server key not configured, 404 = proxy not deployed (e.g. plain
+        // static localhost) → remember and fall back to a personal key below.
+        if (r.status === 503 || r.status === 404) { proxyDown = true; }
+        else {
+          let msg = `HTTP ${r.status}`;
+          try { const e = await r.json(); if (e?.status_message) msg = e.status_message; } catch {}
+          const err = new Error(msg); err.status = r.status; throw err;
+        }
+      } catch (e) {
+        if (e && e.status) throw e;      // genuine upstream error — surface it
+        proxyDown = true;                // network/unreachable — use the fallback
+      }
+    }
+
+    // 2) Fallback — direct TMDB with a user-provided key (local dev / legacy).
     const key = getKey();
-    if (!key) throw new Error('TMDB key missing');
+    if (!key) throw new Error('TMDB unavailable');
     const url = new URL(BASE + path);
-    // Support both v3 api_key and v4 read-access tokens (which start with 'ey')
-    const isV4Token = key.startsWith('ey') && key.length > 60;
+    const isV4Token = key.startsWith('ey') && key.length > 60;  // v4 read-access token
     if (!isV4Token) url.searchParams.set('api_key', key);
     for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
     const headers = { accept: 'application/json' };

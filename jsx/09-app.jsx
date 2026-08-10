@@ -137,26 +137,35 @@ function App() {
     else setTab('swipe');
   };
 
-  // TMDB — admin-managed; we silently read the key if an admin set one, otherwise local sample
+  // TMDB — served from our /api/tmdb backend (key held server-side), so every
+  // visitor gets real posters/metadata with no personal key. Falls back to the
+  // bundled sample titles if the backend isn't configured. A personal key can
+  // still be connected (local dev / legacy) and takes over as a fallback.
   const [tmdbMovies, setTmdbMovies] = React.useState(null);
   const [tmdbStatus, setTmdbStatus] = React.useState('idle');
   const [tmdbReloadTick, setTmdbReloadTick] = React.useState(0);
   const tmdbKey = window.TMDB?.getKey() || '';
 
   React.useEffect(() => {
-    if (!tmdbKey) return;
+    let cancelled = false;
     (async () => {
       setTmdbStatus('loading');
       try {
-        const results = await window.TMDB.library();
-        seedFriendLikesAgainst(results);
-        setTmdbMovies(results);
-        setTmdbStatus('ready');
+        const results = await window.TMDB.library();   // tries the server proxy, then a personal key
+        if (cancelled) return;
+        if (results && results.length) {
+          seedFriendLikesAgainst(results);
+          setTmdbMovies(results);
+          setTmdbStatus('ready');
+        } else {
+          setTmdbStatus('idle');                        // no backend + no key → bundled sample
+        }
       } catch (e) {
-        setTmdbStatus('error');
+        if (!cancelled) setTmdbStatus(window.TMDB?.getKey() ? 'error' : 'idle');
       }
     })();
-  }, [tmdbKey, tmdbReloadTick]);
+    return () => { cancelled = true; };
+  }, [tmdbReloadTick]);
 
   // Auto-close the connect sheet a beat after a successful connection
   React.useEffect(() => {
@@ -185,7 +194,7 @@ function App() {
   }, [sourceMovies, likes, passes, seen]);
 
   React.useEffect(() => {
-    if (!tmdbKey || !tmdbMovies) return;
+    if (!tmdbMovies) return;
     const top = deck.slice(0, 5).filter(m => m.tmdbId && !m._detailFetched);
     if (!top.length) return;
     let cancelled = false;
@@ -350,7 +359,7 @@ function App() {
           setScreen('welcome');
         }}
         onOpenTweaks={()=> showToast('Toggle "Tweaks" in the toolbar above to customize')}
-        tmdbConnected={!!tmdbKey}
+        tmdbConnected={tmdbStatus === 'ready' || !!tmdbKey}
         tmdbStatus={tmdbStatus}
         onOpenTmdb={()=> setTmdbSheetOpen(true)}
         onOpenLegal={setLegal}

@@ -1289,7 +1289,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
             background:`linear-gradient(135deg, ${hexA(tone,0.4)}, ${hexA(tone,0.1)})`,
             border:`0.5px solid ${hexA(tone,0.4)}`, display:'flex', alignItems:'center', justifyContent:'center'}}>{emoji}</div>
           <div style={{flex:1, minWidth:0}}>
-            <div style={label}>Room name</div>
+            <div style={label}>{tr("cr.roomName","Room name")}</div>
             <input value={name} onChange={e=>setName(e.target.value)} style={{width:'100%', background:'rgba(var(--fg-rgb),0.07)', border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius:12, padding:'11px 12px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize:15, outline:0}}/>
           </div>
         </div>
@@ -1319,7 +1319,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
           <IconBadge icon="bell" size={34} tone="#E0955E"/>
           <div style={{flex:1, textAlign:'left'}}>
-            <div style={{fontSize:14, fontWeight:600}}>Mute notifications</div>
+            <div style={{fontSize:14, fontWeight:600}}>{tr('rs.mute','Mute notifications')}</div>
             <div style={{fontSize:12, color:'var(--muted)', marginTop:1}}>{muted ? 'Room alerts are off' : 'Get alerts on new matches'}</div>
           </div>
           <div style={{width:44, height:26, borderRadius:999, flexShrink:0, position:'relative', transition:'background .2s', background: muted ? 'rgba(var(--fg-rgb),0.15)' : 'var(--green)'}}>
@@ -1329,11 +1329,11 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
 
         {/* members */}
         <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', margin:'0 2px 10px'}}>
-          <div style={{fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>Members</div>
+          <div style={{fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>{tr('rs.members','Members')}</div>
           <div style={{fontSize:11, color:'var(--muted-2)'}}>{members.length}</div>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:6, marginBottom:10}}>
-          {members.length === 0 && <div style={{fontSize:12.5, color:'var(--muted)', padding:'6px 2px'}}>Just you so far.</div>}
+          {members.length === 0 && <div style={{fontSize:12.5, color:'var(--muted)', padding:'6px 2px'}}>{tr('rs.justYou','Just you so far.')}</div>}
           {members.map(m=>(
             <div key={m.id} style={{display:'flex', alignItems:'center', gap:12, padding:'8px 10px', borderRadius:12, background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)'}}>
               <Avatar person={m} size={34}/>
@@ -1359,7 +1359,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         </button>
 
         {/* save */}
-        <PrimaryBtn full disabled={!dirty} onClick={save}>Save changes</PrimaryBtn>
+        <PrimaryBtn full disabled={!dirty} onClick={save}>{tr("rs.saveChanges","Save changes")}</PrimaryBtn>
 
         {/* danger zone */}
         <div style={{height:0.5, background:'var(--line)', margin:'20px 0 16px'}}/>
@@ -1375,10 +1375,10 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         ) : (
           <div style={{display:'flex', flexDirection:'column', gap:8}}>
             <button onClick={()=>setConfirm('leave')} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)', background:'transparent', color:'var(--cream)', borderRadius:999, padding:12, fontWeight:600, fontSize:14, display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8}}>
-              <Icon name="arrow" size={15}/> Leave room
+              <Icon name="arrow" size={15}/> {tr("rs.leave","Leave room")}
             </button>
             <button onClick={()=>setConfirm('delete')} style={{appearance:'none', border:'0.5px solid rgba(232,121,138,0.35)', background:'transparent', color:'#E8798A', borderRadius:999, padding:12, fontWeight:600, fontSize:14}}>
-              Delete room
+              {tr("rs.delete","Delete room")}
             </button>
           </div>
         )}

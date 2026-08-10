@@ -186,6 +186,25 @@ window.I18N = {
       'cr.pick35':     'เลือก 3–5',
       'cr.votingHint': 'สมาชิกมีเวลาเท่านี้ในการโหวตแนวและปัดก่อนล็อกผลลัพธ์',
       'cr.day1':'1 วัน', 'cr.day3':'3 วัน', 'cr.week1':'1 สัปดาห์',
+
+      // ── Add members sheet ──
+      'am.addTo':      'เพิ่มเข้า', 'am.selected': 'เลือกแล้ว', 'am.searchFriends': 'ค้นหาเพื่อน',
+      'am.everyoneIn': 'ทุกคนที่คุณรู้จักอยู่ในห้องนี้แล้ว', 'am.noMatch': 'ไม่พบเพื่อนที่ตรงกับการค้นหา', 'am.add': 'เพิ่ม',
+
+      // ── Edit profile sheet ──
+      'ep.editProfile': 'แก้ไขโปรไฟล์', 'ep.profilePic': 'รูปโปรไฟล์',
+      'ep.name': 'ชื่อ', 'ep.username': 'ชื่อผู้ใช้', 'ep.userId': 'User ID', 'ep.save': 'บันทึก',
+      'ep.usernameHint': '@username ของคุณที่ไม่ซ้ำใคร — คนอื่นค้นหาคุณเจอด้วยชื่อนี้',
+      'ep.userIdHint':   'รหัสบัญชีถาวรของคุณ ไม่มีวันเปลี่ยน', 'ep.copy': 'คัดลอก',
+
+      // ── Room settings sheet ──
+      'rs.mute': 'ปิดการแจ้งเตือน', 'rs.members': 'สมาชิก', 'rs.justYou': 'มีแค่คุณตอนนี้',
+      'rs.saveChanges': 'บันทึกการเปลี่ยนแปลง', 'rs.leave': 'ออกจากห้อง', 'rs.delete': 'ลบห้อง',
+
+      // ── Theme picker ──
+      'tp.appearance': 'ธีม',
+      'tp.dark': 'มืด', 'tp.darkDesc': 'สีส้มไฟบนพื้นดำ — ลุคเอกลักษณ์',
+      'tp.light': 'สว่าง', 'tp.lightDesc': 'อบอุ่นโปร่งสบายสำหรับกลางวัน',
       'profile.email':          'อีเมล',
       'profile.birthday':       'วันเกิด',
       'profile.gender':         'เพศ',

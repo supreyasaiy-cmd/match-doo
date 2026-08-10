@@ -1483,13 +1483,13 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
   };
 
   const META = {
-    genres:        { title:'Genres',              save:()=>{ state.setGenres(gDraft);     onSaved('Genres updated'); } },
-    services:      { title:'Streaming services',  save:()=>{ state.setServices(sDraft);   onSaved('Services updated'); } },
-    runtime:       { title:'Run time preference', save:()=>{ state.setRuntime(rDraft);    onSaved('Preference saved'); } },
-    email:         { title:'Email',               save:()=>{ state.setEmail(eDraft.trim()); onSaved('Email saved'); } },
-    birthday:      { title:'Birthday',            save:()=>{ state.setBirthday(bDraft);   onSaved('Birthday saved'); } },
-    gender:        { title:'Gender',              save:()=>{ state.setGender(genderDraft); onSaved('Gender saved'); } },
-    notifications: { title:'Notifications',       save:()=>{ state.setNotif(nDraft);      onSaved('Notifications saved'); } },
+    genres:        { title:tr('profile.genres','Genres'),              save:()=>{ state.setGenres(gDraft);     onSaved('Genres updated'); } },
+    services:      { title:tr('profile.streaming','Streaming services'),  save:()=>{ state.setServices(sDraft);   onSaved('Services updated'); } },
+    runtime:       { title:tr('profile.runtime','Run time preference'), save:()=>{ state.setRuntime(rDraft);    onSaved('Preference saved'); } },
+    email:         { title:tr('profile.email','Email'),               save:()=>{ state.setEmail(eDraft.trim()); onSaved('Email saved'); } },
+    birthday:      { title:tr('profile.birthday','Birthday'),            save:()=>{ state.setBirthday(bDraft);   onSaved('Birthday saved'); } },
+    gender:        { title:tr('profile.gender','Gender'),              save:()=>{ state.setGender(genderDraft); onSaved('Gender saved'); } },
+    notifications: { title:tr('profile.notifications','Notifications'),       save:()=>{ state.setNotif(nDraft);      onSaved('Notifications saved'); } },
   }[kind];
 
   const save = () => { META.save(); onClose(); };
@@ -1665,7 +1665,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
         </div>
 
         <div style={{marginTop: 16}}>
-          <PrimaryBtn full onClick={save}>Save</PrimaryBtn>
+          <PrimaryBtn full onClick={save}>{tr('common.save','Save')}</PrimaryBtn>
         </div>
       </div>
     </div>
@@ -1814,8 +1814,8 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
 // ─── Appearance / theme picker (Dark / Light) ──────────────────────
 function ThemePickerSheet({ theme, onPick, onClose }) {
   const OPTIONS = [
-    { id:'dark',  label:'Dark',  desc:'Ember on near-black — the signature look.', bg:'#17100f', fg:'#f6f1ea', card:'rgba(244,241,234,0.08)' },
-    { id:'light', label:'Light', desc:'Warm & airy for daytime.',                  bg:'#f7f1ea', fg:'#1c1512', card:'rgba(34,24,20,0.06)' },
+    { id:'dark',  label:tr('tp.dark','Dark'),  desc:tr('tp.darkDesc','Ember on near-black — the signature look.'), bg:'#17100f', fg:'#f6f1ea', card:'rgba(244,241,234,0.08)' },
+    { id:'light', label:tr('tp.light','Light'), desc:tr('tp.lightDesc','Warm & airy for daytime.'),                  bg:'#f7f1ea', fg:'#1c1512', card:'rgba(34,24,20,0.06)' },
   ];
   return (
     <div onClick={onClose} style={{
@@ -1835,7 +1835,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
         }}/>
 
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 4}}>
-          <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>Appearance</div>
+          <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>{tr("tp.appearance","Appearance")}</div>
           <button onClick={onClose} style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 34, height: 34, borderRadius: 999, color:'var(--muted)',
@@ -1939,7 +1939,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
         <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px'}}/>
 
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 18}}>
-          <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>Edit profile</div>
+          <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>{tr("ep.editProfile","Edit profile")}</div>
           <button onClick={onClose} style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 34, height: 34, borderRadius: 999, color:'var(--muted)',
@@ -1950,7 +1950,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
         </div>
 
         <div style={{marginBottom: 20}}>
-          <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px'}}>Profile picture</div>
+          <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px'}}>{tr('ep.profilePic','Profile picture')}</div>
           <div
             className="phone-scroll"
             onWheel={(e)=>{ const el = e.currentTarget; if (el.scrollWidth > el.clientWidth && Math.abs(e.deltaY) >= Math.abs(e.deltaX)) el.scrollLeft += e.deltaY; }}
@@ -1984,14 +1984,14 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
         </div>
 
         <div style={{display:'flex', flexDirection:'column', gap: 16, marginBottom: 8}}>
-          {field('Name', n, setN, null, true)}
+          {field(tr('ep.name','Name'), n, setN, null, true)}
           <div>
-            {field('Username', h, setH, '@', false)}
-            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 6, paddingLeft: 2}}>Your unique @username — people can find you by it.</div>
+            {field(tr('ep.username','Username'), h, setH, '@', false)}
+            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 6, paddingLeft: 2}}>{tr('ep.usernameHint','Your unique @username — people can find you by it.')}</div>
           </div>
           {/* User ID — permanent unique account key, not editable */}
           <div>
-            <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 8px 2px'}}>User ID</div>
+            <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 8px 2px'}}>{tr('ep.userId','User ID')}</div>
             <div style={{
               display:'flex', alignItems:'center', gap: 8,
               background:'rgba(var(--fg-rgb),0.04)', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
@@ -2003,15 +2003,15 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
                 borderRadius: 8, padding:'6px 8px', color:'var(--muted)', cursor:'pointer',
                 display:'flex', alignItems:'center', gap: 5, fontSize: 11.5, fontWeight: 600,
               }}>
-                <Icon name="copy" size={13}/> Copy
+                <Icon name="copy" size={13}/> {tr("ep.copy","Copy")}
               </button>
             </div>
-            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 6, paddingLeft: 2}}>Your permanent account key. It never changes.</div>
+            <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 6, paddingLeft: 2}}>{tr('ep.userIdHint','Your permanent account key. It never changes.')}</div>
           </div>
         </div>
 
         <PrimaryBtn full disabled={!n.trim() || !h.trim()} onClick={()=> onSave(n.trim(), h.trim(), src)}>
-          Save
+          {tr('ep.save','Save')}
         </PrimaryBtn>
       </div>
     </div>

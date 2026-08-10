@@ -51,8 +51,8 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
 
         <div style={{padding:'0 20px 6px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
           <div>
-            <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>Add to {room.name}</div>
-            <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>{selected.size} selected</div>
+            <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>{tr("am.addTo","Add to")} {room.name}</div>
+            <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>{selected.size} {tr("am.selected","selected")}</div>
           </div>
           <button onClick={onClose} style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
@@ -73,7 +73,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
             <Icon name="search" size={16} color="var(--muted)"/>
             <input
               autoFocus
-              placeholder="Search friends"
+              placeholder={tr("am.searchFriends","Search friends")}
               value={query}
               onChange={e=>setQuery(e.target.value)}
               style={{
@@ -90,8 +90,8 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
               padding:'24px 20px', textAlign:'center', color:'var(--muted)', fontSize: 13, lineHeight: 1.5,
             }}>
               {eligible.length === 0
-                ? "Everyone you know is already in this room."
-                : "No friends match your search."}
+                ? tr("am.everyoneIn","Everyone you know is already in this room.")
+                : tr("am.noMatch","No friends match your search.")}
             </div>
           ) : filtered.map(f => {
             const on = selected.has(f.id);
@@ -121,7 +121,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
 
         <div style={{padding:'10px 20px 6px', display:'flex', gap: 8}}>
           <PrimaryBtn full disabled={selected.size === 0} onClick={()=> onAdd(Array.from(selected))}>
-            Add {selected.size > 0 ? `(${selected.size})` : ''}
+            {tr("am.add","Add")} {selected.size > 0 ? `(${selected.size})` : ""}
           </PrimaryBtn>
         </div>
       </div>

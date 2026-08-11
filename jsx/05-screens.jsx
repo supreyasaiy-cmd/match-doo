@@ -1378,11 +1378,8 @@ function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matche
           <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={`${notifOn} on`} onClick={()=> setSheet('notifications')}/>
         </SettingsGroup>
 
-        <SettingsGroup title={tr('profile.group.films','Films')}>
-          <SettingsRow icon="film" label={tr('profile.tmdb','TMDB integration')}
-            detail={tmdbDetail}
-            onClick={onOpenTmdb}/>
-        </SettingsGroup>
+        {/* TMDB is served automatically from the backend now — no user-facing
+            row needed. (TmdbConnectSheet stays wired for local-dev fallback.) */}
 
         <SettingsGroup title={tr('profile.group.app','App')}>
           <SettingsRow icon="sparkle" label={tr('profile.language','Language')} detail={lang === 'th' ? 'ไทย' : 'English'} onClick={()=> onSetLang?.(lang === 'en' ? 'th' : 'en')}/>

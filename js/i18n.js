@@ -216,7 +216,7 @@ window.I18N = {
       'tmdb.title': 'การเชื่อมต่อ TMDB',
       'tmdb.stError': 'บันทึก key แล้ว แต่ดึงข้อมูลไม่สำเร็จ', 'tmdb.stLoading': 'กำลังเชื่อมต่อ…',
       'tmdb.stConnected': 'เชื่อมต่อแล้ว · กำลังดึงโปสเตอร์จริง', 'tmdb.stNot': 'ยังไม่เชื่อมต่อ · แสดงโปสเตอร์ภาพวาด',
-      'tmdb.desc': 'วาง TMDB API key ฟรี (v3 auth หรือ v4 read token) เพื่อเปลี่ยนโปสเตอร์ภาพวาดเป็นภาพจริงจาก TMDB โดยตรง key จะเก็บไว้ในเครื่องนี้เท่านั้น',
+      'tmdb.desc': 'โปสเตอร์จริงเปิดใช้งานอยู่ — ดึงสดจาก TMDB ผ่านเซิร์ฟเวอร์ของ MatchDoo ไม่ต้องตั้งค่าเอง ถ้าอยากใช้ key ของตัวเอง วางด้านล่างได้ (ไม่บังคับ)',
       'tmdb.paste': 'วาง TMDB API key ของคุณ', 'tmdb.errMsg': 'เชื่อมต่อไม่ได้ — ตรวจสอบ key แล้วลองใหม่',
       'tmdb.getKey': 'ขอ API key ฟรีที่ themoviedb.org', 'tmdb.disconnect': 'ตัดการเชื่อมต่อ',
       'tmdb.update': 'อัปเดต key', 'tmdb.connect': 'เชื่อมต่อ',

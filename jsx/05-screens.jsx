@@ -2102,7 +2102,7 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
         </div>
 
         <div style={{fontSize: 13, color:'var(--muted)', lineHeight: 1.5, margin:'14px 0'}}>
-          {tr('tmdb.desc',"Paste a free TMDB API key to replace the illustrated posters with real ones, pulled live from TMDB. Your key stays on this device only.")}
+          {tr('tmdb.desc',"Real posters are on — pulled live from TMDB through MatchDoo’s own server, no setup needed. Prefer your own TMDB key? Paste it below (optional).")}
         </div>
 
         <input

@@ -90,7 +90,7 @@ function Poster({ movie, size = 'lg', className = '', style = {}, hideTitle = fa
   return (
     <div className={`poster ${className}`} style={{
       width: dims.w, height: dims.h, aspectRatio: '2/3',
-      background: movie.bg || '#17100f', color: movie.fg || '#f4f1ea', ...style,
+      background: movie.bg || '#13181B', color: movie.fg || '#F0EEEB', ...style,
     }}>
       {realPoster ? (
         <img
@@ -101,7 +101,7 @@ function Poster({ movie, size = 'lg', className = '', style = {}, hideTitle = fa
           onError={(e)=>{ e.currentTarget.style.display='none'; }}
         />
       ) : (
-        <PosterArt art={art} fg={movie.fg || '#f4f1ea'} bg={movie.bg || '#17100f'} small={small} />
+        <PosterArt art={art} fg={movie.fg || '#F0EEEB'} bg={movie.bg || '#13181B'} small={small} />
       )}
 
       {/* grain */}
@@ -206,7 +206,7 @@ function Avatar({ person, size = 44, ring = false, ringColor = '#FD8973' }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%',
-      background: person.tone || '#CC8050',
+      background: person.tone || '#6F93E0',
       backgroundImage: photo ? `url("${photo}")` : 'none',
       backgroundSize: 'cover', backgroundPosition: 'center',
       display:'flex', alignItems:'center', justifyContent:'center',
@@ -220,7 +220,7 @@ function Avatar({ person, size = 44, ring = false, ringColor = '#FD8973' }) {
         <span style={{
           position:'absolute', right: -1, bottom: 1,
           width: size*0.26, height: size*0.26, borderRadius:'50%',
-          background:'#F0B24A', border:'2px solid var(--ink)',
+          background:'#FFBF65', border:'2px solid var(--ink)',
         }}/>
       )}
     </div>
@@ -300,10 +300,10 @@ function TabBar({ active, onChange }) {
         <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
           appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
           width: 56, height: 56, borderRadius: '50%',
-          border: '2px solid rgba(244,241,234,0.92)',
+          border: '2px solid rgba(240,238,235,0.92)',
           backgroundImage: 'url("assets/logo-app.png?v=2")',
           backgroundSize: '128%', backgroundPosition: 'center 48%',
-          backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
+          backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
           boxShadow: on
             ? '0 6px 24px rgba(253,137,115,0.55), 0 0 0 3px rgba(253,137,115,0.45)'
             : '0 4px 16px rgba(0,0,0,0.40)',
@@ -313,7 +313,7 @@ function TabBar({ active, onChange }) {
       );
     }
     // Side tabs — always icon + text; active vs inactive shown by colour
-    const col = on ? ACCENT : 'rgba(244,241,234,0.5)';
+    const col = on ? ACCENT : 'rgba(240,238,235,0.5)';
     return (
       <button key={t.id} onClick={()=>onChange(t.id)} aria-label={t.label} style={{
         appearance:'none', border:0, cursor:'pointer',
@@ -349,12 +349,12 @@ function TabBar({ active, onChange }) {
         padding: '10px 12px',
         // dark glass + a diagonal mood gradient tint — stays a dark bar in
         // both themes, so icons/rim are kept fixed-light.
-        background:'linear-gradient(135deg, rgba(253,137,115,0.20) 0%, rgba(224,149,94,0.16) 55%, rgba(26,18,16,0.30) 100%), rgba(20,13,12,0.78)',
+        background:'linear-gradient(135deg, rgba(253,137,115,0.20) 0%, rgba(253,137,115,0.16) 55%, rgba(19,24,27,0.30) 100%), rgba(15,20,26,0.78)',
         backdropFilter:'blur(30px) saturate(180%)',
         WebkitBackdropFilter:'blur(30px) saturate(180%)',
         borderRadius: 32,
-        border:'0.5px solid rgba(244,241,234,0.16)',
-        boxShadow:'0 16px 46px rgba(0,0,0,0.55), inset 0 0.5px 0 rgba(244,241,234,0.14)',
+        border:'0.5px solid rgba(240,238,235,0.16)',
+        boxShadow:'0 16px 46px rgba(0,0,0,0.55), inset 0 0.5px 0 rgba(240,238,235,0.14)',
       }}>
         {/* Equal-width side rails keep the centre logo locked dead-centre
             no matter which side tab expands. */}

@@ -204,8 +204,8 @@ window.I18N = {
 
       // ── Theme picker ──
       'tp.appearance': 'ธีม',
-      'tp.dark': 'มืด', 'tp.darkDesc': 'สีส้มไฟบนพื้นดำ — ลุคเอกลักษณ์',
-      'tp.light': 'สว่าง', 'tp.lightDesc': 'อบอุ่นโปร่งสบายสำหรับกลางวัน',
+      'tp.dark': 'มืด', 'tp.darkDesc': 'โทน coral บนฟ้ากลางคืน — ลุคเอกลักษณ์',
+      'tp.light': 'สว่าง', 'tp.lightDesc': 'สว่างโปร่งสบายสำหรับกลางวัน',
 
       // ── Calendar ──
       'cal.movieNights': 'คืนดูหนัง', 'cal.movieNightSub': 'คืนดูหนัง', 'cal.watchingSolo': 'ดูคนเดียว',

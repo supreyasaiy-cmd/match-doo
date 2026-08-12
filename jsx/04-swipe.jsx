@@ -140,7 +140,7 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
         }}/>
         <div style={{
           position:'absolute', left: 22, right: 22, bottom: 118,
-          color: '#f4f1ea', pointerEvents:'none',
+          color: '#F0EEEB', pointerEvents:'none',
         }}>
           <div style={{
             display:'flex', alignItems:'center', gap:8, marginBottom: 6, opacity:0.85,
@@ -166,8 +166,8 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
               {movie.genres.map(g=>(
                 <span key={g} style={{
                   fontSize:11, padding:'4px 10px',
-                  background:'rgba(244,241,234,0.14)',
-                  border:'0.5px solid rgba(244,241,234,0.2)',
+                  background:'rgba(240,238,235,0.14)',
+                  border:'0.5px solid rgba(240,238,235,0.2)',
                   borderRadius:999, letterSpacing:'-0.01em', fontWeight:500,
                 }}>{genreLabel(g)}</span>
               ))}
@@ -178,7 +178,7 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
                 display:'inline-flex', alignItems:'center', gap: 7,
                 padding:'5px 11px 5px 6px', borderRadius: 999,
                 background:'rgba(0,0,0,0.42)',
-                border:'0.5px solid rgba(244,241,234,0.22)',
+                border:'0.5px solid rgba(240,238,235,0.22)',
                 backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
                 flexShrink: 0,
               }}>
@@ -342,12 +342,12 @@ function ActionBtn({ icon, color, size, onClick, filled=false, label }) {
         background: filled ? color : 'rgba(0,0,0,0.32)',
         backdropFilter: filled ? 'none' : 'blur(10px) saturate(140%)',
         WebkitBackdropFilter: filled ? 'none' : 'blur(10px) saturate(140%)',
-        color: filled ? '#17100f' : color,
+        color: filled ? '#13181B' : color,
         display:'flex', alignItems:'center', justifyContent:'center',
         transition:'transform .14s ease',
         boxShadow: filled ? `0 8px 22px ${color}66` : '0 6px 18px rgba(0,0,0,0.45)',
       }}>
-        <Icon name={icon} size={size*0.42} stroke={filled? 2.2:1.8} color={filled? '#17100f' : color}/>
+        <Icon name={icon} size={size*0.42} stroke={filled? 2.2:1.8} color={filled? '#13181B' : color}/>
       </button>
       <span style={{
         fontSize: 10.5, fontWeight: 600, color:'rgba(255,255,255,0.92)', letterSpacing:'0.02em',

@@ -612,8 +612,8 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
         <div style={{display:'flex', alignItems:'center', gap: 8}}>
           {canUndo && (
             <button onClick={onUndo} aria-label="Undo last swipe" title="Undo" style={{
-              appearance:'none', border:'0.5px solid rgba(253,166,90,0.4)',
-              background:'rgba(253,166,90,0.12)', color:'var(--gold)',
+              appearance:'none', border:'0.5px solid rgba(255,191,101,0.4)',
+              background:'rgba(255,191,101,0.12)', color:'var(--gold)',
               height: 36, borderRadius: 999, padding:'0 12px',
               display:'inline-flex', alignItems:'center', gap: 6,
               fontFamily:'var(--sans)', fontSize: 12.5, fontWeight: 600,
@@ -658,7 +658,7 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
 // ─── Notifications sheet ───────────────────────────────────────────
 function NotificationsSheet({ items = [], onClose, onOpen }) {
   const META = {
-    match:    { icon:'heart',   tone:'#F0B24A' },
+    match:    { icon:'heart',   tone:'#FFBF65' },
     friend:   { icon:'user',    tone:'#FFBF65' },
     reminder: { icon:'clock',   tone:'#FFBF65' },
     new:      { icon:'sparkle', tone:'#FD8973' },

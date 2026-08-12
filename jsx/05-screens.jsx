@@ -82,7 +82,7 @@ function FilmReelBG() {
       {/* periwinkle sliver, echoing the liquid-glass accent */}
       <div style={{
         position:'absolute', inset:0,
-        background:'radial-gradient(60% 40% at 88% 4%, rgba(224,149,94,0.16), transparent 62%)',
+        background:'radial-gradient(60% 40% at 88% 4%, rgba(253,137,115,0.16), transparent 62%)',
       }}/>
       {/* legibility scrim — darken toward the bottom for the text/buttons */}
       <div style={{
@@ -393,8 +393,8 @@ function SsoButton({ kind, loading, disabled, onClick }) {
   return (
     <button onClick={onClick} disabled={disabled} style={{
       appearance:'none', border:'0.5px solid rgba(0,0,0,0.14)',
-      background: isApple ? '#000' : '#f4f1ea',
-      color: isApple ? '#fff' : '#17100f',
+      background: isApple ? '#000' : '#F0EEEB',
+      color: isApple ? '#fff' : '#13181B',
       height: 52, borderRadius: 999,
       display:'flex', alignItems:'center', justifyContent:'center', gap: 10,
       fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15.5, letterSpacing:'-0.01em',
@@ -404,7 +404,7 @@ function SsoButton({ kind, loading, disabled, onClick }) {
         <span style={{
           width: 16, height: 16, borderRadius:'50%',
           border:`2px solid ${isApple? 'rgba(255,255,255,0.3)':'rgba(0,0,0,0.2)'}`,
-          borderTopColor: isApple ? '#fff' : '#17100f',
+          borderTopColor: isApple ? '#fff' : '#13181B',
           animation:'mm-spin .8s linear infinite',
         }}/>
       ) : isApple ? (
@@ -447,7 +447,7 @@ function Logomark({ size = 32 }) {
       flexShrink: 0, overflow: 'hidden',
       backgroundImage: 'url("assets/logo-app.png?v=2")',
       backgroundSize: '132%', backgroundPosition: 'center 48%',
-      backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
+      backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 12px rgba(253,137,115,0.30)',
       border: '0.5px solid rgba(255,150,90,0.28)',
     }} aria-label="Match Doo logo"/>
@@ -601,7 +601,7 @@ function OnboardingScreen({ initialName = '', onDone }) {
     <div className="fade-in" style={{
       display:'flex', flexDirection:'column', height:'100%',
       padding: '48px 28px 28px',
-      background:'radial-gradient(120% 50% at 50% 0%, rgba(253,166,90,0.10), transparent 60%), var(--ink)',
+      background:'radial-gradient(120% 50% at 50% 0%, rgba(255,191,101,0.10), transparent 60%), var(--ink)',
     }}>
       {/* progress */}
       <div style={{display:'flex', gap: 6, marginBottom: 28}}>
@@ -1023,12 +1023,12 @@ function AddFriendScreen({ onBack }) {
           padding:'10px 16px', borderRadius: 999,
           background:'rgba(var(--bg-rgb),0.92)',
           backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-          border:'0.5px solid rgba(240,178,74,0.40)',
+          border:'0.5px solid rgba(255,191,101,0.40)',
           color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)',
         }}>
-          <Icon name="check" size={14} color="#F0B24A" stroke={2.6}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
           {addedToast}
         </div>
       )}
@@ -1039,8 +1039,8 @@ function AddFriendScreen({ onBack }) {
 function SearchUsername({ onAdd }) {
   const [q, setQ] = React.useState('');
   const candidates = [
-    { name:'Iris Lane',  handle:'@iris',     initials:'IL', tone:'#E8945F', mutual: 3 },
-    { name:'Marco Lin',  handle:'@marcol',   initials:'ML', tone:'#CC8050', mutual: 0 },
+    { name:'Iris Lane',  handle:'@iris',     initials:'IL', tone:'#FFBF65', mutual: 3 },
+    { name:'Marco Lin',  handle:'@marcol',   initials:'ML', tone:'#6F93E0', mutual: 0 },
     { name:'Petra Vance',handle:'@petra.v',  initials:'PV', tone:'#FFBF65', mutual: 1 },
   ];
   return (
@@ -1071,14 +1071,14 @@ function ContactsList({ onAdd }) {
   const contacts = [
     { name:'Diego Marquez', initials:'DM', tone:'#FFBF65', phone:'(555) 010-1102', onApp:true },
     { name:'Yuki Sato',     initials:'YS', tone:'#FFBF65', phone:'(555) 010-2208', onApp:true },
-    { name:'Sam Reyes',     initials:'SR', tone:'#CC8050', phone:'(555) 010-3398', onApp:false },
-    { name:'Nia Cole',      initials:'NC', tone:'#E8945F', phone:'(555) 010-4444', onApp:false },
+    { name:'Sam Reyes',     initials:'SR', tone:'#6F93E0', phone:'(555) 010-3398', onApp:false },
+    { name:'Nia Cole',      initials:'NC', tone:'#FFBF65', phone:'(555) 010-4444', onApp:false },
   ];
   return (
     <div>
       <div style={{
-        background:'rgba(253,166,90,0.08)',
-        border:'0.5px solid rgba(253,166,90,0.18)',
+        background:'rgba(255,191,101,0.08)',
+        border:'0.5px solid rgba(255,191,101,0.18)',
         borderRadius: 14, padding:'12px 14px', marginBottom: 16,
         display:'flex', alignItems:'center', gap: 12,
         fontSize: 12.5, color:'var(--cream)', lineHeight: 1.45,
@@ -1147,18 +1147,18 @@ function QRArt() {
   const cells = [];
   const seed = (i,j) => ((i*7 + j*11 + i*j) % 5) > 1;
   for (let i=0;i<11;i++) for (let j=0;j<11;j++) {
-    if (seed(i,j)) cells.push(<rect key={i+'-'+j} x={j*16} y={i*16} width={14} height={14} rx={2} fill="#17100f"/>);
+    if (seed(i,j)) cells.push(<rect key={i+'-'+j} x={j*16} y={i*16} width={14} height={14} rx={2} fill="#13181B"/>);
   }
   const corner = (cx, cy) => (
     <g key={cx+'-'+cy} transform={`translate(${cx},${cy})`}>
-      <rect width="44" height="44" rx="8" fill="#17100f"/>
-      <rect x="6" y="6" width="32" height="32" rx="4" fill="#f4f1ea"/>
-      <rect x="12" y="12" width="20" height="20" rx="3" fill="#17100f"/>
+      <rect width="44" height="44" rx="8" fill="#13181B"/>
+      <rect x="6" y="6" width="32" height="32" rx="4" fill="#F0EEEB"/>
+      <rect x="12" y="12" width="20" height="20" rx="3" fill="#13181B"/>
     </g>
   );
   return (
     <svg viewBox="0 0 184 184" width="100%" height="100%">
-      <rect width="184" height="184" fill="#f4f1ea"/>
+      <rect width="184" height="184" fill="#F0EEEB"/>
       {cells}
       {corner(0,0)}
       {corner(140,0)}
@@ -1349,7 +1349,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
         <button onClick={()=> setShowProfileEdit(true)} className="tap-row" style={{
           appearance:'none', width:'100%', textAlign:'left', cursor:'pointer',
           padding:'22px 22px', borderRadius: 22,
-          background:'linear-gradient(160deg, rgba(253,137,115,0.18), rgba(253,166,90,0.06) 70%, transparent)',
+          background:'linear-gradient(160deg, rgba(253,137,115,0.18), rgba(255,191,101,0.06) 70%, transparent)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           display:'flex', alignItems:'center', gap: 16, color:'var(--cream)',
         }}>
@@ -1460,12 +1460,12 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
           padding:'10px 16px', borderRadius: 999,
           background:'rgba(var(--bg-rgb),0.92)',
           backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-          border:'0.5px solid rgba(240,178,74,0.40)',
+          border:'0.5px solid rgba(255,191,101,0.40)',
           color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)', whiteSpace:'nowrap',
         }}>
-          <Icon name="check" size={14} color="#F0B24A" stroke={2.6}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
           {toast}
         </div>
       )}
@@ -1828,8 +1828,8 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
 // ─── Appearance / theme picker (Dark / Light) ──────────────────────
 function ThemePickerSheet({ theme, onPick, onClose }) {
   const OPTIONS = [
-    { id:'dark',  label:tr('tp.dark','Dark'),  desc:tr('tp.darkDesc','Ember on near-black — the signature look.'), bg:'#17100f', fg:'#f6f1ea', card:'rgba(244,241,234,0.08)' },
-    { id:'light', label:tr('tp.light','Light'), desc:tr('tp.lightDesc','Warm & airy for daytime.'),                  bg:'#f7f1ea', fg:'#1c1512', card:'rgba(34,24,20,0.06)' },
+    { id:'dark',  label:tr('tp.dark','Dark'),  desc:tr('tp.darkDesc','Coral on midnight — the signature look.'), bg:'#13181B', fg:'#F0EEEB', card:'rgba(240,238,235,0.08)' },
+    { id:'light', label:tr('tp.light','Light'), desc:tr('tp.lightDesc','Bright & airy for daytime.'),             bg:'#F0EEEB', fg:'#13181B', card:'rgba(19,24,27,0.06)' },
   ];
   return (
     <div onClick={onClose} style={{
@@ -2262,7 +2262,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
         {friend && (
           <div style={{
             marginTop: 26, padding:'16px 16px', borderRadius: 18,
-            background:'linear-gradient(135deg, rgba(253,137,115,0.16), rgba(253,166,90,0.05))',
+            background:'linear-gradient(135deg, rgba(253,137,115,0.16), rgba(255,191,101,0.05))',
             border:'0.5px solid rgba(253,137,115,0.25)',
             display:'flex', alignItems:'center', gap: 12,
           }}>
@@ -2352,7 +2352,7 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
       }}/>
       <div style={{
         position:'absolute', right:0, top:0, bottom:0, width:'50%',
-        background:'linear-gradient(270deg, rgba(253,166,90,0.12), transparent)',
+        background:'linear-gradient(270deg, rgba(255,191,101,0.12), transparent)',
         animation:'mm-curtain-r .6s cubic-bezier(.4,0,.2,1) both',
       }}/>
 

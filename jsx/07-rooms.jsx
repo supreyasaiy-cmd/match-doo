@@ -33,7 +33,7 @@ if (!window.ROOMS) {
     {
       id: 'r4', name: 'Owen & Mira', emoji: '✨',
       type: 'friends', members: ['f5','f6'], lastActivity: '3d ago',
-      tone: '#CC8050', matchCount: 7,
+      tone: '#6F93E0', matchCount: 7,
       ownerId: 'me', votingDays: 2,
       filters: { services: ['Netflix','Prime'], genres: ['Drama','Sci-Fi','Comedy','Romance'] },
     },
@@ -66,7 +66,7 @@ function collectMovieNights() {
       if (!d) continue;
       const id = k.slice('matchdoo.schedule.'.length);
       const m = (window.MOVIES || []).find(x => x.id === id);
-      out.push({ date: d, kind: 'movie', movie: m, tone: '#F0B24A', title: m ? m.title : tr('cal.aFilm','A film'), sub: tr('cal.watchingSolo','Watching solo'), emoji: '🎬' });
+      out.push({ date: d, kind: 'movie', movie: m, tone: '#FFBF65', title: m ? m.title : tr('cal.aFilm','A film'), sub: tr('cal.watchingSolo','Watching solo'), emoji: '🎬' });
     }
   } catch {}
   return out.sort((a, b) => a.date.localeCompare(b.date));
@@ -801,12 +801,12 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           padding:'10px 16px', borderRadius: 999,
           background:'rgba(var(--bg-rgb),0.92)',
           backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-          border:'0.5px solid rgba(240,178,74,0.40)',
+          border:'0.5px solid rgba(255,191,101,0.40)',
           color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)',
         }}>
-          <Icon name="check" size={14} color="#F0B24A" stroke={2.6}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
           {memberToast}
         </div>
       )}
@@ -1173,9 +1173,9 @@ function ShareRoomSheet({ room, onClose }) {
             ) : (
               <div style={{
                 display:'flex', flexDirection:'column', alignItems:'center', gap: 8,
-                color:'#17100f', textAlign:'center',
+                color:'#13181B', textAlign:'center',
               }}>
-                <Icon name="qr" size={64} color="#17100f" stroke={1.4}/>
+                <Icon name="qr" size={64} color="#13181B" stroke={1.4}/>
                 <div style={{fontSize: 11, fontWeight: 600, letterSpacing:'0.02em'}}>{code}</div>
               </div>
             )}
@@ -1234,12 +1234,12 @@ function ShareRoomSheet({ room, onClose }) {
             padding:'10px 16px', borderRadius: 999,
             background:'rgba(var(--bg-rgb),0.92)',
             backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-            border:'0.5px solid rgba(240,178,74,0.40)',
+            border:'0.5px solid rgba(255,191,101,0.40)',
             color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
             zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
             boxShadow:'0 12px 30px rgba(0,0,0,0.4)', whiteSpace:'nowrap',
           }}>
-            <Icon name="check" size={14} color="#F0B24A" stroke={2.6}/>
+            <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
             {toast}
           </div>
         )}
@@ -1251,7 +1251,7 @@ function ShareRoomSheet({ room, onClose }) {
 // ─── Room settings sheet ────────────────────────────────────────────
 function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMember, onAddMembers, onShare, onLeave, onDelete }) {
   const EMOJIS = ['🌸','🍿','🎬','✨','🎥','🎭','🌙','🍕','☕','🔥','❤️','🎉'];
-  const TONES  = ['#FD8973','#FFBF65','#6F93E0','#93A8E8','#003A6C','#E8846B','#CCD5DA','#F0B24A'];
+  const TONES  = ['#FD8973','#FFBF65','#6F93E0','#93A8E8','#003A6C','#E8846B','#CCD5DA','#FFBF65'];
   const [name, setName]   = React.useState(room.name);
   const [emoji, setEmoji] = React.useState(room.emoji || '🎬');
   const [tone, setTone]   = React.useState(room.tone || '#FD8973');
@@ -1353,7 +1353,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
 
         {/* share shortcut */}
         <button onClick={onShare} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
-          <IconBadge icon="share" size={34} tone="#F0B24A"/>
+          <IconBadge icon="share" size={34} tone="#FFBF65"/>
           <div style={{flex:1, textAlign:'left', fontSize:14, fontWeight:600}}>Invite / share room</div>
           <Icon name="chev" size={14} color="var(--muted-2)"/>
         </button>

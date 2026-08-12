@@ -203,8 +203,8 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         }}>
           <span style={{
             padding:'2px 8px', borderRadius: 5,
-            background: isSeries ? 'rgba(224,149,94,0.18)' : 'rgba(253,166,90,0.18)',
-            border:`0.5px solid ${isSeries ? 'rgba(224,149,94,0.4)' : 'rgba(253,166,90,0.4)'}`,
+            background: isSeries ? 'rgba(111,147,224,0.18)' : 'rgba(255,191,101,0.18)',
+            border:`0.5px solid ${isSeries ? 'rgba(111,147,224,0.4)' : 'rgba(255,191,101,0.4)'}`,
             color: isSeries ? '#6F93E0' : '#FFBF65',
             fontSize: 10, fontWeight: 700, letterSpacing:'0.08em',
           }}>{isSeries ? 'SERIES' : 'MOVIE'}</span>
@@ -220,8 +220,8 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               <div key={s} style={{
                 display:'inline-flex', alignItems:'center', gap: 8,
                 padding:'6px 13px 6px 6px', borderRadius: 999,
-                background:'rgba(240,178,74,0.10)',
-                border:'0.5px solid rgba(240,178,74,0.30)',
+                background:'rgba(255,191,101,0.10)',
+                border:'0.5px solid rgba(255,191,101,0.30)',
               }}>
                 <ServiceChip name={s} size={20}/>
                 <span style={{fontSize: 12.5, fontWeight: 600, color:'var(--cream)'}}>{s}</span>
@@ -253,8 +253,8 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               position:'relative', flex: 1, cursor:'pointer',
               display:'flex', alignItems:'center', gap: 10,
               padding:'13px 14px', borderRadius: 14,
-              background: sched ? 'rgba(240,178,74,0.10)' : 'rgba(var(--fg-rgb),0.06)',
-              border:`0.5px solid ${sched ? 'rgba(240,178,74,0.35)' : 'rgba(var(--fg-rgb),0.14)'}`,
+              background: sched ? 'rgba(255,191,101,0.10)' : 'rgba(var(--fg-rgb),0.06)',
+              border:`0.5px solid ${sched ? 'rgba(255,191,101,0.35)' : 'rgba(var(--fg-rgb),0.14)'}`,
             }}>
               <Icon name="clock" size={18} color={sched ? 'var(--green)' : 'var(--muted)'}/>
               <span style={{flex:1, fontSize: 14, fontWeight: 600, color: sched ? 'var(--cream)' : 'var(--muted)'}}>
@@ -309,11 +309,11 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               appearance:'none', border:0, position:'absolute', top:'50%', left:'50%',
               transform:'translate(-50%,-50%)',
               width: 64, height: 64, borderRadius:'50%',
-              background:'rgba(255,255,255,0.92)', color:'#17100f',
+              background:'rgba(255,255,255,0.92)', color:'#13181B',
               display:'flex', alignItems:'center', justifyContent:'center',
               boxShadow:'0 12px 30px rgba(0,0,0,0.5)',
             }}>
-              <Icon name="play" size={22} color="#17100f"/>
+              <Icon name="play" size={22} color="#13181B"/>
             </button>
             <div style={{
               position:'absolute', left: 14, bottom: 12,

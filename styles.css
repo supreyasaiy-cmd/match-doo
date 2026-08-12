@@ -87,7 +87,7 @@ button{ font-family: inherit; cursor: default; }
 
 /* pressable list rows — subtle feedback on tap */
 .tap-row{ transition: background .14s ease; cursor: pointer; }
-.tap-row:active{ background: rgba(244,241,234,0.06) !important; }
+.tap-row:active{ background: rgba(240,238,235,0.06) !important; }
 
 /* Welcome ember badge — theme-aware so it stays legible on light bg */
 .wl-badge{ background: rgba(253,137,115,0.12); border-color: rgba(253,137,115,0.40); color: var(--red); }

@@ -119,7 +119,7 @@ function Poster({ movie, size = 'lg', className = '', style = {}, hideTitle = fa
           opacity: 0.7,
         }}>
           <span>{movie.year}</span>
-          <span>{movie.genres?.[0]}</span>
+          <span>{genreLabel(movie.genres?.[0])}</span>
         </div>
       )}
 

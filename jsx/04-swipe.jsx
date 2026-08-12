@@ -169,7 +169,7 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
                   background:'rgba(244,241,234,0.14)',
                   border:'0.5px solid rgba(244,241,234,0.2)',
                   borderRadius:999, letterSpacing:'-0.01em', fontWeight:500,
-                }}>{g}</span>
+                }}>{genreLabel(g)}</span>
               ))}
             </div>
             <div style={{flex:1}}/>

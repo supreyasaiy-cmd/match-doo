@@ -24,7 +24,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
   const schedKey = `matchdoo.schedule.${movie.id}`;
   const [sched, setSched] = React.useState(() => { try { return localStorage.getItem(schedKey) || ''; } catch { return ''; } });
   const saveSched = (v) => { setSched(v); try { v ? localStorage.setItem(schedKey, v) : localStorage.removeItem(schedKey); } catch {} };
-  const schedLabel = sched ? new Date(sched + 'T00:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) : '';
+  const schedLabel = sched ? new Date(sched + 'T00:00:00').toLocaleDateString(window.I18N.lang==='th'?'th-TH-u-ca-gregory':'en-US', { weekday:'short', month:'short', day:'numeric' }) : '';
 
   // ── Draggable bottom-sheet with 3 snap points ────────────────────
   //   full  : sheet expanded near the top for long reading
@@ -461,7 +461,7 @@ function SearchOverlay({ onClose, onPick }) {
               <div style={{flex:1, minWidth:0}}>
                 <div style={{fontFamily:'var(--serif)', fontSize: 19, lineHeight: 1.05, letterSpacing:'-0.01em', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.title}</div>
                 <div style={{fontSize: 11, color:'var(--muted)', marginTop: 4, letterSpacing:'0.05em', textTransform:'uppercase'}}>
-                  {m.year} · {m.type === 'series' ? `${m.seasons||1} season${(m.seasons||1)>1?'s':''}` : (m.genres?.[0] || 'Film')} · {m.rt}% RT
+                  {m.year} · {m.type === 'series' ? `${m.seasons||1} season${(m.seasons||1)>1?'s':''}` : genreLabel(m.genres?.[0] || 'Film')} · {m.rt}% RT
                 </div>
               </div>
               <Icon name="chev" size={14} color="var(--muted-2)"/>

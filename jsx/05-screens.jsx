@@ -587,7 +587,7 @@ function OnboardingScreen({ initialName = '', onDone }) {
                 fontFamily:'var(--sans)', fontWeight: on? 600:500, fontSize: 13,
                 border: `0.5px solid ${on? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
                 transition:'all .14s ease',
-              }}>{g}</button>
+              }}>{genreLabel(g)}</button>
             );
           })}
         </div>
@@ -700,7 +700,7 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
                 border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
                 background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
                 color: on ? 'var(--red)' : 'var(--cream)',
-              }}>{g || tr('matches.all','All')}</button>
+              }}>{g ? genreLabel(g) : tr('matches.all','All')}</button>
             );
           })}
         </div>
@@ -752,7 +752,7 @@ function FriendMatchSection({ friend, matched, watched, onOpen, onOpenMovie }) {
             }}>{matched.length} {tr('matches.matchesN','matches')}</span>
           </div>
           <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>
-            {friend.lastSeen}
+            {relTime(friend.lastSeen)}
           </div>
         </div>
         <Icon name="chev" size={16} color="var(--muted-2)"/>
@@ -949,7 +949,7 @@ function FriendRow({ friend, onClick }) {
           fontWeight: 600, fontSize: 15, letterSpacing:'-0.01em',
         }}>{friend.name}</div>
         <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>
-          {matchCount > 0 ? `${matchCount} mutual film${matchCount===1?'':'s'}` : friend.lastSeen}
+          {matchCount > 0 ? `${matchCount} mutual film${matchCount===1?'':'s'}` : relTime(friend.lastSeen)}
         </div>
       </div>
       {matchCount > 0 && (
@@ -1337,7 +1337,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
   const allFriendsList = [...(window.FRIENDS?.couple||[]), ...(window.FRIENDS?.family||[]), ...(window.FRIENDS?.friends||[])];
   const friendsForMovie = (mid) => allFriendsList.filter(f => (window.MATCHES[f.id]?.movieIds||[]).includes(mid));
 
-  const fmtBirthday = (v) => { try { return new Date(v + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch { return v; } };
+  const fmtBirthday = (v) => { try { return new Date(v + 'T00:00:00').toLocaleDateString(window.I18N.lang==='th'?'th-TH-u-ca-gregory':'en-US', { month:'short', day:'numeric', year:'numeric' }); } catch { return v; } };
   const settingsState = { genres, setGenres, services, setServices, runtime, setRuntime,
     email, setEmail, birthday, setBirthday, gender, setGender, notif, setNotif };
 
@@ -1759,7 +1759,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
                 border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
                 background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
                 color: on ? 'var(--red)' : 'var(--cream)',
-              }}>{g || tr('matches.all','All')}</button>
+              }}>{g ? genreLabel(g) : tr('matches.all','All')}</button>
             );
           })}
         </div>
@@ -2219,7 +2219,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
           <span>·</span>
           <span>{Math.floor(movie.runtime/60)}h {movie.runtime%60}m</span>
           <span>·</span>
-          <span>{movie.genres.join(', ')}</span>
+          <span>{movie.genres.map(genreLabel).join(', ')}</span>
         </div>
 
         <div style={{

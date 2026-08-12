@@ -90,7 +90,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
 
   const firstDow    = new Date(cur.y, cur.m, 1).getDay();
   const daysInMonth = new Date(cur.y, cur.m + 1, 0).getDate();
-  const monthLabel  = new Date(cur.y, cur.m, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const monthLabel  = new Date(cur.y, cur.m, 1).toLocaleDateString(window.I18N.lang==='th'?'th-TH-u-ca-gregory':'en-US', { month: 'long', year: 'numeric' });
   const shift = (delta) => setCur(({ y, m }) => {
     const d = new Date(y, m + delta, 1); return { y: d.getFullYear(), m: d.getMonth() };
   });
@@ -98,10 +98,10 @@ function RoomsCalendar({ onOpenRoom, bare }) {
   const selEvents = byDate[sel] || [];
   const upcoming  = events.filter(e => e.date >= todayIso).slice(0, 3);
   const listTitle = selEvents.length
-    ? new Date(sel + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+    ? new Date(sel + 'T00:00:00').toLocaleDateString(window.I18N.lang==='th'?'th-TH-u-ca-gregory':'en-US', { weekday: 'long', month: 'short', day: 'numeric' })
     : 'Upcoming';
   const list = selEvents.length ? selEvents : upcoming;
-  const fmtRow = (d) => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const fmtRow = (d) => new Date(d + 'T00:00:00').toLocaleDateString(window.I18N.lang==='th'?'th-TH-u-ca-gregory':'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
   const cells = [];
   for (let i = 0; i < firstDow; i++) cells.push(null);
@@ -406,7 +406,7 @@ function RoomCard({ room, onClick }) {
           </>)}
           <span>{members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')}</span>
           <span>·</span>
-          <span>{room.lastActivity}</span>
+          <span>{relTime(room.lastActivity)}</span>
         </div>
       </div>
 
@@ -465,7 +465,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
   const [watchDate, setWatchDate] = React.useState(() => { try { return localStorage.getItem(dateKey) || initialRoom.watchDate || ''; } catch { return initialRoom.watchDate || ''; } });
   const saveWatchDate = (v) => { setWatchDate(v); try { v ? localStorage.setItem(dateKey, v) : localStorage.removeItem(dateKey); } catch {} };
   const isoLocal = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const fmtWatch = (v) => new Date(v + 'T00:00:00').toLocaleDateString('en-US', { weekday:'long', month:'short', day:'numeric' });
+  const fmtWatch = (v) => new Date(v + 'T00:00:00').toLocaleDateString(window.I18N.lang==='th'?'th-TH-u-ca-gregory':'en-US', { weekday:'long', month:'short', day:'numeric' });
   const _tod = new Date(); const _tom = new Date(_tod); _tom.setDate(_tod.getDate()+1);
   const _sat = new Date(_tod); _sat.setDate(_tod.getDate() + ((6 - _tod.getDay() + 7) % 7));
   const QUICK_DATES = [
@@ -547,7 +547,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           color:'var(--cream)', letterSpacing:'-0.01em',
         }}>{room.name}</div>
         <div style={{fontSize: 12.5, color:'var(--muted)', marginTop: 5, textTransform:'capitalize'}}>
-          {room.type ? `${room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')} · ` : ''}{members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')} · {room.lastActivity}
+          {room.type ? `${room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')} · ` : ''}{members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')} · {relTime(room.lastActivity)}
         </div>
 
         {/* Member avatars in a row, with + Add */}
@@ -653,7 +653,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
                     fontSize: 11.5, fontWeight: 600, padding:'5px 11px', borderRadius: 999,
                     background:'rgba(255,109,41,0.12)', color:'var(--red)',
                     border:'0.5px solid rgba(255,109,41,0.28)',
-                  }}>{g}</span>
+                  }}>{genreLabel(g)}</span>
                 ))}
               </div>
             )}
@@ -949,7 +949,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
                   background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.03)',
                   color: on ? 'var(--red)' : (dim ? 'var(--muted-2)' : 'var(--cream)'),
                   opacity: dim ? 0.5 : 1,
-                }}>{g}</button>
+                }}>{genreLabel(g)}</button>
               );
             })}
           </div>
@@ -1495,7 +1495,7 @@ function RoomGenreVoteSheet({ room, onClose, onSaved }) {
                 }}>
                   {on && <Icon name="check" size={12} color="#fff" stroke={3}/>}
                 </div>
-                <div style={{flex:1, fontWeight: 600, fontSize: 15, color: on ? 'var(--red)' : 'var(--cream)'}}>{g}</div>
+                <div style={{flex:1, fontWeight: 600, fontSize: 15, color: on ? 'var(--red)' : 'var(--cream)'}}>{genreLabel(g)}</div>
                 <div style={{fontSize: 11.5, color:'var(--muted)'}}>
                   {(tallyMap[g] || 0)} vote{(tallyMap[g]||0)===1?'':'s'}
                   {others > 0 ? ` · ${others} member${others===1?'':'s'}` : ''}
@@ -1554,7 +1554,7 @@ function RoomSwipeScreen({ room, onBack, onReadMore }) {
       {/* winning-genre + service context strip */}
       <div style={{padding:'0 18px 8px', display:'flex', gap: 6, flexWrap:'wrap', alignItems:'center'}}>
         {RR.activeGenres(room).slice(0,4).map(g => (
-          <span key={g} style={{fontSize: 11, fontWeight: 600, padding:'4px 10px', borderRadius: 999, background:'rgba(255,109,41,0.12)', color:'var(--red)', border:'0.5px solid rgba(255,109,41,0.26)'}}>{g}</span>
+          <span key={g} style={{fontSize: 11, fontWeight: 600, padding:'4px 10px', borderRadius: 999, background:'rgba(255,109,41,0.12)', color:'var(--red)', border:'0.5px solid rgba(255,109,41,0.26)'}}>{genreLabel(g)}</span>
         ))}
       </div>
 

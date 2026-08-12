@@ -94,7 +94,7 @@ window.I18N = {
       'friends.search':   'ค้นหาเพื่อน',
       'friends.wantsToAdd': 'ต้องการเพิ่มคุณ',
       'friends.accept':   'ยอมรับ',
-      'friends.mutual':   'เพื่อนร่วมกัน',
+      'friends.mutual':   'เพื่อนร่วมกัน', 'friends.mutualFilms': 'หนังที่ตรงกัน',
       'friends.addTitle': 'เพิ่มเพื่อน',
       'addfriend.username': 'ชื่อผู้ใช้',
       'addfriend.contacts': 'รายชื่อติดต่อ',
@@ -278,3 +278,44 @@ window.I18N = {
 // Short global helper. Named `tr` (not `t`) to avoid colliding with the
 // tweaks object `t` used in the App component.
 window.tr = function (key, fallback) { return window.I18N.t(key, fallback); };
+
+// ── Display-only localizers (data stays English; only the label changes) ──
+
+// Genre display label. The catalog/filters keep the English genre string;
+// this only swaps the visible text in Thai. Returns the input unchanged in EN.
+const GENRE_TH = {
+  'Action':'แอ็กชัน','Adventure':'ผจญภัย','Animation':'แอนิเมชัน','Comedy':'คอเมดี้',
+  'Crime':'อาชญากรรม','Documentary':'สารคดี','Drama':'ดราม่า','Family':'ครอบครัว',
+  'Fantasy':'แฟนตาซี','History':'ประวัติศาสตร์','Horror':'สยองขวัญ','Music':'ดนตรี',
+  'Musical':'มิวสิคัล','Mystery':'ลึกลับ','Romance':'โรแมนติก','Sci-Fi':'ไซไฟ',
+  'Thriller':'ระทึกขวัญ','War':'สงคราม','Western':'คาวบอย','Series':'ซีรีส์',
+  'Film':'หนัง','Talk':'ทอล์ก','Reality':'เรียลลิตี้',
+};
+window.genreLabel = function (g) {
+  if (!g || window.I18N.lang !== 'th') return g;
+  return GENRE_TH[g] || g;
+};
+
+// Relative-time / activity string ("Active now", "2h ago", "Yesterday"…) → Thai.
+window.relTime = function (s) {
+  if (!s || window.I18N.lang !== 'th') return s;
+  const M = { 'Active now':'ใช้งานอยู่', 'Yesterday':'เมื่อวาน', 'Just now':'เมื่อสักครู่', 'Just added':'เพิ่งเพิ่ม' };
+  if (M[s]) return M[s];
+  let m;
+  if ((m = s.match(/^(\d+)m ago$/))) return `${m[1]} นาทีที่แล้ว`;
+  if ((m = s.match(/^(\d+)h ago$/))) return `${m[1]} ชม.ที่แล้ว`;
+  if ((m = s.match(/^(\d+)d ago$/))) return `${m[1]} วันที่แล้ว`;
+  if ((m = s.match(/^(\d+)w ago$/))) return `${m[1]} สัปดาห์ที่แล้ว`;
+  return s;
+};
+
+// Localized date formatter. Thai uses Thai month/weekday names with a
+// Gregorian year (avoids Buddhist-era confusion since the data is Gregorian).
+window.fmtDateLoc = function (iso, opts) {
+  try {
+    const d = /^\d{4}-\d{2}-\d{2}/.test(iso) ? new Date(iso + 'T00:00:00') : new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    const loc = window.I18N.lang === 'th' ? 'th-TH-u-ca-gregory' : 'en-US';
+    return d.toLocaleDateString(loc, opts);
+  } catch { return iso; }
+};

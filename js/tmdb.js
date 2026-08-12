@@ -86,23 +86,33 @@
     // 1) Server proxy — holds the key server-side, so everyone gets real data
     //    with no personal key. This is the default path in production.
     if (!proxyDown) {
-      try {
-        const url = new URL(PROXY, PROXY_ORIGIN);
-        url.searchParams.set('path', path);
-        for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
-        const r = await fetch(url.toString(), { headers: { accept: 'application/json' } });
-        if (r.ok) return r.json();
-        // 503 = server key not configured, 404 = proxy not deployed (e.g. plain
-        // static localhost) → remember and fall back to a personal key below.
-        if (r.status === 503 || r.status === 404) { proxyDown = true; }
-        else {
+      const url = new URL(PROXY, PROXY_ORIGIN);
+      url.searchParams.set('path', path);
+      for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
+      // A cold Vercel function can drop the first burst of concurrent boot
+      // requests with a network error ("Failed to fetch") before it's warm.
+      // Retry a couple of times with a short backoff so one cold start doesn't
+      // fall the whole app back to bundled data. 404/503 are definitive (proxy
+      // absent / key unset) and break out immediately.
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const r = await fetch(url.toString(), { headers: { accept: 'application/json' } });
+          if (r.ok) return r.json();
+          // 503 = server key not configured, 404 = proxy not deployed (e.g. plain
+          // static localhost) → remember and fall back to a personal key below.
+          if (r.status === 503 || r.status === 404) { proxyDown = true; break; }
           let msg = `HTTP ${r.status}`;
           try { const e = await r.json(); if (e?.status_message) msg = e.status_message; } catch {}
           const err = new Error(msg); err.status = r.status; throw err;
+        } catch (e) {
+          if (e && e.status) throw e;    // genuine upstream error — surface it
+          // Transient network blip (cold start, CORS still propagating, dropped
+          // request). Back off briefly and retry; don't latch proxyDown — a boot
+          // failure must not disable real posters for the whole session.
+          if (attempt < 2) { await new Promise(r => setTimeout(r, 600 * (attempt + 1))); continue; }
+          // out of retries → fall through to the personal-key fallback for THIS
+          // call; the proxy is retried fresh on the next call.
         }
-      } catch (e) {
-        if (e && e.status) throw e;      // genuine upstream error — surface it
-        proxyDown = true;                // network/unreachable — use the fallback
       }
     }
 

@@ -116,25 +116,38 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
         <Wordmark/>
 
         <div style={{flex:1, display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'flex-start', paddingTop: 30}}>
-          <div style={{
-            fontFamily:'var(--serif)', fontSize: 46, lineHeight: 1.0,
-            letterSpacing:'-0.025em', color:'var(--cream)', textWrap:'nowrap',
-          }}>
-            {tr('welcome.h1','Match')}<br/>
-            <em style={{
+          {(() => {
+            const isTH = (window.I18N && window.I18N.lang) === 'th';
+            const grad = {
               fontStyle:'italic',
               background:'linear-gradient(95deg, #FD8973 0%, #FFBF65 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
-            }}>{tr('welcome.h2','a movie')}</em><br/>
-            {tr('welcome.h3','Make')}<br/>
-            <em style={{
-              fontStyle:'italic',
-              background:'linear-gradient(95deg, #FD8973 0%, #FFBF65 80%)',
-              WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
-              backgroundClip:'text', color:'transparent',
-            }}>{tr('welcome.h4','a moment')}</em>
-          </div>
+            };
+            // Thai reads as two verb+noun phrases — set each on its own line
+            // (จับคู่หนัง / สร้างโมเมนต์) with the noun in gradient, and give
+            // Kanit room so upper vowels/tone marks don't crowd the line above.
+            // English keeps its taller four-line stack (Match / a movie / …).
+            return isTH ? (
+              <div style={{
+                fontFamily:'var(--serif)', fontSize: 52, lineHeight: 1.22,
+                letterSpacing:'-0.005em', fontWeight: 600, color:'var(--cream)', textWrap:'nowrap',
+              }}>
+                {tr('welcome.h1','Match')}<em style={grad}>{tr('welcome.h2','a movie')}</em><br/>
+                {tr('welcome.h3','Make')}<em style={grad}>{tr('welcome.h4','a moment')}</em>
+              </div>
+            ) : (
+              <div style={{
+                fontFamily:'var(--serif)', fontSize: 46, lineHeight: 1.0,
+                letterSpacing:'-0.025em', color:'var(--cream)', textWrap:'nowrap',
+              }}>
+                {tr('welcome.h1','Match')}<br/>
+                <em style={grad}>{tr('welcome.h2','a movie')}</em><br/>
+                {tr('welcome.h3','Make')}<br/>
+                <em style={grad}>{tr('welcome.h4','a moment')}</em>
+              </div>
+            );
+          })()}
 
           <div className="wl-badge" style={{
             marginTop: 22,

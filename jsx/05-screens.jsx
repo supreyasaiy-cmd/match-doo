@@ -120,20 +120,20 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
             fontFamily:'var(--serif)', fontSize: 46, lineHeight: 1.0,
             letterSpacing:'-0.025em', color:'var(--cream)', textWrap:'nowrap',
           }}>
-            Match<br/>
+            {tr('welcome.h1','Match')}<br/>
             <em style={{
               fontStyle:'italic',
               background:'linear-gradient(95deg, #FF6D29 0%, #E0955E 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
-            }}>a movie</em><br/>
-            Make<br/>
+            }}>{tr('welcome.h2','a movie')}</em><br/>
+            {tr('welcome.h3','Make')}<br/>
             <em style={{
               fontStyle:'italic',
               background:'linear-gradient(95deg, #FF6D29 0%, #E0955E 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
-            }}>a moment</em>
+            }}>{tr('welcome.h4','a moment')}</em>
           </div>
 
           <div className="wl-badge" style={{
@@ -168,7 +168,7 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
           <div style={{
             textAlign:'center', marginTop: 12, fontSize: 11, color:'var(--muted-2)', lineHeight: 1.5,
           }}>
-            By continuing you agree to our <span style={legalLink} onClick={()=> onOpenLegal?.('terms')}>Terms</span><br/>and <span style={legalLink} onClick={()=> onOpenLegal?.('privacy')}>Privacy Policy</span>.
+            {tr('welcome.agree','By continuing you agree to our')} <span style={legalLink} onClick={()=> onOpenLegal?.('terms')}>{tr('welcome.terms','Terms')}</span><br/>{tr('welcome.and','and')} <span style={legalLink} onClick={()=> onOpenLegal?.('privacy')}>{tr('welcome.privacy','Privacy Policy')}</span>.
           </div>
         </div>
       </div>

@@ -237,10 +237,14 @@ window.I18N = {
       'profile.tagline':        'Match Doo · สร้างมาเพื่อค่ำคืนดูหนัง',
 
       // ── Welcome ──
+      // Welcome headline — stacks as "จับคู่หนัง / สร้างโมเมนต์" (lines 2 & 4 gradient)
+      'welcome.h1': 'จับคู่', 'welcome.h2': 'หนัง', 'welcome.h3': 'สร้าง', 'welcome.h4': 'โมเมนต์',
       'welcome.badge':       'เลือกให้น้อยลง ดูด้วยกันให้มากขึ้น',
       'welcome.desc':        'ค้นพบหนังและซีรีส์ไปด้วยกัน ปัด จับคู่ แล้วเปลี่ยนหนังที่ถูกใจให้เป็นค่ำคืนดูหนังครั้งต่อไป',
       'welcome.signin':      'เข้าสู่ระบบ',
       'welcome.create':      'สร้างบัญชี',
+      'welcome.agree':       'การใช้งานต่อถือว่าคุณยอมรับ', 'welcome.and': 'และ',
+      'welcome.terms':       'ข้อกำหนด', 'welcome.privacy': 'นโยบายความเป็นส่วนตัว',
 
       // ── Common ──
       'common.save':   'บันทึก',

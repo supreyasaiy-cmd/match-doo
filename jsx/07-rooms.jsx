@@ -12,21 +12,21 @@ if (!window.ROOMS) {
     {
       id: 'r1', name: 'Sofia & me', emoji: '🌸',
       type: 'couple', members: ['f1'], lastActivity: 'Active now',
-      tone: '#FF6D29', matchCount: 5, watchDate: _isoSeed(_seedSat),
+      tone: '#FD8973', matchCount: 5, watchDate: _isoSeed(_seedSat),
       ownerId: 'me', votingDays: 2,
       filters: { services: ['Netflix','Prime','Max'], genres: ['Drama','Thriller','Sci-Fi','Romance'] },
     },
     {
       id: 'r2', name: 'Family Night', emoji: '🍿',
       type: 'family', members: ['f2','f3','f4'], lastActivity: '2h ago',
-      tone: '#FDA65A', matchCount: 3, watchDate: _isoSeed(_seedFri),
+      tone: '#FFBF65', matchCount: 3, watchDate: _isoSeed(_seedFri),
       ownerId: 'me', votingDays: 3,
       filters: { services: ['Netflix','Max','Hulu'], genres: ['Drama','Sci-Fi','Adventure','Animation','Crime'] },
     },
     {
       id: 'r3', name: 'Friday Crew', emoji: '🎬',
       type: 'friends', members: ['f5','f6','f7'], lastActivity: 'Yesterday',
-      tone: '#E0955E', matchCount: 11,
+      tone: '#FFBF65', matchCount: 11,
       ownerId: 'me', votingDays: 1,
       filters: { services: ['Netflix','Prime','Apple TV+'], genres: ['Sci-Fi','Comedy','Drama','Action','Thriller'] },
     },
@@ -56,7 +56,7 @@ function collectMovieNights() {
     let d = null;
     try { d = localStorage.getItem(`matchdoo.roomdate.${r.id}`); } catch {}
     if (!d) d = r.watchDate || null;
-    if (d) out.push({ date: d, kind: 'room', room: r, tone: r.tone || '#FF6D29', title: r.name, sub: tr('cal.movieNightSub','Movie night'), emoji: r.emoji || '🎬' });
+    if (d) out.push({ date: d, kind: 'room', room: r, tone: r.tone || '#FD8973', title: r.name, sub: tr('cal.movieNightSub','Movie night'), emoji: r.emoji || '🎬' });
   }
   try {
     for (let i = 0; i < localStorage.length; i++) {
@@ -154,7 +154,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
           return (
             <button key={dIso} onClick={()=>setSel(dIso)} style={{
               appearance:'none', border: isSel ? '0.5px solid var(--red)' : '0.5px solid transparent',
-              background: isSel ? hexA('#FF6D29', 0.14) : 'transparent',
+              background: isSel ? hexA('#FD8973', 0.14) : 'transparent',
               height: 38, borderRadius: 10, cursor:'pointer', position:'relative',
               display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap: 3,
             }}>
@@ -287,7 +287,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
           padding:'12px 14px', borderRadius: 999,
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-          boxShadow:'0 6px 18px rgba(255,109,41,0.35)',
+          boxShadow:'0 6px 18px rgba(253,137,115,0.35)',
         }}>
           <Icon name="plus" size={16} stroke={2.4} color="#fff"/>
           {tr('rooms.create','Create room')}
@@ -651,8 +651,8 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
                 {activeGenres.map(g => (
                   <span key={g} style={{
                     fontSize: 11.5, fontWeight: 600, padding:'5px 11px', borderRadius: 999,
-                    background:'rgba(255,109,41,0.12)', color:'var(--red)',
-                    border:'0.5px solid rgba(255,109,41,0.28)',
+                    background:'rgba(253,137,115,0.12)', color:'var(--red)',
+                    border:'0.5px solid rgba(253,137,115,0.28)',
                   }}>{genreLabel(g)}</span>
                 ))}
               </div>
@@ -844,7 +844,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
     setGenres(next);
   };
 
-  const tone = '#FF6D29';  // rooms use the brand tone now that Type is gone
+  const tone = '#FD8973';  // rooms use the brand tone now that Type is gone
 
   const canCreate = name.trim().length >= 2 && selected.size >= 1
     && services.size >= 1 && genres.size >= 3 && genres.size <= 5;
@@ -946,7 +946,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
                   appearance:'none', cursor: dim ? 'default' : 'pointer',
                   padding:'8px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 600,
                   border:`0.5px solid ${on? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
-                  background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.03)',
+                  background: on ? 'rgba(253,137,115,0.14)' : 'rgba(var(--fg-rgb),0.03)',
                   color: on ? 'var(--red)' : (dim ? 'var(--muted-2)' : 'var(--cream)'),
                   opacity: dim ? 0.5 : 1,
                 }}>{genreLabel(g)}</button>
@@ -966,7 +966,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
               return (
                 <button key={o.d} onClick={()=>setVotingDays(o.d)} style={{
                   appearance:'none', border:`0.5px solid ${on? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
-                  background: on ? 'rgba(255,109,41,0.12)' : 'rgba(var(--fg-rgb),0.03)',
+                  background: on ? 'rgba(253,137,115,0.12)' : 'rgba(var(--fg-rgb),0.03)',
                   color: on ? 'var(--red)' : 'var(--cream)',
                   flex:1, padding:'12px 8px', borderRadius: 12,
                   fontFamily:'var(--sans)', fontWeight: 600, fontSize: 13,
@@ -1067,7 +1067,7 @@ function ShareRoomSheet({ room, onClose }) {
   const [qrFailed, setQrFailed] = React.useState(false);
   const code = roomCode(room);
   const link = roomLink(room);
-  const tone = room.tone || '#FF6D29';
+  const tone = room.tone || '#FD8973';
 
   // QR of the join link — rendered on a light card (dark modules) so it
   // scans reliably. Image is fetched live from a public QR renderer.
@@ -1251,14 +1251,14 @@ function ShareRoomSheet({ room, onClose }) {
 // ─── Room settings sheet ────────────────────────────────────────────
 function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMember, onAddMembers, onShare, onLeave, onDelete }) {
   const EMOJIS = ['🌸','🍿','🎬','✨','🎥','🎭','🌙','🍕','☕','🔥','❤️','🎉'];
-  const TONES  = ['#FF6D29','#FDA65A','#F0B24A','#E8846B','#D98B5A','#C77D52','#B32C1A','#8A5A3C'];
+  const TONES  = ['#FD8973','#FFBF65','#6F93E0','#93A8E8','#003A6C','#E8846B','#CCD5DA','#F0B24A'];
   const [name, setName]   = React.useState(room.name);
   const [emoji, setEmoji] = React.useState(room.emoji || '🎬');
-  const [tone, setTone]   = React.useState(room.tone || '#FF6D29');
+  const [tone, setTone]   = React.useState(room.tone || '#FD8973');
   const [muted, setMuted] = React.useState(!!room.muted);
   const [confirm, setConfirm] = React.useState(null); // 'leave' | 'delete'
 
-  const dirty = name.trim() !== room.name || emoji !== (room.emoji || '🎬') || tone !== (room.tone || '#FF6D29') || muted !== !!room.muted;
+  const dirty = name.trim() !== room.name || emoji !== (room.emoji || '🎬') || tone !== (room.tone || '#FD8973') || muted !== !!room.muted;
   const label = { fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px' };
   const save = () => { onUpdate({ name: name.trim() || room.name, emoji, tone, muted }); onClose(); };
 
@@ -1317,7 +1317,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
 
         {/* mute toggle */}
         <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
-          <IconBadge icon="bell" size={34} tone="#E0955E"/>
+          <IconBadge icon="bell" size={34} tone="#FFBF65"/>
           <div style={{flex:1, textAlign:'left'}}>
             <div style={{fontSize:14, fontWeight:600}}>{tr('rs.mute','Mute notifications')}</div>
             <div style={{fontSize:12, color:'var(--muted)', marginTop:1}}>{muted ? 'Room alerts are off' : 'Get alerts on new matches'}</div>
@@ -1483,7 +1483,7 @@ function RoomGenreVoteSheet({ room, onClose, onSaved }) {
             return (
               <button key={g} onClick={()=> toggle(g)} style={{
                 appearance:'none', border:`0.5px solid ${on? 'var(--red)':'rgba(var(--fg-rgb),0.12)'}`,
-                background: on ? 'rgba(255,109,41,0.12)' : 'rgba(var(--fg-rgb),0.04)',
+                background: on ? 'rgba(253,137,115,0.12)' : 'rgba(var(--fg-rgb),0.04)',
                 borderRadius: 14, padding:'13px 14px', width:'100%', textAlign:'left',
                 display:'flex', alignItems:'center', gap: 12, color:'var(--cream)',
               }}>
@@ -1554,7 +1554,7 @@ function RoomSwipeScreen({ room, onBack, onReadMore }) {
       {/* winning-genre + service context strip */}
       <div style={{padding:'0 18px 8px', display:'flex', gap: 6, flexWrap:'wrap', alignItems:'center'}}>
         {RR.activeGenres(room).slice(0,4).map(g => (
-          <span key={g} style={{fontSize: 11, fontWeight: 600, padding:'4px 10px', borderRadius: 999, background:'rgba(255,109,41,0.12)', color:'var(--red)', border:'0.5px solid rgba(255,109,41,0.26)'}}>{genreLabel(g)}</span>
+          <span key={g} style={{fontSize: 11, fontWeight: 600, padding:'4px 10px', borderRadius: 999, background:'rgba(253,137,115,0.12)', color:'var(--red)', border:'0.5px solid rgba(253,137,115,0.26)'}}>{genreLabel(g)}</span>
         ))}
       </div>
 

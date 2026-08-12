@@ -205,7 +205,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
             padding:'2px 8px', borderRadius: 5,
             background: isSeries ? 'rgba(224,149,94,0.18)' : 'rgba(253,166,90,0.18)',
             border:`0.5px solid ${isSeries ? 'rgba(224,149,94,0.4)' : 'rgba(253,166,90,0.4)'}`,
-            color: isSeries ? '#E0955E' : '#FDA65A',
+            color: isSeries ? '#6F93E0' : '#FFBF65',
             fontSize: 10, fontWeight: 700, letterSpacing:'0.08em',
           }}>{isSeries ? 'SERIES' : 'MOVIE'}</span>
           <span>{movie.year}</span><span>·</span>
@@ -373,7 +373,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
           background:'var(--red)', color:'#fff',
           border:0, fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-          boxShadow:'0 8px 24px rgba(255,109,41,0.45)',
+          boxShadow:'0 8px 24px rgba(253,137,115,0.45)',
         }}>
           <Icon name="bookmark" size={16} color="#fff"/> {window.tr ? tr('swipe.watchlist','Watchlist') : 'Watchlist'}
         </button>

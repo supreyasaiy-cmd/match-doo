@@ -22,7 +22,7 @@ function seedFriendLikesAgainst(movies) {
 }
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "accent": "#FF6D29",
+  "accent": "#FD8973",
   "celebration": "curtain",
   "density": "regular",
   "bannerPlacement": "swipeTop"
@@ -394,7 +394,7 @@ function App() {
     <IOSDevice dark={theme === 'dark'}>
       <div style={{
         position:'absolute', inset:0,
-        background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)',
+        background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)',
         color:'var(--cream)',
         display:'flex', flexDirection:'column',
       }}>
@@ -420,7 +420,7 @@ function App() {
           )}
           {legal && (
             <div style={{position:'absolute', inset:0, zIndex: 300,
-              background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)'}}>
+              background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)'}}>
               <LegalScreen doc={legal} onBack={()=> setLegal(null)}/>
             </div>
           )}
@@ -469,7 +469,7 @@ function App() {
             />
           )}
           {roomDetail && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: roomDetailModal ? 250 : 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: roomDetailModal ? 250 : 45}}>
               <RoomDetailScreen
                 room={roomDetail}
                 onBack={()=> { setRoomDetailModal(false); setRoomDetail(null); }}
@@ -480,7 +480,7 @@ function App() {
             </div>
           )}
           {roomSwipe && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 240}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 240}}>
               <RoomSwipeScreen
                 room={roomSwipe.room}
                 onReadMore={(m)=> setReadMore({ movie: m })}
@@ -489,7 +489,7 @@ function App() {
             </div>
           )}
           {matchesOpen && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
               <MatchesScreen
                 likes={Array.from(likes)}
                 onBack={()=> setMatchesOpen(false)}
@@ -499,7 +499,7 @@ function App() {
             </div>
           )}
           {createRoom && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
               <CreateRoomScreen
                 onBack={()=> setCreateRoom(false)}
                 onCreate={(r)=>{ setCreateRoom(false); setRoomDetail(r); showToast(tr('toast.roomCreated','Room’s ready — let’s find your film. 🍿')); }}
@@ -507,12 +507,12 @@ function App() {
             </div>
           )}
           {addFriend && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
               <AddFriendScreen onBack={()=> setAddFriend(false)}/>
             </div>
           )}
           {friendsOpen && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
               <FriendsScreen
                 onBack={()=> setFriendsOpen(false)}
                 onOpenFriend={(f)=> setFriendProfile(f)}
@@ -521,7 +521,7 @@ function App() {
             </div>
           )}
           {friendProfile && (
-            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(255,109,41,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(179,44,26,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
+            <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 45}}>
               <FriendProfileScreen
                 friend={friendProfile}
                 onBack={()=> setFriendProfile(null)}
@@ -659,9 +659,9 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
 function NotificationsSheet({ items = [], onClose, onOpen }) {
   const META = {
     match:    { icon:'heart',   tone:'#F0B24A' },
-    friend:   { icon:'user',    tone:'#E0955E' },
-    reminder: { icon:'clock',   tone:'#FDA65A' },
-    new:      { icon:'sparkle', tone:'#FF6D29' },
+    friend:   { icon:'user',    tone:'#FFBF65' },
+    reminder: { icon:'clock',   tone:'#FFBF65' },
+    new:      { icon:'sparkle', tone:'#FD8973' },
   };
   return (
     <div onClick={onClose} style={{
@@ -743,7 +743,7 @@ function MatchToast({ movie, friend, onDismiss }) {
       padding:'12px 14px', borderRadius: 18,
       background:'rgba(var(--bg-rgb),0.85)',
       backdropFilter:'blur(20px)',
-      border:'0.5px solid rgba(255,109,41,0.35)',
+      border:'0.5px solid rgba(253,137,115,0.35)',
       display:'flex', alignItems:'center', gap: 12,
       boxShadow:'0 12px 30px rgba(0,0,0,0.4)', color:'var(--cream)',
     }}>
@@ -768,7 +768,7 @@ function MatchDooTweaks({ t, setTweak }) {
     <TweaksPanel>
       <TweakSection label="Theme"/>
       <TweakColor label="Accent" value={t.accent}
-        options={['#FF6D29','#FDA65A','#E0955E','#F0B24A']}
+        options={['#FD8973','#FFBF65','#6F93E0','#93A8E8']}
         onChange={(v)=>{ setTweak('accent', v); document.documentElement.style.setProperty('--red', v); }}
       />
       <TweakSection label="Match moment"/>

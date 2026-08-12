@@ -66,14 +66,22 @@ or present in some file's `Object.assign(window, {...})` list.
 
 ## Design system
 
-- **Colors** (see `:root` in styles.css): navy inks `--ink #0b0f18`,
-  `--ink-2 #131a26`, `--ink-3 #1d2733`; accents `--red #E17F5C` (coral,
-  primary/like), `--gold #F0AC72`, `--green #7ED9B4`, `--blue #6F93E0`;
-  plus a periwinkle `#93A8E8` used ad hoc for the "friends" tone.
-  Mood/tone reference was a dark navy + coral + periwinkle "liquid glass"
-  wallpaper the user supplied — see the `LiquidGlassBG` component in
-  05-screens.jsx (animated blurred blob background) for the fullest
-  expression of it.
+- **Colors** — "Midnight Sunset" mood (the hour people gather to watch a
+  film): a deep-blue night sky meeting a coral + gold sunset. See `:root` in
+  styles.css. Midnight inks `--ink #13181B` (Neverything), `--ink-2 #1B2530`,
+  `--ink-3 #26333F`, over `--page-bg #0F141A`. Accents: `--red #FD8973`
+  (Miami Coral, primary/like), `--gold #FFBF65` (Sea Buckthorn),
+  `--blue #6F93E0` (with deep Ateneo Blue `#003A6C` used for the ambient
+  night-sky washes/gradients), `--green #8FB4E6` (a soft sky blue — the palette
+  has no green, so the "positive" role is a cool tone). Neutrals:
+  `--cream #F0EEEB` (Magical Moonlight), `--cream-2 #CCD5DA` (Polar Drift).
+  Semantic split to avoid collisions: SEEN (swipe-down) and series use blue,
+  while READ MORE (swipe-up) and movies use gold. The mood's fullest
+  expression is the `LiquidGlassBG` component in 05-screens.jsx (animated
+  blurred blobs: a dominant deep-blue night blob upper-left, a coral sun glow
+  upper-right, gold near the horizon) plus the blue-dominant `body` gradient
+  in styles.css. (Legacy note: earlier iterations were an all-warm "On Fire"
+  orange theme and, before that, navy+coral+periwinkle.)
 - **Typography**: single family, `Plus Jakarta Sans` (Google Fonts, free/OFL),
   loaded via `<link>` in index.html, referenced everywhere through the CSS
   vars `--serif` and `--sans` (both point to the same family — the "serif"

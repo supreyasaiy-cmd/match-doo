@@ -4,31 +4,31 @@
 function LiquidGlassBG() {
   return (
     <div className="mm-liquid-bg grain" aria-hidden="true">
-      {/* bright ember core, upper-left — the hot centre of the "On Fire" glow */}
+      {/* deep-blue night sky — the dominant cool top of the sunset */}
       <div className="blob" style={{
-        width: 520, height: 600, left: '-20%', top: '-18%',
-        background: 'radial-gradient(circle at 32% 30%, rgba(255,236,150,0.92), rgba(255,109,41,0.62) 46%, transparent 72%)',
+        width: 660, height: 680, left: '-16%', top: '-24%',
+        background: 'radial-gradient(circle at 40% 36%, rgba(120,158,232,0.62), rgba(0,58,108,0.76) 50%, transparent 78%)',
         borderRadius: '48% 52% 58% 42% / 55% 45% 55% 45%',
         animation: 'mm-blob-a 24s ease-in-out infinite',
       }}/>
-      {/* deep-rust flare, upper-right */}
+      {/* coral sun glow, upper-right — the warm accent under the night sky */}
       <div className="blob" style={{
-        width: 460, height: 560, right: '-24%', top: '-16%',
-        background: 'radial-gradient(circle at 62% 34%, rgba(255,171,84,0.85), rgba(179,44,26,0.6) 52%, transparent 74%)',
+        width: 430, height: 520, right: '-26%', top: '-12%',
+        background: 'radial-gradient(circle at 62% 34%, rgba(253,137,115,0.6), rgba(199,73,52,0.38) 52%, transparent 74%)',
         borderRadius: '55% 45% 42% 58% / 48% 55% 45% 52%',
         animation: 'mm-blob-b 28s ease-in-out infinite',
       }}/>
-      {/* small bean-shaped blob, lower area */}
+      {/* warm gold near the horizon, lower area */}
       <div className="blob" style={{
         width: 280, height: 220, left: '6%', bottom: '-8%',
-        background: 'radial-gradient(circle at 40% 40%, rgba(255,109,41,0.55), rgba(179,44,26,0.35) 55%, transparent 75%)',
+        background: 'radial-gradient(circle at 40% 40%, rgba(255,191,101,0.6), rgba(253,137,115,0.34) 55%, transparent 75%)',
         borderRadius: '50% 50% 46% 54% / 54% 46% 54% 46%',
         animation: 'mm-blob-c 19s ease-in-out infinite',
       }}/>
-      {/* thin warm sheen streak, like light through glass */}
+      {/* thin cool moonlight sheen, like light through glass */}
       <div className="sheen" style={{
         width: 160, height: '180%', left: '52%', top: '-40%',
-        background: 'linear-gradient(100deg, transparent 40%, rgba(255,244,225,0.38) 50%, transparent 60%)',
+        background: 'linear-gradient(100deg, transparent 40%, rgba(226,236,255,0.34) 50%, transparent 60%)',
         animation: 'mm-sheen-drift 15s ease-in-out infinite',
       }}/>
       {/* darken toward the bottom so text stays legible */}
@@ -77,7 +77,7 @@ function FilmReelBG() {
       {/* coral tie-in glow toward the top */}
       <div style={{
         position:'absolute', inset:0,
-        background:'radial-gradient(92% 55% at 50% 6%, rgba(255,109,41,0.20), transparent 60%)',
+        background:'radial-gradient(92% 55% at 50% 6%, rgba(0,58,108,0.32), transparent 60%)',
       }}/>
       {/* periwinkle sliver, echoing the liquid-glass accent */}
       <div style={{
@@ -123,14 +123,14 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
             {tr('welcome.h1','Match')}<br/>
             <em style={{
               fontStyle:'italic',
-              background:'linear-gradient(95deg, #FF6D29 0%, #E0955E 80%)',
+              background:'linear-gradient(95deg, #FD8973 0%, #FFBF65 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
             }}>{tr('welcome.h2','a movie')}</em><br/>
             {tr('welcome.h3','Make')}<br/>
             <em style={{
               fontStyle:'italic',
-              background:'linear-gradient(95deg, #FF6D29 0%, #E0955E 80%)',
+              background:'linear-gradient(95deg, #FD8973 0%, #FFBF65 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
             }}>{tr('welcome.h4','a moment')}</em>
@@ -228,13 +228,13 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
     <div className="fade-in" style={{
       position:'relative', overflow:'hidden',
       display:'flex', flexDirection:'column', height:'100%',
-      background:'radial-gradient(120% 60% at 50% 0%, rgba(255,109,41,0.16), transparent 55%), var(--ink)',
+      background:'radial-gradient(120% 60% at 50% 0%, rgba(0,58,108,0.22), transparent 55%), var(--ink)',
     }}>
       <FilmReelBG/>
       {(busy === 'google' || busy === 'apple') && (
         <div className="fade-in" style={{
           position:'absolute', inset:0, zIndex: 20,
-          background:'radial-gradient(120% 60% at 50% 0%, rgba(255,109,41,0.18), transparent 55%), var(--ink)',
+          background:'radial-gradient(120% 60% at 50% 0%, rgba(0,58,108,0.24), transparent 55%), var(--ink)',
           display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap: 18,
         }}>
           <div style={{
@@ -337,7 +337,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
                       <button key={g} type="button" onClick={()=> setGender(g)} style={{
                         appearance:'none', flex:1, padding:'11px 6px', borderRadius: 12,
                         border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
-                        background: on ? 'rgba(255,109,41,0.12)' : 'rgba(var(--fg-rgb),0.06)',
+                        background: on ? 'rgba(253,137,115,0.12)' : 'rgba(var(--fg-rgb),0.06)',
                         color: on ? 'var(--red)' : 'var(--cream)',
                         fontFamily:'var(--sans)', fontWeight: 600, fontSize: 12.5, lineHeight: 1.2,
                         cursor:'pointer',
@@ -360,7 +360,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
             background: canSubmit ? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)',
             color: canSubmit ? '#fff' : 'var(--muted)',
             fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15.5, letterSpacing:'-0.01em',
-            boxShadow: canSubmit ? '0 8px 24px rgba(255,109,41,0.40)' : 'none',
+            boxShadow: canSubmit ? '0 8px 24px rgba(253,137,115,0.40)' : 'none',
             display:'flex', alignItems:'center', justifyContent:'center', gap: 8,
             cursor: canSubmit ? 'pointer' : 'default', transition:'background .2s ease, box-shadow .2s ease',
           }}>
@@ -448,7 +448,7 @@ function Logomark({ size = 32 }) {
       backgroundImage: 'url("assets/logo-app.png?v=2")',
       backgroundSize: '132%', backgroundPosition: 'center 48%',
       backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
-      boxShadow: '0 2px 12px rgba(255,109,41,0.30)',
+      boxShadow: '0 2px 12px rgba(253,137,115,0.30)',
       border: '0.5px solid rgba(255,150,90,0.28)',
     }} aria-label="Match Doo logo"/>
   );
@@ -698,7 +698,7 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
                 appearance:'none', flexShrink:0, cursor:'pointer',
                 padding:'7px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 600, whiteSpace:'nowrap',
                 border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
-                background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
+                background: on ? 'rgba(253,137,115,0.14)' : 'rgba(var(--fg-rgb),0.04)',
                 color: on ? 'var(--red)' : 'var(--cream)',
               }}>{g ? genreLabel(g) : tr('matches.all','All')}</button>
             );
@@ -858,7 +858,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
             appearance:'none', border:0, background:'var(--red)',
             color:'#fff', width: 38, height: 38, borderRadius: 999,
             display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow:'0 6px 16px rgba(255,109,41,0.35)',
+            boxShadow:'0 6px 16px rgba(253,137,115,0.35)',
           }}>
             <Icon name="plus" size={20} stroke={2.4}/>
           </button>
@@ -955,8 +955,8 @@ function FriendRow({ friend, onClick }) {
       {matchCount > 0 && (
         <div style={{
           padding:'4px 9px', borderRadius: 999, fontSize: 11, fontWeight: 600,
-          background:'rgba(255,109,41,0.15)', color:'var(--red)',
-          border:'0.5px solid rgba(255,109,41,0.3)',
+          background:'rgba(253,137,115,0.15)', color:'var(--red)',
+          border:'0.5px solid rgba(253,137,115,0.3)',
         }}>
           {matchCount}
         </div>
@@ -976,7 +976,7 @@ function AddFriendScreen({ onBack }) {
     const newFriend = {
       id, name: person.name, handle: person.handle || `@${person.name.toLowerCase().replace(/\s+/g,'')}`,
       initials: person.initials || person.name.split(' ').map(n=>n[0]).join('').slice(0,2),
-      tone: person.tone || '#E0955E', online: false, lastSeen: 'Just added', mutual: person.mutual || 0,
+      tone: person.tone || '#FFBF65', online: false, lastSeen: 'Just added', mutual: person.mutual || 0,
     };
     window.FRIENDS.friends = [newFriend, ...(window.FRIENDS.friends || [])];
     setAddedToast(tr('toast.friendAdded',"{name}’s in! 🎉").replace('{name}', person.name));
@@ -1041,7 +1041,7 @@ function SearchUsername({ onAdd }) {
   const candidates = [
     { name:'Iris Lane',  handle:'@iris',     initials:'IL', tone:'#E8945F', mutual: 3 },
     { name:'Marco Lin',  handle:'@marcol',   initials:'ML', tone:'#CC8050', mutual: 0 },
-    { name:'Petra Vance',handle:'@petra.v',  initials:'PV', tone:'#E0955E', mutual: 1 },
+    { name:'Petra Vance',handle:'@petra.v',  initials:'PV', tone:'#FFBF65', mutual: 1 },
   ];
   return (
     <div>
@@ -1069,8 +1069,8 @@ function SearchUsername({ onAdd }) {
 
 function ContactsList({ onAdd }) {
   const contacts = [
-    { name:'Diego Marquez', initials:'DM', tone:'#FDA65A', phone:'(555) 010-1102', onApp:true },
-    { name:'Yuki Sato',     initials:'YS', tone:'#E0955E', phone:'(555) 010-2208', onApp:true },
+    { name:'Diego Marquez', initials:'DM', tone:'#FFBF65', phone:'(555) 010-1102', onApp:true },
+    { name:'Yuki Sato',     initials:'YS', tone:'#FFBF65', phone:'(555) 010-2208', onApp:true },
     { name:'Sam Reyes',     initials:'SR', tone:'#CC8050', phone:'(555) 010-3398', onApp:false },
     { name:'Nia Cole',      initials:'NC', tone:'#E8945F', phone:'(555) 010-4444', onApp:false },
   ];
@@ -1165,7 +1165,7 @@ function QRArt() {
       {corner(0,140)}
       {/* logo — popcorn (movie-night cue) */}
       <g transform="translate(80,80)">
-        <rect width="24" height="24" rx="6" fill="#FF6D29"/>
+        <rect width="24" height="24" rx="6" fill="#FD8973"/>
         {/* popped kernels spilling over the rim */}
         <g fill="#fff">
           <circle cx="8.8" cy="9.4" r="2.2"/>
@@ -1176,8 +1176,8 @@ function QRArt() {
         {/* box */}
         <path d="M7.4 11.2 H16.6 L15.5 19.6 A1 1 0 0 1 14.5 20.5 H9.5 A1 1 0 0 1 8.5 19.6 Z" fill="#fff"/>
         {/* box stripes */}
-        <rect x="10.7" y="11.2" width="0.9" height="9.3" fill="#FF6D29"/>
-        <rect x="13.4" y="11.2" width="0.9" height="9.3" fill="#FF6D29"/>
+        <rect x="10.7" y="11.2" width="0.9" height="9.3" fill="#FD8973"/>
+        <rect x="13.4" y="11.2" width="0.9" height="9.3" fill="#FD8973"/>
       </g>
     </svg>
   );
@@ -1349,7 +1349,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
         <button onClick={()=> setShowProfileEdit(true)} className="tap-row" style={{
           appearance:'none', width:'100%', textAlign:'left', cursor:'pointer',
           padding:'22px 22px', borderRadius: 22,
-          background:'linear-gradient(160deg, rgba(255,109,41,0.18), rgba(253,166,90,0.06) 70%, transparent)',
+          background:'linear-gradient(160deg, rgba(253,137,115,0.18), rgba(253,166,90,0.06) 70%, transparent)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           display:'flex', alignItems:'center', gap: 16, color:'var(--cream)',
         }}>
@@ -1757,7 +1757,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
                 appearance:'none', flexShrink:0, cursor:'pointer',
                 padding:'7px 13px', borderRadius: 999, fontSize: 12.5, fontWeight: 600, whiteSpace:'nowrap',
                 border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
-                background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
+                background: on ? 'rgba(253,137,115,0.14)' : 'rgba(var(--fg-rgb),0.04)',
                 color: on ? 'var(--red)' : 'var(--cream)',
               }}>{g ? genreLabel(g) : tr('matches.all','All')}</button>
             );
@@ -1868,7 +1868,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
                 appearance:'none', cursor:'pointer', textAlign:'left', padding: 8,
                 borderRadius: 18,
                 border:`1.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
-                background: on ? 'rgba(255,109,41,0.08)' : 'transparent',
+                background: on ? 'rgba(253,137,115,0.08)' : 'transparent',
               }}>
                 {/* mini preview */}
                 <div style={{
@@ -1877,7 +1877,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
                   border:'0.5px solid rgba(128,128,128,0.18)',
                 }}>
                   <div style={{display:'flex', alignItems:'center', gap: 6}}>
-                    <div style={{width: 16, height: 16, borderRadius: 5, background:'#FF6D29'}}/>
+                    <div style={{width: 16, height: 16, borderRadius: 5, background:'#FD8973'}}/>
                     <div style={{height: 6, width: 42, borderRadius: 3, background: o.fg, opacity: 0.85}}/>
                   </div>
                   <div style={{flex:1, borderRadius: 8, background: o.card}}/>
@@ -2061,7 +2061,7 @@ function SettingsRow({ icon, label, detail, onClick, danger }) {
       color: danger ? '#E8798A' : 'var(--cream)',
       borderBottom:'0.5px solid var(--line)',
     }}>
-      <IconBadge icon={icon} size={34} tone={danger ? '#E8798A' : '#E0955E'}/>
+      <IconBadge icon={icon} size={34} tone={danger ? '#E8798A' : '#FFBF65'}/>
       <div style={{flex:1, fontSize: 14, fontWeight: 500}}>{label}</div>
       {detail && <div style={{fontSize: 12.5, color:'var(--muted)'}}>{detail}</div>}
       {!danger && <Icon name="chev" size={14} color="var(--muted-2)"/>}
@@ -2101,7 +2101,7 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
         }}/>
 
         <div style={{display:'flex', alignItems:'center', gap: 12, marginBottom: 6}}>
-          <IconBadge icon="film" size={44} tone="#E0955E"/>
+          <IconBadge icon="film" size={44} tone="#FFBF65"/>
           <div style={{flex:1, minWidth:0}}>
             <div style={{fontFamily:'var(--serif)', fontSize: 24, lineHeight: 1.1, color:'var(--cream)'}}>
               {tr('tmdb.title','TMDB integration')}
@@ -2142,10 +2142,10 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
         <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noreferrer"
           style={{
             display:'inline-flex', alignItems:'center', gap: 6,
-            fontSize: 12.5, color:'#E0955E', marginBottom: 18, textDecoration:'none',
+            fontSize: 12.5, color:'#FFBF65', marginBottom: 18, textDecoration:'none',
           }}>
           {tr("tmdb.getKey","Get a free API key at themoviedb.org")}
-          <Icon name="link" size={12} color="#E0955E"/>
+          <Icon name="link" size={12} color="#FFBF65"/>
         </a>
 
         <div style={{display:'flex', gap: 8}}>
@@ -2262,8 +2262,8 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
         {friend && (
           <div style={{
             marginTop: 26, padding:'16px 16px', borderRadius: 18,
-            background:'linear-gradient(135deg, rgba(255,109,41,0.16), rgba(253,166,90,0.05))',
-            border:'0.5px solid rgba(255,109,41,0.25)',
+            background:'linear-gradient(135deg, rgba(253,137,115,0.16), rgba(253,166,90,0.05))',
+            border:'0.5px solid rgba(253,137,115,0.25)',
             display:'flex', alignItems:'center', gap: 12,
           }}>
             <Avatar person={friend} size={42}/>
@@ -2347,7 +2347,7 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
       {/* curtains */}
       <div style={{
         position:'absolute', left:0, top:0, bottom:0, width:'50%',
-        background:'linear-gradient(90deg, rgba(255,109,41,0.18), transparent)',
+        background:'linear-gradient(90deg, rgba(253,137,115,0.18), transparent)',
         animation:'mm-curtain-l .6s cubic-bezier(.4,0,.2,1) both',
       }}/>
       <div style={{

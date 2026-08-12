@@ -46,7 +46,7 @@ function Icon({ name, size = 20, color = 'currentColor', stroke = 1.6 }) {
 // ─── IconBadge ──────────────────────────────────────────────────────
 // Circular tonal icon badge: soft radial glow + ring + icon, in the
 // "system icon" style — one accent hue, glass-tinted, gradient glow.
-function IconBadge({ icon, size = 40, tone = '#FF6D29', style = {} }) {
+function IconBadge({ icon, size = 40, tone = '#FD8973', style = {} }) {
   const rgba = (a) => {
     if (typeof tone === 'string' && tone[0] === '#' && tone.length === 7) {
       const r = parseInt(tone.slice(1,3),16), g = parseInt(tone.slice(3,5),16), b = parseInt(tone.slice(5,7),16);
@@ -200,7 +200,7 @@ function pickAvatar(person) {
   return AVATAR_POOL[Math.abs(h) % AVATAR_POOL.length];
 }
 
-function Avatar({ person, size = 44, ring = false, ringColor = '#FF6D29' }) {
+function Avatar({ person, size = 44, ring = false, ringColor = '#FD8973' }) {
   if (!person) return null;
   const photo = person.photo || (person.noPhoto ? null : pickAvatar(person));
   return (
@@ -290,7 +290,7 @@ function TabBar({ active, onChange }) {
     { id: 'swipe',   icon: 'cards', label: 'MatchDoo', center: true },
     { id: 'profile', icon: 'user',  label: window.tr ? tr('nav.profile','Profile') : 'Profile' },
   ];
-  const ACCENT = '#FF6D29';
+  const ACCENT = '#FD8973';
 
   const renderTab = (t) => {
     const on = active === t.id;
@@ -305,7 +305,7 @@ function TabBar({ active, onChange }) {
           backgroundSize: '128%', backgroundPosition: 'center 48%',
           backgroundRepeat: 'no-repeat', backgroundColor: '#161113',
           boxShadow: on
-            ? '0 6px 24px rgba(255,109,41,0.55), 0 0 0 3px rgba(255,109,41,0.45)'
+            ? '0 6px 24px rgba(253,137,115,0.55), 0 0 0 3px rgba(253,137,115,0.45)'
             : '0 4px 16px rgba(0,0,0,0.40)',
           transform: on ? 'translateY(-2px) scale(1.05)' : 'scale(1)',
           transition: 'transform .28s cubic-bezier(.4,0,.2,1), box-shadow .28s ease',
@@ -320,7 +320,7 @@ function TabBar({ active, onChange }) {
         display:'flex', alignItems:'center', justifyContent:'center',
         gap: 7, height: 46,
         padding: '0 16px', borderRadius: 999,
-        background: on ? 'rgba(255,109,41,0.16)' : 'transparent',
+        background: on ? 'rgba(253,137,115,0.16)' : 'transparent',
         overflow:'hidden', flexShrink: 0, maxWidth:'100%',
         transition: 'background .3s cubic-bezier(.4,0,.2,1)',
       }}>
@@ -349,7 +349,7 @@ function TabBar({ active, onChange }) {
         padding: '10px 12px',
         // dark glass + a diagonal mood gradient tint — stays a dark bar in
         // both themes, so icons/rim are kept fixed-light.
-        background:'linear-gradient(135deg, rgba(255,109,41,0.20) 0%, rgba(224,149,94,0.16) 55%, rgba(26,18,16,0.30) 100%), rgba(20,13,12,0.78)',
+        background:'linear-gradient(135deg, rgba(253,137,115,0.20) 0%, rgba(224,149,94,0.16) 55%, rgba(26,18,16,0.30) 100%), rgba(20,13,12,0.78)',
         backdropFilter:'blur(30px) saturate(180%)',
         WebkitBackdropFilter:'blur(30px) saturate(180%)',
         borderRadius: 32,

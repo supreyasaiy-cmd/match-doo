@@ -1,10 +1,10 @@
 // swipe.jsx — Card stack with 4-direction gestures (right=want, left=pass, up=seen, down=super)
 
 const SWIPE_LABELS = {
-  right: { text: 'WATCHLIST',  color: '#FF6D29', rot: -8 },  // like → save to watchlist (coral)
+  right: { text: 'WATCHLIST',  color: '#FD8973', rot: -8 },  // like → save to watchlist (coral)
   left:  { text: 'PASS',       color: '#5F7A8C', rot:  8 },  // clearly distinct cool slate
-  up:    { text: 'READ MORE',  color: '#FDA65A', rot:  0 },
-  down:  { text: 'SEEN',       color: '#E0955E', rot:  0 },
+  up:    { text: 'READ MORE',  color: '#FFBF65', rot:  0 },
+  down:  { text: 'SEEN',       color: '#6F93E0', rot:  0 },
 };
 
 function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, density='regular', onOpenAdCTA }) {
@@ -321,9 +321,9 @@ function SwipeDeck({ movies, onSwipe, onTap, density='regular', ads=[], adCadenc
           pointerEvents:'none',
         }}>
           <ActionBtn label={tr('swipe.pass','Pass')}           icon="x"        color="#5F7A8C" size={60} onClick={()=>programmatic('left')} />
-          <ActionBtn label={tr('swipe.more','More')}           icon="chevup"   color="#FDA65A" size={48} onClick={()=>programmatic('up')} />
-          <ActionBtn label={tr('swipe.seen','Seen')}           icon="eye"      color="#E0955E" size={48} onClick={()=>programmatic('down')} />
-          <ActionBtn label={tr('swipe.watchlist','Watchlist')} icon="bookmark" color="#FF6D29" size={60} onClick={()=>programmatic('right')} filled/>
+          <ActionBtn label={tr('swipe.more','More')}           icon="chevup"   color="#FFBF65" size={48} onClick={()=>programmatic('up')} />
+          <ActionBtn label={tr('swipe.seen','Seen')}           icon="eye"      color="#6F93E0" size={48} onClick={()=>programmatic('down')} />
+          <ActionBtn label={tr('swipe.watchlist','Watchlist')} icon="bookmark" color="#FD8973" size={60} onClick={()=>programmatic('right')} filled/>
         </div>
       )}
     </div>
@@ -440,10 +440,10 @@ function SwipeCoach({ onDone }) {
   const caretLeft = rect ? Math.min(Math.max((rect.left + rect.width/2) - 20 - 7, 16), (rootW - 40) - 30) : 0;
 
   const arrows = [
-    { d:'right',  label:tr('swipe.watchlist','Watchlist'), color:'#FF6D29', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
+    { d:'right',  label:tr('swipe.watchlist','Watchlist'), color:'#FD8973', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
     { d:'left',   label:tr('swipe.pass','Pass'),      color:'#5F7A8C', rot: 180, pos:{ left:12,  top:'50%',  ty:'translateY(-50%)' } },
-    { d:'up',     label:tr('swipe.more','More'), color:'#FDA65A', rot: -90, pos:{ top:14,   left:'50%', ty:'translateX(-50%)' } },
-    { d:'down',   label:tr('swipe.seen','Seen'), color:'#E0955E', rot: 90,  pos:{ bottom:14,left:'50%', ty:'translateX(-50%)' } },
+    { d:'up',     label:tr('swipe.more','More'), color:'#FFBF65', rot: -90, pos:{ top:14,   left:'50%', ty:'translateX(-50%)' } },
+    { d:'down',   label:tr('swipe.seen','Seen'), color:'#6F93E0', rot: 90,  pos:{ bottom:14,left:'50%', ty:'translateX(-50%)' } },
   ];
 
   return (
@@ -456,7 +456,7 @@ function SwipeCoach({ onDone }) {
           position:'absolute', left: rect.left, top: rect.top, width: rect.width, height: rect.height,
           borderRadius: step.radius, pointerEvents:'none',
           boxShadow:'0 0 0 9999px rgba(8,5,4,0.76)',
-          border:'1.5px solid rgba(255,109,41,0.9)',
+          border:'1.5px solid rgba(253,137,115,0.9)',
           transition:'left .34s cubic-bezier(.4,0,.2,1), top .34s cubic-bezier(.4,0,.2,1), width .34s cubic-bezier(.4,0,.2,1), height .34s cubic-bezier(.4,0,.2,1)',
         }}/>
       ) : (
@@ -528,7 +528,7 @@ function SwipeCoach({ onDone }) {
                 <button onClick={next} style={{
                   appearance:'none', border:0, background:'var(--red)', color:'#fff',
                   fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14, padding:'9px 18px', borderRadius: 999,
-                  boxShadow:'0 6px 18px rgba(255,109,41,0.4)', cursor:'pointer', display:'inline-flex', alignItems:'center', gap: 6,
+                  boxShadow:'0 6px 18px rgba(253,137,115,0.4)', cursor:'pointer', display:'inline-flex', alignItems:'center', gap: 6,
                 }}>
                   {last ? tr('coach.gotit','Got it!') : tr('coach.next','Next')}
                   {!last && <Icon name="arrow" size={14} color="#fff" stroke={2.4}/>}

@@ -231,6 +231,22 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
       background:'radial-gradient(120% 60% at 50% 0%, rgba(255,109,41,0.16), transparent 55%), var(--ink)',
     }}>
       <FilmReelBG/>
+      {(busy === 'google' || busy === 'apple') && (
+        <div className="fade-in" style={{
+          position:'absolute', inset:0, zIndex: 20,
+          background:'radial-gradient(120% 60% at 50% 0%, rgba(255,109,41,0.18), transparent 55%), var(--ink)',
+          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap: 18,
+        }}>
+          <div style={{
+            width: 44, height: 44, borderRadius:'50%',
+            border:'3px solid rgba(var(--fg-rgb),0.15)', borderTopColor:'var(--red)',
+            animation:'mm-spin 0.8s linear infinite',
+          }}/>
+          <div style={{color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 15, fontWeight: 600}}>
+            {tr('auth.signingIn','Signing you in…')}
+          </div>
+        </div>
+      )}
       <div style={{position:'relative', zIndex:1, display:'flex', flexDirection:'column', height:'100%'}}>
         <div style={{padding:'52px 28px 0', flexShrink: 0}}>
           <button onClick={onBack} style={{
@@ -1281,15 +1297,16 @@ function EmptySectionRow({ text }) {
 }
 
 // ─── Profile / Settings ─────────────────────────────────────────────
-function ProfileScreen({ user, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb, onOpenLegal, lang = 'en', onSetLang }) {
+function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [], matchedMovies = [], seenMovies = [], onOpenMovie, onOpenMatches, theme = 'dark', onSetTheme, tmdbConnected, tmdbStatus, onOpenTmdb, onOpenLegal, lang = 'en', onSetLang }) {
   const tmdbDetail = !tmdbConnected ? tr('tmdb.notConnected','Not connected')
     : tmdbStatus === 'loading' ? tr('tmdb.connecting','Loading real posters…')
     : tmdbStatus === 'error' ? tr('tmdb.fetchFailed','Connected · fetch failed')
     : tr('tmdb.realPosters','Connected · real posters');
 
-  // Editable profile settings (local prototype state)
-  const [genres, setGenres] = React.useState(new Set(['Drama','Romance','Sci-Fi','Thriller','Mystery','Comedy']));
-  const [services, setServices] = React.useState(new Set(['Netflix','Prime','Max']));
+  // Editable profile settings — seeded from the taste picked during onboarding
+  // (prefs), falling back to sensible defaults if onboarding was skipped.
+  const [genres, setGenres] = React.useState(() => new Set(prefs?.genres?.length ? prefs.genres : ['Drama','Romance','Sci-Fi','Thriller','Mystery','Comedy']));
+  const [services, setServices] = React.useState(() => new Set(prefs?.services?.length ? prefs.services : ['Netflix','Prime','Max']));
   const [runtime, setRuntime] = React.useState('90–150 min');
   const [email, setEmail] = React.useState('alex@cinema.com');
   const [birthday, setBirthday] = React.useState(user.birthday || '1996-04-12');

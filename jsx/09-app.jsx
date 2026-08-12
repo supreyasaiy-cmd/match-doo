@@ -343,6 +343,7 @@ function App() {
       const matchedMovies = sourceMovies.filter(m => matchedIds.has(m.id));
       tabContent = <ProfileScreen
         user={user}
+        prefs={prefs}
         likedMovies={likedMovies}
         matchedMovies={matchedMovies}
         seenMovies={seenMovies}

@@ -82,6 +82,7 @@ window.I18N = {
       'auth.haveAccount': 'มีบัญชีอยู่แล้ว?',
       'auth.newHere':    'เพิ่งเคยใช้?',
       'auth.under15':    'คุณต้องมีอายุอย่างน้อย 15 ปีจึงจะใช้ MatchDoo ได้',
+      'auth.signingIn':  'กำลังเข้าสู่ระบบ…',
       'gender.male':     'ชาย',
       'gender.female':   'หญิง',
       'gender.na':       'ไม่ระบุ',

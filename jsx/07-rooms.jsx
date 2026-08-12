@@ -404,7 +404,7 @@ function RoomCard({ room, onClick }) {
             <span style={{textTransform:'capitalize'}}>{room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')}</span>
             <span>·</span>
           </>)}
-          <span>{members.length} {members.length===1?'member':'members'}</span>
+          <span>{members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')}</span>
           <span>·</span>
           <span>{room.lastActivity}</span>
         </div>
@@ -575,7 +575,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
             }}>
               <Icon name="plus" size={16}/>
             </div>
-            <div style={{fontSize: 10, color:'var(--muted)'}}>Add</div>
+            <div style={{fontSize: 10, color:'var(--muted)'}}>{tr('am.add','Add')}</div>
           </button>
         </div>
 

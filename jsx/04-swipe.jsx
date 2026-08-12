@@ -440,10 +440,10 @@ function SwipeCoach({ onDone }) {
   const caretLeft = rect ? Math.min(Math.max((rect.left + rect.width/2) - 20 - 7, 16), (rootW - 40) - 30) : 0;
 
   const arrows = [
-    { d:'right',  label:'Watchlist', color:'#FF6D29', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
-    { d:'left',   label:'Pass',      color:'#5F7A8C', rot: 180, pos:{ left:12,  top:'50%',  ty:'translateY(-50%)' } },
-    { d:'up',     label:'More', color:'#FDA65A', rot: -90, pos:{ top:14,   left:'50%', ty:'translateX(-50%)' } },
-    { d:'down',   label:'Seen', color:'#E0955E', rot: 90,  pos:{ bottom:14,left:'50%', ty:'translateX(-50%)' } },
+    { d:'right',  label:tr('swipe.watchlist','Watchlist'), color:'#FF6D29', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
+    { d:'left',   label:tr('swipe.pass','Pass'),      color:'#5F7A8C', rot: 180, pos:{ left:12,  top:'50%',  ty:'translateY(-50%)' } },
+    { d:'up',     label:tr('swipe.more','More'), color:'#FDA65A', rot: -90, pos:{ top:14,   left:'50%', ty:'translateX(-50%)' } },
+    { d:'down',   label:tr('swipe.seen','Seen'), color:'#E0955E', rot: 90,  pos:{ bottom:14,left:'50%', ty:'translateX(-50%)' } },
   ];
 
   return (

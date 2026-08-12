@@ -292,7 +292,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         </Section>
 
         {/* Trailer */}
-        <Section title="Trailer">
+        <Section title={window.tr ? tr('rm.trailer','Trailer') : 'Trailer'}>
           <div style={{
             position:'relative', borderRadius: 16, overflow:'hidden',
             aspectRatio:'16/9', background:'#000',

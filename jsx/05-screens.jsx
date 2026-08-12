@@ -700,7 +700,7 @@ function MatchesScreen({ likes, onBack, onOpenMatch, onOpenMovie }) {
                 border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
                 background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
                 color: on ? 'var(--red)' : 'var(--cream)',
-              }}>{g || 'All'}</button>
+              }}>{g || tr('matches.all','All')}</button>
             );
           })}
         </div>
@@ -749,7 +749,7 @@ function FriendMatchSection({ friend, matched, watched, onOpen, onOpenMovie }) {
               fontSize: 11, color:'var(--muted)', fontWeight: 500,
               padding:'2px 7px', borderRadius: 999,
               background:'rgba(var(--fg-rgb),0.07)',
-            }}>{matched.length} match{matched.length===1?'':'es'}</span>
+            }}>{matched.length} {tr('matches.matchesN','matches')}</span>
           </div>
           <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>
             {friend.lastSeen}
@@ -1224,7 +1224,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'0 0 120px'}}>
         {/* Matched */}
-        <Section title="On your shared queue" caption={`${matched.length} films you both want to watch`}>
+        <Section title={tr('fp.sharedQueue','On your shared queue')} caption={`${matched.length} ${tr('fp.sharedQueueCap','films you both want to watch')}`}>
           {matched.length === 0 ? (
             <EmptySectionRow text={tr('empty.sharedQueue','No shared picks yet — keep swiping! 🍿')}/>
           ) : (
@@ -1233,7 +1233,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
         </Section>
 
         {/* Watched */}
-        <Section title="Watched together" caption={`${watched.length} films you've seen with ${friend.name.split(' ')[0]}`}>
+        <Section title={tr('fp.watchedTogether','Watched together')} caption={`${watched.length} ${tr('fp.watchedCap','films you’ve seen with')} ${friend.name.split(' ')[0]}`}>
           {watched.length === 0 ? (
             <EmptySectionRow text={tr("ms.logWatched","Once you watch a match, tap “Watched” to log it here.")}/>
           ) : (
@@ -1359,7 +1359,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
               fontFamily:'var(--serif)', fontSize: 26, color:'var(--cream)',
               lineHeight: 1.05, letterSpacing:'-0.01em',
             }}>{profileName || 'Alex Carter'}</div>
-            <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>@{handle} · joined May 2026</div>
+            <div style={{fontSize: 12, color:'var(--muted)', marginTop: 4}}>@{handle} · {tr('profile.joined','joined May 2026')}</div>
             <div style={{fontSize: 11, color:'var(--muted-2)', marginTop: 3, fontFamily:'var(--sans)', letterSpacing:'0.02em'}}>ID {userId}</div>
           </div>
           <div style={{
@@ -1383,16 +1383,16 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
         </div>
 
         <SettingsGroup title={tr('profile.group.taste','Taste')}>
-          <SettingsRow icon="sparkle" label={tr('profile.genres','Genres')} detail={`${genres.size} selected`} onClick={()=> setSheet('genres')}/>
+          <SettingsRow icon="sparkle" label={tr('profile.genres','Genres')} detail={`${genres.size} ${tr('profile.selectedN','selected')}`} onClick={()=> setSheet('genres')}/>
           <SettingsRow icon="film" label={tr('profile.streaming','Streaming services')} detail={servicesDetail} onClick={()=> setSheet('services')}/>
-          <SettingsRow icon="clock" label={tr('profile.runtime','Run time preference')} detail={runtime} onClick={()=> setSheet('runtime')}/>
+          <SettingsRow icon="clock" label={tr('profile.runtime','Run time preference')} detail={tr('rt.'+runtime, runtime)} onClick={()=> setSheet('runtime')}/>
         </SettingsGroup>
 
         <SettingsGroup title={tr('profile.group.account','Account')}>
           <SettingsRow icon="mail" label={tr('profile.email','Email')} detail={email} onClick={()=> setSheet('email')}/>
           <SettingsRow icon="calendar" label={tr('profile.birthday','Birthday')} detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
-          <SettingsRow icon="user" label={tr('profile.gender','Gender')} detail={gender} onClick={()=> setSheet('gender')}/>
-          <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={`${notifOn} on`} onClick={()=> setSheet('notifications')}/>
+          <SettingsRow icon="user" label={tr('profile.gender','Gender')} detail={tr('g.'+gender, gender)} onClick={()=> setSheet('gender')}/>
+          <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={`${notifOn} ${tr('profile.notifOn','on')}`} onClick={()=> setSheet('notifications')}/>
         </SettingsGroup>
 
         {/* TMDB is served automatically from the backend now — no user-facing
@@ -1400,7 +1400,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
 
         <SettingsGroup title={tr('profile.group.app','App')}>
           <SettingsRow icon="sparkle" label={tr('profile.language','Language')} detail={lang === 'th' ? 'ไทย' : 'English'} onClick={()=> onSetLang?.(lang === 'en' ? 'th' : 'en')}/>
-          <SettingsRow icon="settings" label={tr('profile.themes','Themes')} detail={theme === 'light' ? 'Light' : 'Dark'} onClick={()=> setShowTheme(true)}/>
+          <SettingsRow icon="settings" label={tr('profile.themes','Themes')} detail={theme === 'light' ? tr('theme.light','Light') : tr('theme.dark','Dark')} onClick={()=> setShowTheme(true)}/>
           <SettingsRow icon="x" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
         </SettingsGroup>
 
@@ -1621,9 +1621,9 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
     );
   } else if (kind === 'notifications') {
     const ROWS = [
-      { id:'matches',    label:'New matches',   desc:'When you and a friend both like a film' },
-      { id:'newFriends', label:'Friend activity', desc:'When someone adds you or joins a room' },
-      { id:'reminders',  label:'Movie-night reminders', desc:'Nudges to keep swiping together' },
+      { id:'matches',    label:tr('ns.matches','New matches'),   desc:tr('ns.matchesDesc','When you and a friend both like a film') },
+      { id:'newFriends', label:tr('ns.friends','Friend activity'), desc:tr('ns.friendsDesc','When someone adds you or joins a room') },
+      { id:'reminders',  label:tr('ns.reminders','Movie-night reminders'), desc:tr('ns.remindersDesc','Nudges to keep swiping together') },
     ];
     body = (
       <div style={{display:'flex', flexDirection:'column', gap: 4}}>
@@ -1759,7 +1759,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
                 border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
                 background: on ? 'rgba(255,109,41,0.14)' : 'rgba(var(--fg-rgb),0.04)',
                 color: on ? 'var(--red)' : 'var(--cream)',
-              }}>{g || 'All'}</button>
+              }}>{g || tr('matches.all','All')}</button>
             );
           })}
         </div>

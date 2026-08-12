@@ -222,6 +222,16 @@ window.I18N = {
       'tmdb.getKey': 'ขอ API key ฟรีที่ themoviedb.org', 'tmdb.disconnect': 'ตัดการเชื่อมต่อ',
       'tmdb.update': 'อัปเดต key', 'tmdb.connect': 'เชื่อมต่อ',
 
+      // ── Notification settings ──
+      'ns.matches': 'แมตช์ใหม่', 'ns.matchesDesc': 'เมื่อคุณกับเพื่อนถูกใจหนังเรื่องเดียวกัน',
+      'ns.friends': 'กิจกรรมของเพื่อน', 'ns.friendsDesc': 'เมื่อมีคนเพิ่มคุณหรือเข้าห้อง',
+      'ns.reminders': 'เตือนคืนดูหนัง', 'ns.remindersDesc': 'กระตุ้นให้ปัดหนังด้วยกัน',
+
+      // ── Read More / Friend profile ──
+      'rm.trailer': 'ตัวอย่าง',
+      'fp.sharedQueue': 'คิวที่อยากดูร่วมกัน', 'fp.sharedQueueCap': 'เรื่องที่คุณทั้งคู่อยากดู',
+      'fp.watchedTogether': 'เคยดูด้วยกัน', 'fp.watchedCap': 'เรื่องที่ดูกับ',
+
       // ── Misc ──
       'ms.logWatched': 'พอดูแมตช์แล้ว แตะ “เคยดู” เพื่อบันทึกไว้ตรงนี้',
       'profile.email':          'อีเมล',
@@ -231,6 +241,15 @@ window.I18N = {
       'profile.tmdb':           'การเชื่อมต่อ TMDB',
       'profile.themes':         'ธีม',
       'profile.language':       'ภาษา',
+      'profile.joined':         'เข้าร่วม พ.ค. 2026',
+      'profile.selectedN':      'รายการ',
+      'profile.notifOn':        'เปิด',
+      'theme.dark':             'มืด', 'theme.light': 'สว่าง',
+      'matches.all':            'ทั้งหมด', 'matches.matchesN': 'แมตช์',
+      // Gender + runtime display labels (values stay English internally)
+      'g.Male': 'ชาย', 'g.Female': 'หญิง', 'g.Prefer not to say': 'ไม่ระบุ',
+      'rt.Under 90 min': 'ต่ำกว่า 90 นาที', 'rt.90–150 min': '90–150 นาที',
+      'rt.Over 150 min': 'มากกว่า 150 นาที', 'rt.No preference': 'ไม่มีข้อกำหนด',
       'profile.signout':        'ออกจากระบบ',
       'profile.terms':          'ข้อกำหนดและเงื่อนไข',
       'profile.privacy':        'นโยบายความเป็นส่วนตัว',

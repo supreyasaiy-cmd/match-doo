@@ -96,7 +96,12 @@
       // absent / key unset) and break out immediately.
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
-          const r = await fetch(url.toString(), { headers: { accept: 'application/json' } });
+          // `no-store`: never read/write the browser HTTP cache for API calls.
+          // The Vercel edge cache (s-maxage on the proxy response) still absorbs
+          // the load CDN-side, so we keep the TMDB-call savings — but the browser
+          // won't pin a stale response (e.g. a pre-CORS one) and replay it as a
+          // hard CORS failure on every future request to the same URL.
+          const r = await fetch(url.toString(), { headers: { accept: 'application/json' }, cache: 'no-store' });
           if (r.ok) return r.json();
           // 503 = server key not configured, 404 = proxy not deployed (e.g. plain
           // static localhost) → remember and fall back to a personal key below.

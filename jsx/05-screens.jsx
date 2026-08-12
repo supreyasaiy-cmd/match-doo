@@ -124,27 +124,18 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
             };
-            // Thai reads as two verb+noun phrases — set each on its own line
-            // (จับคู่หนัง / สร้างโมเมนต์) with the noun in gradient, and give
-            // Kanit room so upper vowels/tone marks don't crowd the line above.
-            // English keeps its taller four-line stack (Match / a movie / …).
-            return isTH ? (
+            // Two-line hook: a friendly question, then the answer in gradient.
+            // ดูอะไรดี? / ปัดเลย  —  What to watch? / Just swipe.
+            // Thai (Kanit) gets a looser line-height so tone marks don't crowd.
+            return (
               <div style={{
-                fontFamily:'var(--serif)', fontSize: 52, lineHeight: 1.22,
-                letterSpacing:'-0.005em', fontWeight: 600, color:'var(--cream)', textWrap:'nowrap',
+                fontFamily:'var(--serif)',
+                fontSize: isTH ? 54 : 50, lineHeight: isTH ? 1.2 : 1.08,
+                letterSpacing: isTH ? '-0.005em' : '-0.02em', fontWeight: 600,
+                color:'var(--cream)', textWrap:'nowrap',
               }}>
-                {tr('welcome.h1','Match')}<em style={grad}>{tr('welcome.h2','a movie')}</em><br/>
-                {tr('welcome.h3','Make')}<em style={grad}>{tr('welcome.h4','a moment')}</em>
-              </div>
-            ) : (
-              <div style={{
-                fontFamily:'var(--serif)', fontSize: 46, lineHeight: 1.0,
-                letterSpacing:'-0.025em', color:'var(--cream)', textWrap:'nowrap',
-              }}>
-                {tr('welcome.h1','Match')}<br/>
-                <em style={grad}>{tr('welcome.h2','a movie')}</em><br/>
-                {tr('welcome.h3','Make')}<br/>
-                <em style={grad}>{tr('welcome.h4','a moment')}</em>
+                {tr('welcome.h1','What to watch?')}<br/>
+                <em style={grad}>{tr('welcome.h2','Just swipe')}</em>
               </div>
             );
           })()}
@@ -157,13 +148,13 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
             letterSpacing:'-0.005em',
           }}>
             <Icon name="film" size={14} color="currentColor"/>
-            {tr('welcome.badge','Less choosing. More watching together.')}
+            {tr('welcome.badge','End the what-to-watch struggle')}
           </div>
 
           <div style={{
             marginTop: 18, color:'var(--muted)', fontSize: 15.5, lineHeight: 1.55, maxWidth: 320,
           }}>
-            {tr('welcome.desc','Discover movies and series together. Swipe, match, and turn your shared picks into your next movie night.')}
+            {tr('welcome.desc','Swipe to the movie or series that just fits — in seconds. Great on your own, or with your partner, friends, or family.')}
           </div>
         </div>
 
@@ -1227,11 +1218,11 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
           borderRadius: 16,
         }}>
-          <Stat label="Matches" value={matched.length}/>
+          <Stat label={tr('profile.matches','Matches')} value={matched.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label="Watched" value={watched.length}/>
+          <Stat label={tr('fd.watched','Watched')} value={watched.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label="Mutual" value={friend.mutual}/>
+          <Stat label={tr('friends.mutual','Mutual friends')} value={friend.mutual}/>
         </div>
       </div>
 

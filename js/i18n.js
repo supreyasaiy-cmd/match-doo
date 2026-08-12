@@ -231,6 +231,7 @@ window.I18N = {
       'rm.trailer': 'ตัวอย่าง',
       'fp.sharedQueue': 'คิวที่อยากดูร่วมกัน', 'fp.sharedQueueCap': 'เรื่องที่คุณทั้งคู่อยากดู',
       'fp.watchedTogether': 'เคยดูด้วยกัน', 'fp.watchedCap': 'เรื่องที่ดูกับ',
+      'fd.watched': 'ดูด้วยกัน',
 
       // ── Misc ──
       'ms.logWatched': 'พอดูแมตช์แล้ว แตะ “เคยดู” เพื่อบันทึกไว้ตรงนี้',
@@ -256,10 +257,11 @@ window.I18N = {
       'profile.tagline':        'Match Doo · สร้างมาเพื่อค่ำคืนดูหนัง',
 
       // ── Welcome ──
-      // Welcome headline — stacks as "จับคู่หนัง / สร้างโมเมนต์" (lines 2 & 4 gradient)
-      'welcome.h1': 'จับคู่', 'welcome.h2': 'หนัง', 'welcome.h3': 'สร้าง', 'welcome.h4': 'โมเมนต์',
-      'welcome.badge':       'เลือกให้น้อยลง ดูด้วยกันให้มากขึ้น',
-      'welcome.desc':        'ค้นพบหนังและซีรีส์ไปด้วยกัน ปัด จับคู่ แล้วเปลี่ยนหนังที่ถูกใจให้เป็นค่ำคืนดูหนังครั้งต่อไป',
+      // Welcome headline — two lines: a question, then the answer in gradient
+      // ("ดูอะไรดี?" / "ปัดเลย"). h3/h4 are legacy, no longer rendered.
+      'welcome.h1': 'ดูอะไรดี?', 'welcome.h2': 'ปัดเลย', 'welcome.h3': '', 'welcome.h4': '',
+      'welcome.badge':       'จบปัญหาเลือกหนังไม่ถูก',
+      'welcome.desc':        'ปัดหาหนังและซีรีส์ที่ใช่ในไม่กี่วิ ดูคนเดียวก็ฟิน อยู่กับแฟน เพื่อน หรือครอบครัวก็ลงตัว',
       'welcome.signin':      'เข้าสู่ระบบ',
       'welcome.create':      'สร้างบัญชี',
       'welcome.agree':       'การใช้งานต่อถือว่าคุณยอมรับ', 'welcome.and': 'และ',

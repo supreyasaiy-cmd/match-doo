@@ -71,6 +71,15 @@
   }
 
   const PROXY = '/api/tmdb';
+  // On a plain static localhost (python http.server, Live Server, file://) there
+  // is no serverless runtime, so the relative /api/tmdb 404s. Borrow the deployed
+  // proxy instead — it's CORS-open and keeps the TMDB key server-side, so dev
+  // gets real posters with no local Node/key setup. In production this is same-origin.
+  const PROD_ORIGIN = 'https://match-doo.vercel.app';
+  const isLocalStatic =
+    location.protocol === 'file:' ||
+    /^(localhost|127\.|0\.0\.0\.0|\[?::1\]?)$/.test(location.hostname);
+  const PROXY_ORIGIN = isLocalStatic ? PROD_ORIGIN : location.origin;
   let proxyDown = false;  // once we learn the server proxy isn't there, stop retrying it this session
 
   async function call(path, params = {}) {
@@ -78,7 +87,7 @@
     //    with no personal key. This is the default path in production.
     if (!proxyDown) {
       try {
-        const url = new URL(PROXY, location.origin);
+        const url = new URL(PROXY, PROXY_ORIGIN);
         url.searchParams.set('path', path);
         for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
         const r = await fetch(url.toString(), { headers: { accept: 'application/json' } });

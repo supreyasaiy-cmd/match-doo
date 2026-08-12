@@ -15,6 +15,14 @@
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 
 module.exports = async (req, res) => {
+  // Read-only public TMDB data — allow any origin so a plain static localhost
+  // (e.g. `python3 -m http.server`) can borrow this deployed proxy for real
+  // posters during dev, without running its own serverless runtime.
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'accept');
+  if (req.method === 'OPTIONS') { res.status(204).end(); return; }
+
   const token = process.env.TMDB_ACCESS_TOKEN || '';
   const apiKey = process.env.TMDB_API_KEY || '';
   if (!token && !apiKey) {

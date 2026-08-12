@@ -1,16 +1,14 @@
-# macOS
-.DS_Store
+# local env / secrets — never commit
+.env
+.env.local
+.env*.local
 
-# Vercel
+# vercel
 .vercel
 
-# Node (not used, but keep clean if tooling is added later)
+# deps / os
 node_modules/
-npm-debug.log*
-*.log
+.DS_Store
 
-# Claude Code local settings
-.claude/settings.local.json
-
-# Original logo source art (kept local, not shipped)
-assets/Logo App /
+# local editor/agent settings
+.claude/

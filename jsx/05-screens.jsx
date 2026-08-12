@@ -1195,6 +1195,17 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
   const matched = window.MOVIES.filter(m => matchedSet.has(m.id) && !watchedSet.has(m.id));
   const watched = window.MOVIES.filter(m => watchedSet.has(m.id));
 
+  // Tappable stats scroll to their matching section below.
+  const matchedRef = React.useRef(null);
+  const watchedRef = React.useRef(null);
+  const mutualRef  = React.useRef(null);
+  const goTo = (ref) => ref.current && ref.current.scrollIntoView({ behavior:'smooth', block:'start' });
+  // Mutual friends — avatars derived from the seeded friends list (minus this one).
+  const _allFriends = [...(window.FRIENDS?.couple||[]), ...(window.FRIENDS?.family||[]), ...(window.FRIENDS?.friends||[])];
+  const mutualFriends = _allFriends
+    .filter(f => (f.handle||f.name) !== (friend.handle||friend.name))
+    .slice(0, friend.mutual || 0);
+
   return (
     <div className="fade-in" style={{display:'flex', flexDirection:'column', height:'100%'}}>
       <TopBar title="" onBack={onBack}/>
@@ -1213,47 +1224,75 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
         </div>
 
         <div style={{
-          display:'flex', gap: 22, marginTop: 22, padding:'14px 22px',
+          display:'flex', gap: 14, marginTop: 22, padding:'14px 16px',
           background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
           borderRadius: 16,
         }}>
-          <Stat label={tr('profile.matches','Matches')} value={matched.length}/>
+          <Stat label={tr('fd.statMatches','Movie\nmatches')}    value={matched.length} onClick={()=>goTo(matchedRef)}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label={tr('fd.watched','Watched')} value={watched.length}/>
+          <Stat label={tr('fd.statWatched','Watched\ntogether')} value={watched.length} onClick={()=>goTo(watchedRef)}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label={tr('friends.mutual','Mutual friends')} value={friend.mutual}/>
+          <Stat label={tr('fd.statMutual','Mutual\nfriends')}    value={friend.mutual} onClick={()=>goTo(mutualRef)}/>
         </div>
       </div>
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'0 0 120px'}}>
         {/* Matched */}
-        <Section title={tr('fp.sharedQueue','On your shared queue')} caption={`${matched.length} ${tr('fp.sharedQueueCap','films you both want to watch')}`}>
-          {matched.length === 0 ? (
-            <EmptySectionRow text={tr('empty.sharedQueue','No shared picks yet — keep swiping! 🍿')}/>
-          ) : (
-            <PosterRow movies={matched} onTap={(m)=>onOpenMovie(m, friend)}/>
-          )}
-        </Section>
+        <div ref={matchedRef} style={{scrollMarginTop: 8}}>
+          <Section title={tr('fp.sharedQueue','On your shared queue')} caption={`${matched.length} ${tr('fp.sharedQueueCap','films you both want to watch')}`}>
+            {matched.length === 0 ? (
+              <EmptySectionRow text={tr('empty.sharedQueue','No shared picks yet — keep swiping! 🍿')}/>
+            ) : (
+              <PosterRow movies={matched} onTap={(m)=>onOpenMovie(m, friend)}/>
+            )}
+          </Section>
+        </div>
 
         {/* Watched */}
-        <Section title={tr('fp.watchedTogether','Watched together')} caption={`${watched.length} ${tr('fp.watchedCap','films you’ve seen with')} ${friend.name.split(' ')[0]}`}>
-          {watched.length === 0 ? (
-            <EmptySectionRow text={tr("ms.logWatched","Once you watch a match, tap “Watched” to log it here.")}/>
-          ) : (
-            <PosterRow movies={watched} dim onTap={(m)=>onOpenMovie(m, friend)}/>
-          )}
-        </Section>
+        <div ref={watchedRef} style={{scrollMarginTop: 8}}>
+          <Section title={tr('fp.watchedTogether','Watched together')} caption={`${watched.length} ${tr('fp.watchedCap','films you’ve seen with')} ${friend.name.split(' ')[0]}`}>
+            {watched.length === 0 ? (
+              <EmptySectionRow text={tr("ms.logWatched","Once you watch a match, tap “Watched” to log it here.")}/>
+            ) : (
+              <PosterRow movies={watched} dim onTap={(m)=>onOpenMovie(m, friend)}/>
+            )}
+          </Section>
+        </div>
+
+        {/* Mutual friends */}
+        <div ref={mutualRef} style={{scrollMarginTop: 8}}>
+          <Section title={tr('friends.mutual','Mutual friends')} caption={tr('fd.mutualCap','Friends you both know')}>
+            {mutualFriends.length === 0 ? (
+              <EmptySectionRow text={tr('empty.mutual','No mutual friends yet.')}/>
+            ) : (
+              <div style={{display:'flex', gap: 16, overflowX:'auto', padding:'2px 0 6px'}}>
+                {mutualFriends.map((f, i) => (
+                  <div key={f.handle||f.name||i} style={{flexShrink:0, width: 62, textAlign:'center'}}>
+                    <Avatar person={f} size={52}/>
+                    <div style={{fontSize: 11, color:'var(--muted)', marginTop: 6, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{(f.name||'').split(' ')[0]}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
+        </div>
       </div>
     </div>
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, onClick }) {
+  const tappable = !!onClick;
   return (
-    <div style={{textAlign:'center'}}>
+    <div onClick={onClick} className={tappable ? 'tap-row' : undefined}
+      style={{ textAlign:'center', cursor: tappable ? 'pointer' : 'default', borderRadius: 12, padding:'2px 8px' }}>
       <div style={{fontFamily:'var(--serif)', fontSize: 26, color:'var(--cream)', lineHeight: 1}}>{value}</div>
-      <div style={{fontSize: 10, letterSpacing:'0.12em', textTransform:'uppercase', color:'var(--muted)', marginTop: 4}}>{label}</div>
+      {/* label is two lines (contains \n) so all three columns stay the same height */}
+      <div style={{
+        fontSize: 10, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--muted)',
+        marginTop: 6, lineHeight: 1.3, whiteSpace:'pre-line',
+      }}>{label}</div>
     </div>
   );
 }
@@ -1742,7 +1781,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
 
   return (
     <div className="fade-in" style={{
-      position:'absolute', inset: 0, zIndex: 120,
+      position:'absolute', inset: 0, zIndex: 200,
       background:'var(--ink)', display:'flex', flexDirection:'column',
     }}>
       <TopBar title={title} onBack={onClose} right={

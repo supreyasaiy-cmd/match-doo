@@ -231,7 +231,9 @@ window.I18N = {
       'rm.trailer': 'ตัวอย่าง',
       'fp.sharedQueue': 'คิวที่อยากดูร่วมกัน', 'fp.sharedQueueCap': 'เรื่องที่คุณทั้งคู่อยากดู',
       'fp.watchedTogether': 'เคยดูด้วยกัน', 'fp.watchedCap': 'เรื่องที่ดูกับ',
-      'fd.watched': 'ดูด้วยกัน',
+      // Friend-detail stat labels — each two lines (\n) so all three align.
+      'fd.statMatches': 'หนัง\nที่แมตช์', 'fd.statWatched': 'ดู\nด้วยกัน', 'fd.statMutual': 'เพื่อน\nร่วมกัน',
+      'fd.mutualCap': 'เพื่อนที่รู้จักร่วมกัน', 'empty.mutual': 'ยังไม่มีเพื่อนร่วมกัน',
 
       // ── Misc ──
       'ms.logWatched': 'พอดูแมตช์แล้ว แตะ “เคยดู” เพื่อบันทึกไว้ตรงนี้',

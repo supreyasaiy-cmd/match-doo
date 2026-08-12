@@ -344,7 +344,10 @@ function TabBar({ active, onChange }) {
         background:'linear-gradient(180deg, transparent 0%, rgba(var(--bg-rgb),0.5) 42%, rgba(var(--bg-rgb),0.94) 100%)',
       }}/>
       <div data-coach="nav" style={{
-        position:'absolute', left: 14, right: 14, bottom: 12, zIndex: 200,
+        // Below the modal/sheet layer (sheets are zIndex 200) so a bottom sheet
+        // covers the tab bar instead of the bar bleeding over the sheet's content;
+        // still above regular screen content and the swipe deck.
+        position:'absolute', left: 14, right: 14, bottom: 12, zIndex: 150,
         display:'flex', alignItems:'center',
         padding: '10px 12px',
         // dark glass + a diagonal mood gradient tint — stays a dark bar in

@@ -412,7 +412,7 @@ function TopBar({ title, onBack, right, subtitle, large=false }) {
 // ─── Primary button ─────────────────────────────────────────────────
 function PrimaryBtn({ children, onClick, full=false, secondary=false, disabled=false, style={} }) {
   return (
-    <button onClick={disabled? undefined : onClick} style={{
+    <button onClick={disabled? undefined : onClick} className={disabled ? undefined : 'press'} style={{
       appearance:'none', border:0,
       background: secondary ? 'rgba(var(--fg-rgb),0.08)' : 'var(--cream)',
       color: secondary ? 'var(--cream)' : 'var(--ink)',

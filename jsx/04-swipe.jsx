@@ -142,21 +142,28 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
           position:'absolute', left: 22, right: 22, bottom: 118,
           color: '#F0EEEB', pointerEvents:'none',
         }}>
+          {/* rating pill (quick "is it good?" signal) + muted year · length */}
           <div style={{
-            display:'flex', alignItems:'center', gap:8, marginBottom: 6, opacity:0.85,
-            fontSize:11, letterSpacing:'0.16em', textTransform:'uppercase',
+            display:'flex', alignItems:'center', gap: 8, marginBottom: 9,
           }}>
-            <span>{movie.year}</span>
-            <span style={{opacity:0.5}}>·</span>
-            <span>{movie.type === 'series'
-              ? `${movie.seasons} Season${movie.seasons > 1 ? 's' : ''}`
-              : `${Math.floor(movie.runtime/60)}h ${movie.runtime%60}m`}</span>
-            <span style={{opacity:0.5}}>·</span>
-            <span>{movie.rt}% RT</span>
+            <span style={{
+              display:'inline-flex', alignItems:'center', gap: 4,
+              fontSize: 12, fontWeight: 700, letterSpacing:'0.01em',
+              padding:'3px 9px 3px 7px', borderRadius: 999,
+              background:'rgba(255,191,101,0.18)', color:'#FFD79E',
+              border:'0.5px solid rgba(255,191,101,0.4)',
+            }}>
+              <Icon name="starf" size={11} color="#FFBF65"/> {Number(movie.imdb).toFixed(1)}
+            </span>
+            <span style={{ fontSize: 11, letterSpacing:'0.15em', textTransform:'uppercase', opacity: 0.82 }}>
+              {movie.year} · {movie.type === 'series'
+                ? `${movie.seasons} Season${movie.seasons > 1 ? 's' : ''}`
+                : `${Math.floor(movie.runtime/60)}h ${movie.runtime%60}m`}
+            </span>
           </div>
           {/* Movie title */}
           <div style={{
-            fontFamily:'var(--serif)', fontSize: 30, lineHeight: 1.0, letterSpacing:'-0.01em',
+            fontFamily:'var(--serif)', fontSize: 32, lineHeight: 1.0, letterSpacing:'-0.01em',
             marginBottom: 4, textWrap:'pretty', textShadow:'0 2px 14px rgba(0,0,0,0.55)',
           }}>{movie.title}</div>
           <div style={{
@@ -336,7 +343,7 @@ function ActionBtn({ icon, color, size, onClick, filled=false, label }) {
       display:'flex', flexDirection:'column', alignItems:'center', gap: 7,
       pointerEvents:'auto',
     }}>
-      <button onClick={onClick} aria-label={label} title={label} style={{
+      <button onClick={onClick} aria-label={label} title={label} className="press" style={{
         appearance:'none', border:`1.2px solid ${color}`,
         width: size, height: size, borderRadius:'50%',
         background: filled ? color : 'rgba(0,0,0,0.32)',

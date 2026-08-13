@@ -89,6 +89,20 @@ button{ font-family: inherit; cursor: default; }
 .tap-row{ transition: background .14s ease; cursor: pointer; }
 .tap-row:active{ background: rgba(240,238,235,0.06) !important; }
 
+/* Tactile press feedback — controls scale in slightly on touch for a physical,
+   modern feel. `.press` for buttons, `.press-soft` for cards/tiles (gentler).
+   Honors reduced-motion. */
+.press, .press-soft{
+  transition: transform .13s cubic-bezier(.34,1.1,.64,1), filter .13s ease, box-shadow .13s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.press:active{ transform: scale(.955); }
+.press-soft{ cursor: pointer; }
+.press-soft:active{ transform: scale(.985); filter: brightness(1.03); }
+@media (prefers-reduced-motion: reduce){
+  .press:active, .press-soft:active{ transform: none; filter: none; }
+}
+
 /* Welcome ember badge — theme-aware so it stays legible on light bg */
 .wl-badge{ background: rgba(253,137,115,0.12); border-color: rgba(253,137,115,0.40); color: var(--red); }
 :root[data-theme="light"] .wl-badge{

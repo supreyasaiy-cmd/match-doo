@@ -68,7 +68,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
             display:'flex', alignItems:'center', gap: 10,
             background:'rgba(var(--fg-rgb),0.07)',
             border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-            borderRadius: 12, padding:'10px 14px',
+            borderRadius: 'var(--r-sm)', padding:'10px 14px',
           }}>
             <Icon name="search" size={16} color="var(--muted)"/>
             <input

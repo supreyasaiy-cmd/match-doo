@@ -111,7 +111,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
     <div style={bare ? {} : {
       background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
       border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-      borderRadius: 18, padding:'14px 14px 12px', marginBottom: 14,
+      borderRadius: 'var(--r-md)', padding:'14px 14px 12px', marginBottom: 14,
     }}>
       {/* header */}
       <div style={{display:'flex', alignItems:'center', gap: 10, marginBottom: 12}}>
@@ -188,7 +188,7 @@ function RoomsCalendar({ onOpenRoom, bare }) {
             {list.map((e, i) => (
               <button key={i} onClick={()=> e.kind === 'room' && onOpenRoom && onOpenRoom(e.room)} style={{
                 appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.05)',
-                borderRadius: 12, padding:'8px 10px', width:'100%', textAlign:'left',
+                borderRadius: 'var(--r-sm)', padding:'8px 10px', width:'100%', textAlign:'left',
                 display:'flex', alignItems:'center', gap: 10, color:'var(--cream)',
                 cursor: e.kind === 'room' ? 'pointer' : 'default',
               }}>
@@ -322,7 +322,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
           display:'flex', alignItems:'center', gap: 10,
           background:'rgba(var(--fg-rgb),0.07)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-          borderRadius: 12, padding:'10px 14px',
+          borderRadius: 'var(--r-sm)', padding:'10px 14px',
         }}>
           <Icon name="search" size={16} color="var(--muted)"/>
           <input
@@ -367,7 +367,7 @@ function RoomCard({ room, onClick }) {
     <button onClick={onClick} style={{
       appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
       background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
-      borderRadius: 18, padding:'14px 14px', width:'100%', textAlign:'left',
+      borderRadius: 'var(--r-md)', padding:'14px 14px', width:'100%', textAlign:'left',
       display:'flex', alignItems:'center', gap: 14, color:'var(--cream)',
       position:'relative', overflow:'hidden',
     }}>
@@ -378,7 +378,7 @@ function RoomCard({ room, onClick }) {
       }}/>
 
       <div style={{
-        width: 52, height: 52, borderRadius: 14,
+        width: 52, height: 52, borderRadius: 'var(--r-sm)',
         background: `linear-gradient(135deg, ${hexA(room.tone, 0.25)}, ${hexA(room.tone, 0.08)})`,
         border: `0.5px solid ${hexA(room.tone, 0.35)}`,
         display:'flex', alignItems:'center', justifyContent:'center',
@@ -535,7 +535,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         padding:'4px 28px 22px', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
       }}>
         <div style={{
-          width: 90, height: 90, borderRadius: 26,
+          width: 90, height: 90, borderRadius: 'var(--r-lg)',
           background: `linear-gradient(135deg, ${hexA(room.tone, 0.4)}, ${hexA(room.tone, 0.1)})`,
           border: `0.5px solid ${hexA(room.tone, 0.4)}`,
           display:'flex', alignItems:'center', justifyContent:'center',
@@ -583,7 +583,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           display:'flex', gap: 22, marginTop: 22, padding:'14px 22px',
           background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
-          borderRadius: 16,
+          borderRadius: 'var(--r-md)',
         }}>
           <Stat label={tr('room.groupMatches','Group matches')} value={groupMatches.length}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
@@ -597,7 +597,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         {/* ── This round — the room's voting + swipe session ── */}
         <div style={{padding:'4px 18px 6px'}}>
           <div style={{
-            borderRadius: 18, padding:'16px 16px 14px',
+            borderRadius: 'var(--r-md)', padding:'16px 16px 14px',
             background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))',
             border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           }}>
@@ -632,7 +632,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
             <button onClick={()=> setShowGenreVote(true)} className="tap-row" style={{
               appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
               background:'rgba(var(--fg-rgb),0.04)', width:'100%', textAlign:'left',
-              borderRadius: 12, padding:'11px 12px', color:'var(--cream)',
+              borderRadius: 'var(--r-sm)', padding:'11px 12px', color:'var(--cream)',
               display:'flex', alignItems:'center', gap: 10, marginBottom: 12,
             }}>
               <IconBadge icon="sparkle" size={34} tone={room.tone}/>
@@ -662,7 +662,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
             <button onClick={()=> onSwipeRoom?.(room, ()=> setRoundTick(t=>t+1))} style={{
               appearance:'none', border:0, width:'100%',
               background:`linear-gradient(135deg, ${room.tone}, ${hexA(room.tone,0.75)})`,
-              color:'#fff', borderRadius: 14, padding:'14px', cursor:'pointer',
+              color:'#fff', borderRadius: 'var(--r-sm)', padding:'14px', cursor:'pointer',
               fontFamily:'var(--sans)', fontWeight: 700, fontSize: 15,
               display:'flex', alignItems:'center', justifyContent:'center', gap: 9,
               boxShadow:`0 10px 24px ${hexA(room.tone,0.4)}`,
@@ -696,7 +696,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         {/* Movie night — pick a day to watch together */}
         <div style={{padding:'4px 18px 6px'}}>
           <div style={{
-            borderRadius: 18, padding:'14px 16px',
+            borderRadius: 'var(--r-md)', padding:'14px 16px',
             background: `linear-gradient(135deg, ${hexA(room.tone, 0.14)}, rgba(var(--fg-rgb),0.04))`,
             border:`0.5px solid ${hexA(room.tone, 0.28)}`,
           }}>
@@ -856,13 +856,13 @@ function CreateRoomScreen({ onBack, onCreate }) {
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'4px 18px 110px'}}>
         {/* Emoji + name */}
         <div style={{
-          padding:'18px 16px', borderRadius: 18,
+          padding:'18px 16px', borderRadius: 'var(--r-md)',
           background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           display:'flex', alignItems:'center', gap: 12,
         }}>
           <div style={{
-            width: 56, height: 56, borderRadius: 16,
+            width: 56, height: 56, borderRadius: 'var(--r-md)',
             background: `linear-gradient(135deg, ${hexA(tone, 0.4)}, ${hexA(tone, 0.1)})`,
             border: `0.5px solid ${hexA(tone, 0.4)}`,
             display:'flex', alignItems:'center', justifyContent:'center',
@@ -883,7 +883,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
           marginTop: 14, padding:'12px 12px',
           background:'rgba(var(--fg-rgb),0.03)',
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
-          borderRadius: 14,
+          borderRadius: 'var(--r-sm)',
           display:'flex', gap: 6, flexWrap:'wrap',
         }}>
           {EMOJI_OPTS.map(e=>(
@@ -968,7 +968,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
                   appearance:'none', border:`0.5px solid ${on? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
                   background: on ? 'rgba(253,137,115,0.12)' : 'rgba(var(--fg-rgb),0.03)',
                   color: on ? 'var(--red)' : 'var(--cream)',
-                  flex:1, padding:'12px 8px', borderRadius: 12,
+                  flex:1, padding:'12px 8px', borderRadius: 'var(--r-sm)',
                   fontFamily:'var(--sans)', fontWeight: 600, fontSize: 13,
                 }}>{o.l}</button>
               );
@@ -1139,7 +1139,7 @@ function ShareRoomSheet({ room, onClose }) {
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', gap: 8}}>
           <div style={{display:'flex', alignItems:'center', gap: 12, minWidth: 0}}>
             <div style={{
-              width: 46, height: 46, borderRadius: 13,
+              width: 46, height: 46, borderRadius: 'var(--r-sm)',
               background: `linear-gradient(135deg, ${hexA(tone, 0.35)}, ${hexA(tone, 0.1)})`,
               border: `0.5px solid ${hexA(tone, 0.4)}`,
               display:'flex', alignItems:'center', justifyContent:'center',
@@ -1162,7 +1162,7 @@ function ShareRoomSheet({ room, onClose }) {
         {/* QR code on a light card */}
         <div style={{display:'flex', justifyContent:'center', margin:'20px 0 6px'}}>
           <div style={{
-            width: 188, height: 188, borderRadius: 20, padding: 12,
+            width: 188, height: 188, borderRadius: 'var(--r-md)', padding: 12,
             background:'#ffffff',
             border:'0.5px solid rgba(var(--fg-rgb),0.14)',
             boxShadow:'0 10px 30px rgba(0,0,0,0.35)',
@@ -1197,7 +1197,7 @@ function ShareRoomSheet({ room, onClose }) {
           appearance:'none', width:'100%', textAlign:'left',
           border:`0.5px solid ${hexA(tone, 0.3)}`,
           background: hexA(tone, 0.08),
-          borderRadius: 14, padding:'12px 14px',
+          borderRadius: 'var(--r-sm)', padding:'12px 14px',
           display:'flex', alignItems:'center', gap: 12, color:'var(--cream)',
         }}>
           <IconBadge icon="qr" size={38} tone={tone}/>
@@ -1216,7 +1216,7 @@ function ShareRoomSheet({ room, onClose }) {
           <button onClick={()=>copy(link, 'Link')} style={{
             appearance:'none', flex: 1, border:'0.5px solid rgba(var(--fg-rgb),0.14)',
             background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)',
-            padding:'13px 14px', borderRadius: 14,
+            padding:'13px 14px', borderRadius: 'var(--r-sm)',
             display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
             fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
           }}>
@@ -1226,7 +1226,7 @@ function ShareRoomSheet({ room, onClose }) {
           <button onClick={share} style={{
             appearance:'none', flex: 1, border:0,
             background:'var(--cream)', color:'var(--ink)',
-            padding:'13px 14px', borderRadius: 14,
+            padding:'13px 14px', borderRadius: 'var(--r-sm)',
             display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
             fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
           }}>
@@ -1292,12 +1292,12 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
 
         {/* preview + name */}
         <div style={{display:'flex', alignItems:'center', gap:14, marginBottom:22}}>
-          <div style={{width:60, height:60, borderRadius:18, flexShrink:0, fontSize:28,
+          <div style={{width:60, height:60, borderRadius:'var(--r-md)', flexShrink:0, fontSize:28,
             background:`linear-gradient(135deg, ${hexA(tone,0.4)}, ${hexA(tone,0.1)})`,
             border:`0.5px solid ${hexA(tone,0.4)}`, display:'flex', alignItems:'center', justifyContent:'center'}}>{emoji}</div>
           <div style={{flex:1, minWidth:0}}>
             <div style={label}>{tr("cr.roomName","Room name")}</div>
-            <input value={name} onChange={e=>setName(e.target.value)} style={{width:'100%', background:'rgba(var(--fg-rgb),0.07)', border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius:12, padding:'11px 12px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize:15, outline:0}}/>
+            <input value={name} onChange={e=>setName(e.target.value)} style={{width:'100%', background:'rgba(var(--fg-rgb),0.07)', border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius:'var(--r-sm)', padding:'11px 12px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize:15, outline:0}}/>
           </div>
         </div>
 
@@ -1305,7 +1305,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         <div style={label}>Icon</div>
         <div style={{display:'flex', gap:6, flexWrap:'wrap', marginBottom:20}}>
           {EMOJIS.map(e=>(
-            <button key={e} onClick={()=>setEmoji(e)} style={{appearance:'none', width:40, height:40, borderRadius:12, fontSize:20,
+            <button key={e} onClick={()=>setEmoji(e)} style={{appearance:'none', width:40, height:40, borderRadius:'var(--r-sm)', fontSize:20,
               background: emoji===e ? hexA(tone,0.14) : 'rgba(var(--fg-rgb),0.05)',
               border:`0.5px solid ${emoji===e ? hexA(tone,0.5) : 'transparent'}`}}>{e}</button>
           ))}
@@ -1323,7 +1323,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         </div>
 
         {/* mute toggle */}
-        <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
+        <button onClick={()=>setMuted(m=>!m)} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:'var(--r-sm)', padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
           <IconBadge icon="bell" size={34} tone="#FFBF65"/>
           <div style={{flex:1, textAlign:'left'}}>
             <div style={{fontSize:14, fontWeight:600}}>{tr('rs.mute','Mute notifications')}</div>
@@ -1342,7 +1342,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         <div style={{display:'flex', flexDirection:'column', gap:6, marginBottom:10}}>
           {members.length === 0 && <div style={{fontSize:12.5, color:'var(--muted)', padding:'6px 2px'}}>{tr('rs.justYou','Just you so far.')}</div>}
           {members.map(m=>(
-            <div key={m.id} style={{display:'flex', alignItems:'center', gap:12, padding:'8px 10px', borderRadius:12, background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)'}}>
+            <div key={m.id} style={{display:'flex', alignItems:'center', gap:12, padding:'8px 10px', borderRadius:'var(--r-sm)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)'}}>
               <Avatar person={m} size={34}/>
               <div style={{flex:1, minWidth:0}}>
                 <div style={{fontSize:14, fontWeight:600, color:'var(--cream)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.name}</div>
@@ -1354,12 +1354,12 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
             </div>
           ))}
         </div>
-        <button onClick={onAddMembers} style={{appearance:'none', border:'0.5px dashed rgba(var(--fg-rgb),0.22)', background:'transparent', borderRadius:12, padding:'11px', width:'100%', color:'var(--cream)', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, fontSize:13.5, fontWeight:600, marginBottom:14}}>
+        <button onClick={onAddMembers} style={{appearance:'none', border:'0.5px dashed rgba(var(--fg-rgb),0.22)', background:'transparent', borderRadius:'var(--r-sm)', padding:'11px', width:'100%', color:'var(--cream)', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, fontSize:13.5, fontWeight:600, marginBottom:14}}>
           <Icon name="plus" size={15} stroke={2.4}/> {tr("cr.addMembers","Add members")}
         </button>
 
         {/* share shortcut */}
-        <button onClick={onShare} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:14, padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
+        <button onClick={onShare} style={{appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.10)', background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)', borderRadius:'var(--r-sm)', padding:'12px 14px', width:'100%', display:'flex', alignItems:'center', gap:12, marginBottom:22, color:'var(--cream)'}}>
           <IconBadge icon="share" size={34} tone="#FFBF65"/>
           <div style={{flex:1, textAlign:'left', fontSize:14, fontWeight:600}}>Invite / share room</div>
           <Icon name="chev" size={14} color="var(--muted-2)"/>
@@ -1371,7 +1371,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
         {/* danger zone */}
         <div style={{height:0.5, background:'var(--line)', margin:'20px 0 16px'}}/>
         {confirm ? (
-          <div style={{background:'rgba(232,121,138,0.08)', border:'0.5px solid rgba(232,121,138,0.3)', borderRadius:14, padding:14}}>
+          <div style={{background:'rgba(232,121,138,0.08)', border:'0.5px solid rgba(232,121,138,0.3)', borderRadius:'var(--r-sm)', padding:14}}>
             <div style={{fontSize:13.5, color:'var(--cream)', fontWeight:600, marginBottom:4}}>{confirm==='delete' ? 'Delete this room?' : 'Leave this room?'}</div>
             <div style={{fontSize:12.5, color:'var(--muted)', marginBottom:12}}>{confirm==='delete' ? "This removes the room for good. This can't be undone." : "It'll be removed from your rooms."}</div>
             <div style={{display:'flex', gap:8}}>
@@ -1403,7 +1403,7 @@ function RoundResultRow({ rank, result, total, tone, onTap }) {
     <button onClick={onTap} className="tap-row" style={{
       appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.08)',
       background: everyone ? hexA(tone, 0.10) : 'rgba(var(--fg-rgb),0.04)',
-      borderRadius: 14, padding:'9px 12px 9px 9px', width:'100%', textAlign:'left',
+      borderRadius: 'var(--r-sm)', padding:'9px 12px 9px 9px', width:'100%', textAlign:'left',
       display:'flex', alignItems:'center', gap: 11, color:'var(--cream)',
     }}>
       <div style={{
@@ -1491,7 +1491,7 @@ function RoomGenreVoteSheet({ room, onClose, onSaved }) {
               <button key={g} onClick={()=> toggle(g)} style={{
                 appearance:'none', border:`0.5px solid ${on? 'var(--red)':'rgba(var(--fg-rgb),0.12)'}`,
                 background: on ? 'rgba(253,137,115,0.12)' : 'rgba(var(--fg-rgb),0.04)',
-                borderRadius: 14, padding:'13px 14px', width:'100%', textAlign:'left',
+                borderRadius: 'var(--r-sm)', padding:'13px 14px', width:'100%', textAlign:'left',
                 display:'flex', alignItems:'center', gap: 12, color:'var(--cream)',
               }}>
                 <div style={{

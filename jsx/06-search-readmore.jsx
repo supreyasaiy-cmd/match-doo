@@ -252,7 +252,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
             <label style={{
               position:'relative', flex: 1, cursor:'pointer',
               display:'flex', alignItems:'center', gap: 10,
-              padding:'13px 14px', borderRadius: 14,
+              padding:'13px 14px', borderRadius: 'var(--r-sm)',
               background: sched ? 'rgba(255,191,101,0.10)' : 'rgba(var(--fg-rgb),0.06)',
               border:`0.5px solid ${sched ? 'rgba(255,191,101,0.35)' : 'rgba(var(--fg-rgb),0.14)'}`,
             }}>
@@ -272,7 +272,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
               <button onClick={()=> saveSched('')} aria-label="Clear date" style={{
                 appearance:'none', border:'0.5px solid rgba(var(--fg-rgb),0.14)',
                 background:'rgba(var(--fg-rgb),0.07)', color:'var(--muted)',
-                width: 46, height: 46, borderRadius: 14, flexShrink: 0,
+                width: 46, height: 46, borderRadius: 'var(--r-sm)', flexShrink: 0,
                 display:'flex', alignItems:'center', justifyContent:'center',
               }}>
                 <Icon name="x" size={16}/>
@@ -294,7 +294,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
         {/* Trailer */}
         <Section title={window.tr ? tr('rm.trailer','Trailer') : 'Trailer'}>
           <div style={{
-            position:'relative', borderRadius: 16, overflow:'hidden',
+            position:'relative', borderRadius: 'var(--r-md)', overflow:'hidden',
             aspectRatio:'16/9', background:'#000',
           }}>
             {movie.backdropUrl ? (
@@ -452,7 +452,7 @@ function SearchOverlay({ onClose, onPick }) {
           {results.map(m => (
             <button key={m.id} onClick={()=> onPick(m)} style={{
               appearance:'none', border:0, background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
-              borderRadius: 14, padding:'8px 10px', textAlign:'left',
+              borderRadius: 'var(--r-sm)', padding:'8px 10px', textAlign:'left',
               display:'flex', alignItems:'center', gap: 12, width:'100%', color:'var(--cream)', cursor:'pointer',
             }}>
               <div style={{width: 52, height: 78, borderRadius: 9, overflow:'hidden', flexShrink:0}}>

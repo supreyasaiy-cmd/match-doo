@@ -203,7 +203,7 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
         {/* directional glow ring — grows with the swipe for motion feedback */}
         {activeLabel && (
           <div style={{
-            position:'absolute', inset:0, borderRadius:24, pointerEvents:'none',
+            position:'absolute', inset:0, borderRadius:'var(--r-lg)', pointerEvents:'none',
             boxShadow:`inset 0 0 0 3px ${SWIPE_LABELS[activeLabel].color}, inset 0 0 55px ${SWIPE_LABELS[activeLabel].color}66`,
             opacity: labelOpacity,
             transition: drag?.releasing ? 'opacity .28s ease' : 'none',
@@ -223,7 +223,7 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
             transform: `${activeLabel === 'up' || activeLabel === 'down' ? 'translateX(-50%)' : ''} rotate(${SWIPE_LABELS[activeLabel].rot}deg) scale(${labelScale})`,
             transformOrigin:'center',
             opacity: labelOpacity,
-            padding:'12px 22px', borderRadius: 12, whiteSpace:'nowrap',
+            padding:'12px 22px', borderRadius: 'var(--r-sm)', whiteSpace:'nowrap',
             border:'2px solid rgba(255,255,255,0.92)',
             color:'#fff', background: SWIPE_LABELS[activeLabel].color,
             fontFamily:'var(--sans)', fontWeight: 800, fontSize: 22, letterSpacing:'0.06em',
@@ -511,7 +511,7 @@ function SwipeCoach({ onDone }) {
           )}
           <div style={{
             background:'var(--ink)', border:'0.5px solid rgba(var(--fg-rgb),0.12)',
-            borderRadius: 18, padding:'16px 16px 14px', boxShadow:'0 20px 50px rgba(0,0,0,0.55)',
+            borderRadius: 'var(--r-md)', padding:'16px 16px 14px', boxShadow:'0 20px 50px rgba(0,0,0,0.55)',
           }}>
             <div style={{fontSize: 10, letterSpacing:'0.18em', textTransform:'uppercase', color:'var(--red)', marginBottom: 6}}>{step.kicker}</div>
             <div style={{fontFamily:'var(--serif)', fontSize: 22, color:'var(--cream)', lineHeight: 1.1, marginBottom: 6}}>{step.title}</div>

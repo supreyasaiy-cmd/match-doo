@@ -64,7 +64,7 @@ function BannerAd({ placement, onOpenCTA, style = {} }) {
       appearance: 'none', border: '0.5px solid rgba(var(--fg-rgb),0.14)',
       background: 'rgba(var(--fg-rgb),0.05)', width: '100%', textAlign: 'left',
       display: 'flex', alignItems: 'center', gap: 10,
-      padding: '9px 12px', borderRadius: 16, color: 'var(--cream)',
+      padding: '9px 12px', borderRadius: 'var(--r-md)', color: 'var(--cream)',
       ...style,
     }}>
       <image-slot id={`banner-logo-${campaign.id}`} shape="rounded" radius="8"
@@ -146,7 +146,7 @@ function PopupAdInterstitial({ campaign, onClose, onOpenCTA }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 22px',
     }}>
       <div className="pop" style={{
-        width: '100%', maxWidth: 320, background: '#241813', borderRadius: 26,
+        width: '100%', maxWidth: 320, background: '#241813', borderRadius: 'var(--r-lg)',
         border: '0.5px solid rgba(var(--fg-rgb),0.12)', overflow: 'hidden', position: 'relative',
         boxShadow: '0 30px 80px rgba(0,0,0,0.55)',
       }}>
@@ -220,7 +220,7 @@ function AdCarousel16({ interval = 4200, onOpenCTA, style = {} }) {
     <div
       onPointerDown={()=>setPaused(true)} onPointerUp={()=>setPaused(false)} onPointerLeave={()=>setPaused(false)}
       style={{
-        position:'relative', width:'100%', aspectRatio:'16 / 9', borderRadius:16, overflow:'hidden',
+        position:'relative', width:'100%', aspectRatio:'16 / 9', borderRadius:'var(--r-md)', overflow:'hidden',
         border:'0.5px solid rgba(var(--fg-rgb),0.14)', ...style,
       }}>
       <div style={{

@@ -26,6 +26,13 @@
   --sans: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
   /* Wordmark ("Match Doo") — Kodchasan, a friendly rounded Thai/Latin face. */
   --logo: 'Kodchasan', 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+
+  /* Corner-radius scale — one system for every card/surface so radii stop
+     drifting (was 12/16/18/24/26/27/28 ad hoc). Pills stay 999, circles 50%. */
+  --r-sm: 14px;   /* inputs, chips, small cards          */
+  --r-md: 18px;   /* standard cards, list rows, tiles    */
+  --r-lg: 26px;   /* large cards, hero surfaces          */
+  --r-xl: 28px;   /* bottom sheets, big containers       */
 }
 
 /* Thai: head titles (the --serif display var) render in Kanit for proper,

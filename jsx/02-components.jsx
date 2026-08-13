@@ -301,7 +301,7 @@ function TabBar({ active, onChange }) {
           appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
           width: 56, height: 56, borderRadius: '50%',
           border: '2px solid rgba(240,238,235,0.92)',
-          backgroundImage: 'url("assets/logo-app.png?v=176")',
+          backgroundImage: 'url("assets/logo-app.png?v=177")',
           backgroundSize: '116%', backgroundPosition: 'center 47%',
           backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
           boxShadow: on
@@ -355,7 +355,7 @@ function TabBar({ active, onChange }) {
         background:'linear-gradient(135deg, rgba(253,137,115,0.20) 0%, rgba(253,137,115,0.16) 55%, rgba(19,24,27,0.30) 100%), rgba(15,20,26,0.78)',
         backdropFilter:'blur(30px) saturate(180%)',
         WebkitBackdropFilter:'blur(30px) saturate(180%)',
-        borderRadius: 32,
+        borderRadius: 'var(--r-xl)',
         border:'0.5px solid rgba(240,238,235,0.16)',
         boxShadow:'0 16px 46px rgba(0,0,0,0.55), inset 0 0.5px 0 rgba(240,238,235,0.14)',
       }}>

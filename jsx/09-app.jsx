@@ -699,7 +699,7 @@ function NotificationsSheet({ items = [], onClose, onOpen }) {
               <button key={n.id} onClick={()=> onOpen?.(n)} className="tap-row" style={{
                 appearance:'none', border:0, background:'transparent', width:'100%', textAlign:'left', cursor:'pointer',
                 display:'flex', alignItems:'center', gap: 12,
-                padding:'12px 10px', borderRadius: 14, color:'var(--cream)',
+                padding:'12px 10px', borderRadius: 'var(--r-sm)', color:'var(--cream)',
               }}>
                 {n.person ? <Avatar person={n.person} size={40}/> : <IconBadge icon={m.icon} size={40} tone={m.tone}/>}
                 <div style={{flex:1, minWidth:0}}>
@@ -740,7 +740,7 @@ function MatchToast({ movie, friend, onDismiss }) {
     <button onClick={onDismiss} className="rise" style={{
       appearance:'none', border:0, textAlign:'left',
       position:'absolute', left: 16, right: 16, top: 70, zIndex: 999,
-      padding:'12px 14px', borderRadius: 18,
+      padding:'12px 14px', borderRadius: 'var(--r-md)',
       background:'rgba(var(--bg-rgb),0.85)',
       backdropFilter:'blur(20px)',
       border:'0.5px solid rgba(253,137,115,0.35)',

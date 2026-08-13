@@ -224,7 +224,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
     width:'100%', height: 50, background:'rgba(var(--fg-rgb),0.06)',
     backdropFilter:'blur(10px) saturate(130%)', WebkitBackdropFilter:'blur(10px) saturate(130%)',
     border:`0.5px solid ${invalid ? 'rgba(232,121,138,0.6)' : 'rgba(var(--fg-rgb),0.14)'}`,
-    borderRadius: 14, padding:'0 14px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 15, outline:0,
+    borderRadius: 'var(--r-sm)', padding:'0 14px', color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 15, outline:0,
   });
   const fieldLabel = { fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 7px 2px' };
 
@@ -342,7 +342,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
                     const gLabel = { 'Male': tr('gender.male','Male'), 'Female': tr('gender.female','Female'), 'Prefer not to say': tr('gender.naShort','Prefer not') }[g];
                     return (
                       <button key={g} type="button" onClick={()=> setGender(g)} style={{
-                        appearance:'none', flex:1, padding:'11px 6px', borderRadius: 12,
+                        appearance:'none', flex:1, padding:'11px 6px', borderRadius: 'var(--r-sm)',
                         border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
                         background: on ? 'rgba(253,137,115,0.12)' : 'rgba(var(--fg-rgb),0.06)',
                         color: on ? 'var(--red)' : 'var(--cream)',
@@ -452,7 +452,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=176")',
+      backgroundImage: 'url("assets/logo-app.png?v=177")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
@@ -467,7 +467,7 @@ function FieldInput({ type, placeholder, value, onChange, icon }) {
       display:'flex', alignItems:'center', gap: 10,
       background:'rgba(var(--fg-rgb),0.07)',
       border:'0.5px solid rgba(var(--fg-rgb),0.12)',
-      borderRadius: 14, padding:'14px 16px',
+      borderRadius: 'var(--r-sm)', padding:'14px 16px',
     }}>
       {icon && <Icon name={icon} size={18} color="var(--muted)"/>}
       <input
@@ -519,13 +519,13 @@ function OnboardingScreen({ initialName = '', onDone }) {
                 appearance:'none', width:'100%', textAlign:'left',
                 background: on ? 'rgba(var(--fg-rgb),0.08)' : 'rgba(var(--fg-rgb),0.03)',
                 border: `0.5px solid ${on? 'var(--cream)':'rgba(var(--fg-rgb),0.12)'}`,
-                padding:'16px 16px', borderRadius: 16,
+                padding:'16px 16px', borderRadius: 'var(--r-md)',
                 display:'flex', alignItems:'center', gap: 14,
                 color:'var(--cream)',
                 transition:'all .14s ease',
               }}>
                 <div style={{
-                  width: 40, height: 40, borderRadius: 12,
+                  width: 40, height: 40, borderRadius: 'var(--r-sm)',
                   background: on ? 'var(--cream)' : 'rgba(var(--fg-rgb),0.08)',
                   color: on ? 'var(--ink)' : 'var(--cream)',
                   display:'flex', alignItems:'center', justifyContent:'center',
@@ -562,7 +562,7 @@ function OnboardingScreen({ initialName = '', onDone }) {
             return (
               <button key={s} onClick={()=>setServices(set=>toggle(set,s))} style={{
                 appearance:'none', border:`0.5px solid ${on? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
-                padding:'14px 14px', borderRadius: 14, textAlign:'left',
+                padding:'14px 14px', borderRadius: 'var(--r-sm)', textAlign:'left',
                 background: on ? 'rgba(var(--fg-rgb),0.08)' : 'rgba(var(--fg-rgb),0.03)',
                 display:'flex', alignItems:'center', gap: 10,
                 color:'var(--cream)', fontFamily:'var(--sans)', fontWeight:500, fontSize: 13,
@@ -877,7 +877,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
           display:'flex', alignItems:'center', gap: 10,
           background:'rgba(var(--fg-rgb),0.07)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-          borderRadius: 12, padding:'10px 14px',
+          borderRadius: 'var(--r-sm)', padding:'10px 14px',
         }}>
           <Icon name="search" size={16} color="var(--muted)"/>
           <input
@@ -905,7 +905,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
                 display:'flex', alignItems:'center', gap: 12,
                 background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
                 border:'0.5px solid rgba(var(--fg-rgb),0.08)',
-                borderRadius: 16, padding:'10px 12px',
+                borderRadius: 'var(--r-md)', padding:'10px 12px',
               }}>
                 <Avatar person={p} size={40}/>
                 <div style={{flex:1, minWidth:0}}>
@@ -996,7 +996,7 @@ function AddFriendScreen({ onBack }) {
       <div style={{padding:'8px 18px 14px'}}>
         <div style={{
           display:'flex', padding: 3, gap: 2,
-          background:'rgba(var(--fg-rgb),0.07)', borderRadius: 12,
+          background:'rgba(var(--fg-rgb),0.07)', borderRadius: 'var(--r-sm)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
         }}>
           {[
@@ -1086,7 +1086,7 @@ function ContactsList({ onAdd }) {
       <div style={{
         background:'rgba(255,191,101,0.08)',
         border:'0.5px solid rgba(255,191,101,0.18)',
-        borderRadius: 14, padding:'12px 14px', marginBottom: 16,
+        borderRadius: 'var(--r-sm)', padding:'12px 14px', marginBottom: 16,
         display:'flex', alignItems:'center', gap: 12,
         fontSize: 12.5, color:'var(--cream)', lineHeight: 1.45,
       }}>
@@ -1119,7 +1119,7 @@ function QRPanel() {
   return (
     <div style={{display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', padding:'20px 0 0'}}>
       <div style={{
-        width: 220, height: 220, borderRadius: 24,
+        width: 220, height: 220, borderRadius: 'var(--r-lg)',
         background:'var(--cream)', padding: 18, boxSizing:'border-box',
         boxShadow:'0 24px 60px rgba(0,0,0,0.4)',
       }}>
@@ -1133,7 +1133,7 @@ function QRPanel() {
         Friends can scan this — or use the link below — to add you instantly.
       </div>
       <div style={{
-        marginTop: 22, padding:'12px 16px', borderRadius: 12,
+        marginTop: 22, padding:'12px 16px', borderRadius: 'var(--r-sm)',
         background:'rgba(var(--fg-rgb),0.07)',
         border:'0.5px solid rgba(var(--fg-rgb),0.10)',
         display:'flex', alignItems:'center', gap: 10,
@@ -1230,7 +1230,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
           display:'flex', gap: 14, marginTop: 22, padding:'14px 16px',
           background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
-          borderRadius: 16,
+          borderRadius: 'var(--r-md)',
         }}>
           <Stat label={tr('fd.statMatches','Movie\nmatches')}    value={matched.length} onClick={()=>goTo(matchedRef)}/>
           <div style={{width:0.5, background:'var(--line)'}}/>
@@ -1289,7 +1289,7 @@ function Stat({ label, value, onClick }) {
   const tappable = !!onClick;
   return (
     <div onClick={onClick} className={tappable ? 'tap-row' : undefined}
-      style={{ textAlign:'center', cursor: tappable ? 'pointer' : 'default', borderRadius: 12, padding:'2px 8px' }}>
+      style={{ textAlign:'center', cursor: tappable ? 'pointer' : 'default', borderRadius: 'var(--r-sm)', padding:'2px 8px' }}>
       <div style={{fontFamily:'var(--serif)', fontSize: 26, color:'var(--cream)', lineHeight: 1}}>{value}</div>
       {/* label is two lines (contains \n) so all three columns stay the same height */}
       <div style={{
@@ -1334,7 +1334,7 @@ function PosterRow({ movies, onTap, dim=false }) {
 function EmptySectionRow({ text }) {
   return (
     <div style={{
-      padding:'14px 16px', borderRadius: 14,
+      padding:'14px 16px', borderRadius: 'var(--r-sm)',
       background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
       border:'0.5px dashed rgba(var(--fg-rgb),0.12)',
       fontSize: 12.5, color:'var(--muted)', lineHeight: 1.5,
@@ -1394,7 +1394,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
       <div style={{padding:'10px 18px 14px'}}>
         <button onClick={()=> setShowProfileEdit(true)} className="tap-row" style={{
           appearance:'none', width:'100%', textAlign:'left', cursor:'pointer',
-          padding:'22px 22px', borderRadius: 22,
+          padding:'22px 22px', borderRadius: 'var(--r-lg)',
           background:'linear-gradient(160deg, rgba(253,137,115,0.18), rgba(255,191,101,0.06) 70%, transparent)',
           border:'0.5px solid rgba(var(--fg-rgb),0.10)',
           display:'flex', alignItems:'center', gap: 16, color:'var(--cream)',
@@ -1579,7 +1579,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
           return (
             <button key={s} onClick={()=> setSDraft(set=> toggleSet(set, s))} style={{
               appearance:'none', border:`0.5px solid ${on ? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
-              padding:'12px 14px', borderRadius: 14, textAlign:'left',
+              padding:'12px 14px', borderRadius: 'var(--r-sm)', textAlign:'left',
               background: on ? 'rgba(var(--fg-rgb),0.08)' : 'rgba(var(--fg-rgb),0.03)',
               display:'flex', alignItems:'center', gap: 10,
               color:'var(--cream)', fontFamily:'var(--sans)', fontWeight: 500, fontSize: 13,
@@ -1601,7 +1601,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
             <button key={o} onClick={()=> setRDraft(o)} style={{
               appearance:'none', border:`0.5px solid ${on ? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
               background: on ? 'rgba(var(--fg-rgb),0.08)' : 'rgba(var(--fg-rgb),0.03)',
-              padding:'14px 16px', borderRadius: 14, textAlign:'left',
+              padding:'14px 16px', borderRadius: 'var(--r-sm)', textAlign:'left',
               display:'flex', alignItems:'center', justifyContent:'space-between',
               color:'var(--cream)', fontFamily:'var(--sans)', fontWeight: 500, fontSize: 14,
             }}>
@@ -1623,7 +1623,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
         placeholder="you@email.com"
         style={{
           width:'100%', background:'rgba(var(--fg-rgb),0.07)',
-          border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius: 14,
+          border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius: 'var(--r-sm)',
           padding:'14px 16px', color:'var(--cream)', outline:0,
           fontFamily:'var(--sans)', fontSize: 16,
         }}
@@ -1639,7 +1639,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
         onChange={e => setBDraft(e.target.value)}
         style={{
           width:'100%', background:'rgba(var(--fg-rgb),0.07)',
-          border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius: 14,
+          border:'0.5px solid rgba(var(--fg-rgb),0.14)', borderRadius: 'var(--r-sm)',
           padding:'14px 16px', color:'var(--cream)', outline:0,
           fontFamily:'var(--sans)', fontSize: 16, colorScheme:'dark',
         }}
@@ -1654,7 +1654,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
             <button key={o} onClick={()=> setGenderDraft(o)} style={{
               appearance:'none', border:`0.5px solid ${on ? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
               background: on ? 'rgba(var(--fg-rgb),0.08)' : 'rgba(var(--fg-rgb),0.03)',
-              padding:'14px 16px', borderRadius: 14, textAlign:'left',
+              padding:'14px 16px', borderRadius: 'var(--r-sm)', textAlign:'left',
               display:'flex', alignItems:'center', justifyContent:'space-between',
               color:'var(--cream)', fontFamily:'var(--sans)', fontWeight: 500, fontSize: 14,
             }}>
@@ -1755,7 +1755,7 @@ function ProfileStatCard({ label, value, accent, onClick }) {
   return (
     <button onClick={onClick} className="tap-row" style={{
       appearance:'none', textAlign:'left', cursor:'pointer',
-      flex: 1, padding:'14px 14px', borderRadius: 18,
+      flex: 1, padding:'14px 14px', borderRadius: 'var(--r-md)',
       background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
       border:'0.5px solid rgba(var(--fg-rgb),0.08)',
       display:'flex', flexDirection:'column',
@@ -1831,7 +1831,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
                 textAlign:'left', cursor:'pointer', color:'var(--cream)',
               }}>
                 <div style={{
-                  width:'100%', aspectRatio:'2/3', borderRadius: 12, overflow:'hidden',
+                  width:'100%', aspectRatio:'2/3', borderRadius: 'var(--r-sm)', overflow:'hidden',
                   boxShadow:'0 6px 16px rgba(0,0,0,0.35)',
                 }}>
                   <Poster movie={m} size="sm" hideTitle style={{width:'100%', height:'100%'}}/>
@@ -1912,13 +1912,13 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
             return (
               <button key={o.id} onClick={()=> onPick(o.id)} style={{
                 appearance:'none', cursor:'pointer', textAlign:'left', padding: 8,
-                borderRadius: 18,
+                borderRadius: 'var(--r-md)',
                 border:`1.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)'}`,
                 background: on ? 'rgba(253,137,115,0.08)' : 'transparent',
               }}>
                 {/* mini preview */}
                 <div style={{
-                  aspectRatio:'16/11', borderRadius: 12, background: o.bg, overflow:'hidden',
+                  aspectRatio:'16/11', borderRadius: 'var(--r-sm)', background: o.bg, overflow:'hidden',
                   padding: 10, display:'flex', flexDirection:'column', gap: 6,
                   border:'0.5px solid rgba(128,128,128,0.18)',
                 }}>
@@ -1969,7 +1969,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
       <div style={{
         display:'flex', alignItems:'center', gap: 4,
         background:'rgba(var(--fg-rgb),0.07)', border:'0.5px solid rgba(var(--fg-rgb),0.14)',
-        borderRadius: 14, padding:'12px 14px',
+        borderRadius: 'var(--r-sm)', padding:'12px 14px',
       }}>
         {prefix && <span style={{color:'var(--muted)', fontSize: 16}}>{prefix}</span>}
         <input
@@ -2055,7 +2055,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
             <div style={{
               display:'flex', alignItems:'center', gap: 8,
               background:'rgba(var(--fg-rgb),0.04)', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
-              borderRadius: 14, padding:'12px 14px',
+              borderRadius: 'var(--r-sm)', padding:'12px 14px',
             }}>
               <span style={{flex:1, color:'var(--muted)', fontFamily:'var(--sans)', fontSize: 15, letterSpacing:'0.02em'}}>{userId}</span>
               <button onClick={()=>{ try { navigator.clipboard.writeText(userId); } catch {} }} aria-label="Copy User ID" style={{
@@ -2086,7 +2086,7 @@ function SettingsGroup({ title, children }) {
         color:'var(--muted)', padding:'0 24px 8px',
       }}>{title}</div>
       <div style={{
-        margin:'0 18px', borderRadius: 16,
+        margin:'0 18px', borderRadius: 'var(--r-md)',
         background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
         border:'0.5px solid rgba(var(--fg-rgb),0.08)',
         overflow:'hidden',
@@ -2173,7 +2173,7 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
           style={{
             width:'100%', background:'rgba(var(--fg-rgb),0.07)',
             border:`0.5px solid ${errored ? 'rgba(232,121,138,0.5)' : 'rgba(var(--fg-rgb),0.14)'}`,
-            borderRadius: 12, padding:'12px 14px',
+            borderRadius: 'var(--r-sm)', padding:'12px 14px',
             color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 14,
             outline: 0, marginBottom: 8,
           }}
@@ -2307,7 +2307,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
         {/* Mutual liked context */}
         {friend && (
           <div style={{
-            marginTop: 26, padding:'16px 16px', borderRadius: 18,
+            marginTop: 26, padding:'16px 16px', borderRadius: 'var(--r-md)',
             background:'linear-gradient(135deg, rgba(253,137,115,0.16), rgba(255,191,101,0.05))',
             border:'0.5px solid rgba(253,137,115,0.25)',
             display:'flex', alignItems:'center', gap: 12,
@@ -2342,7 +2342,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
 function RatingCard({ label, value, color, sub }) {
   return (
     <div style={{
-      flex: 1, padding:'12px 14px', borderRadius: 14,
+      flex: 1, padding:'12px 14px', borderRadius: 'var(--r-sm)',
       background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
       border:'0.5px solid rgba(var(--fg-rgb),0.08)',
     }}>

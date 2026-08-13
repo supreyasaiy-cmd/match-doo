@@ -313,7 +313,7 @@ function RoomsScreen({ onOpenRoom, onCreateRoom, onAddFriend, onOpenCalendar, on
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 14,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
         }}>
-          <Icon name="user" size={15}/>
+          <Icon name="usersRound" size={16}/>
           {tr('rooms.friends','Friends')}
         </button>
       </div>

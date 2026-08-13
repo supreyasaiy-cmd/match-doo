@@ -301,7 +301,7 @@ function TabBar({ active, onChange }) {
           appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
           width: 56, height: 56, borderRadius: '50%',
           border: '2px solid rgba(240,238,235,0.92)',
-          backgroundImage: 'url("assets/logo-app.png?v=177")',
+          backgroundImage: 'url("assets/logo-app.png?v=178")',
           backgroundSize: '116%', backgroundPosition: 'center 47%',
           backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
           boxShadow: on

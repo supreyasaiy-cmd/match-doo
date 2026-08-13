@@ -452,7 +452,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=177")',
+      backgroundImage: 'url("assets/logo-app.png?v=178")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
@@ -1288,7 +1288,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
 function Stat({ label, value, onClick }) {
   const tappable = !!onClick;
   return (
-    <div onClick={onClick} className={tappable ? 'tap-row' : undefined}
+    <div onClick={onClick} className={tappable ? 'press-soft' : undefined}
       style={{ textAlign:'center', cursor: tappable ? 'pointer' : 'default', borderRadius: 'var(--r-sm)', padding:'2px 8px' }}>
       <div style={{fontFamily:'var(--serif)', fontSize: 26, color:'var(--cream)', lineHeight: 1}}>{value}</div>
       {/* label is two lines (contains \n) so all three columns stay the same height */}
@@ -1320,7 +1320,7 @@ function PosterRow({ movies, onTap, dim=false }) {
       marginLeft: -18, marginRight: -18, paddingLeft: 18, paddingRight: 18,
     }} className="phone-scroll">
       {movies.map(m=>(
-        <button key={m.id} onClick={()=>onTap?.(m)} style={{
+        <button key={m.id} onClick={()=>onTap?.(m)} className="press-soft" style={{
           appearance:'none', border:0, background:'transparent', padding:0,
           flexShrink:0, opacity: dim ? 0.65 : 1, filter: dim ? 'saturate(.7)' : 'none',
         }}>
@@ -1753,7 +1753,7 @@ function Toggle({ on }) {
 
 function ProfileStatCard({ label, value, accent, onClick }) {
   return (
-    <button onClick={onClick} className="tap-row" style={{
+    <button onClick={onClick} className="press-soft" style={{
       appearance:'none', textAlign:'left', cursor:'pointer',
       flex: 1, padding:'14px 14px', borderRadius: 'var(--r-md)',
       background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',

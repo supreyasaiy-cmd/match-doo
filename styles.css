@@ -22,7 +22,9 @@
   --blue: #6F93E0;
   --page-bg: #0F141A;
 
-  --serif: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  /* Display / headings — Kodchasan (rounded, friendly; pairs with the logo).
+     Body stays Plus Jakarta Sans for legibility. TH overrides --serif to Kanit. */
+  --serif: 'Kodchasan', 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
   --sans: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
   /* Wordmark ("Match Doo") — Kodchasan, a friendly rounded Thai/Latin face. */
   --logo: 'Kodchasan', 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;

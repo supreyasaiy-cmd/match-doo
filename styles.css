@@ -40,7 +40,11 @@
 /* Thai: head titles (the --serif display var) render in Kanit for proper,
    attractive Thai letterforms. Body text (--sans) keeps its stack. */
 :root[data-lang="th"]{
+  /* Thai display = Kanit (loopless / ไม่มีหัว). Thai body = Noto Sans Thai
+     (also loopless) so UI/detail text stops falling back to the OS looped face.
+     Plus Jakarta Sans stays first so Latin glyphs keep their shape. */
   --serif: 'Kanit', 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  --sans: 'Plus Jakarta Sans', 'Noto Sans Thai', -apple-system, system-ui, sans-serif;
 }
 
 /* ─── Light theme ─────────────────────────────────────────────────────

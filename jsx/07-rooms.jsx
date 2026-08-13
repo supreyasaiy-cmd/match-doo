@@ -227,11 +227,15 @@ function CalendarSheet({ onClose, onOpenRoom }) {
         boxShadow:'0 -24px 60px rgba(0,0,0,0.6)',
         border:'0.5px solid rgba(var(--fg-rgb),0.12)', borderBottom: 0,
       }}>
-        {/* handle + close */}
-        <div style={{position:'relative', display:'flex', alignItems:'center', justifyContent:'center', marginBottom: 12}}>
-          <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.35)'}}/>
+        {/* handle + close — give this row the close button's full height so the
+            × sits in its own band and can't overlap the calendar header below */}
+        <div style={{position:'relative', height: 34, marginBottom: 6}}>
+          <div style={{
+            width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.35)',
+            position:'absolute', left:'50%', top: 6, transform:'translateX(-50%)',
+          }}/>
           <button onClick={onClose} aria-label="Close" style={{
-            appearance:'none', border:0, position:'absolute', right: 0, top: -2,
+            appearance:'none', border:0, position:'absolute', right: 0, top: 1,
             background:'rgba(var(--fg-rgb),0.09)', color:'var(--cream)',
             width: 32, height: 32, borderRadius: 999,
             display:'flex', alignItems:'center', justifyContent:'center',

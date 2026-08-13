@@ -141,6 +141,10 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
             const isTH = (window.I18N && window.I18N.lang) === 'th';
             const grad = {
               fontStyle:'italic',
+              // inline-block + a little right padding so the italic overhang of the
+              // last glyph (e.g. Thai ย) stays inside the gradient-clipped box and
+              // isn't sliced off. paddingRight doesn't shift the left edge.
+              display:'inline-block', paddingRight:'0.2em',
               background:'linear-gradient(95deg, #FD8973 0%, #FFBF65 80%)',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
               backgroundClip:'text', color:'transparent',
@@ -473,7 +477,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=183")',
+      backgroundImage: 'url("assets/logo-app.png?v=184")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',

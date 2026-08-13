@@ -234,7 +234,10 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
       display:'flex', flexDirection:'column', height:'100%',
       background:'radial-gradient(120% 60% at 50% 0%, rgba(0,58,108,0.22), transparent 55%), var(--ink)',
     }}>
-      <FilmReelBG/>
+      {/* Plain Midnight-Sunset mood background — same soft blurred blobs as the
+          Welcome screen, so the two entry screens share one look (replaces the
+          old sepia film-reel mock photo). */}
+      <LiquidGlassBG/>
       {(busy === 'google' || busy === 'apple') && (
         <div className="fade-in" style={{
           position:'absolute', inset:0, zIndex: 20,

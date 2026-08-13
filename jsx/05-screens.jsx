@@ -473,7 +473,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=182")',
+      backgroundImage: 'url("assets/logo-app.png?v=183")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',

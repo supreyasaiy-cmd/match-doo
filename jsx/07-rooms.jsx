@@ -583,8 +583,25 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           </button>
         </div>
 
+        {/* Primary action — the room's whole point. Sits right under the members
+            so it's the first thing you reach, no scrolling. */}
+        <button onClick={()=> onSwipeRoom?.(room, ()=> setRoundTick(t=>t+1))} className="press" style={{
+          appearance:'none', border:0, width:'100%', marginTop: 22, cursor:'pointer',
+          background:`linear-gradient(135deg, ${room.tone}, ${hexA(room.tone,0.75)})`,
+          color:'#fff', borderRadius: 'var(--r-md)', padding:'15px',
+          fontFamily:'var(--sans)', fontWeight: 700, fontSize: 15.5,
+          display:'flex', alignItems:'center', justifyContent:'center', gap: 9,
+          boxShadow:`0 12px 28px ${hexA(room.tone,0.45)}`,
+        }}>
+          <Icon name="cards" size={19} color="#fff" stroke={2.4}/>
+          {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
+          <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
+            {deckLeft > 0 ? (window.I18N && window.I18N.lang==='th' ? `· ${tr('room.left','left')} ${deckLeft}` : `· ${deckLeft} left`) : `· ${tr('room.deckDone','deck done')}`}
+          </span>
+        </button>
+
         <div style={{
-          display:'flex', gap: 22, marginTop: 22, padding:'14px 22px',
+          display:'flex', gap: 22, marginTop: 14, padding:'14px 22px',
           background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
           border:'0.5px solid rgba(var(--fg-rgb),0.08)',
           borderRadius: 'var(--r-md)',
@@ -662,21 +679,6 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
               </div>
             )}
 
-            {/* Swipe CTA */}
-            <button onClick={()=> onSwipeRoom?.(room, ()=> setRoundTick(t=>t+1))} style={{
-              appearance:'none', border:0, width:'100%',
-              background:`linear-gradient(135deg, ${room.tone}, ${hexA(room.tone,0.75)})`,
-              color:'#fff', borderRadius: 'var(--r-sm)', padding:'14px', cursor:'pointer',
-              fontFamily:'var(--sans)', fontWeight: 700, fontSize: 15,
-              display:'flex', alignItems:'center', justifyContent:'center', gap: 9,
-              boxShadow:`0 10px 24px ${hexA(room.tone,0.4)}`,
-            }}>
-              <Icon name="cards" size={19} color="#fff" stroke={2.4}/>
-              {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
-              <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
-                {deckLeft > 0 ? (window.I18N && window.I18N.lang==='th' ? `· ${tr('room.left','left')} ${deckLeft}` : `· ${deckLeft} left`) : `· ${tr('room.deckDone','deck done')}`}
-              </span>
-            </button>
           </div>
         </div>
 

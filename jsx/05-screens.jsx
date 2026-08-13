@@ -40,65 +40,6 @@ function LiquidGlassBG() {
   );
 }
 
-// ─── Film-reel photo background, recolored to the app's tone ────────
-// Takes a real cinematic photo (assets/film-reel.jpg) and pushes it
-// through an SVG duotone filter that maps shadows → navy ink and
-// highlights → coral, so it reads as part of the liquid-glass palette
-// rather than a warm outside image. Falls back to nothing if missing.
-function FilmReelBG() {
-  const [ok, setOk] = React.useState(true);
-  if (!ok) return null;
-  return (
-    <div aria-hidden="true" style={{position:'absolute', inset:0, overflow:'hidden', zIndex:0}}>
-      {/* duotone filter def (navy shadows → coral highlights) */}
-      <svg width="0" height="0" style={{position:'absolute'}}>
-        <filter id="mm-duotone" colorInterpolationFilters="sRGB">
-          <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
-          {/* shadows → warm near-black, highlights → ember amber */}
-          <feComponentTransfer>
-            <feFuncR type="table" tableValues="0.10 1.0"/>
-            <feFuncG type="table" tableValues="0.06 0.635"/>
-            <feFuncB type="table" tableValues="0.05 0.306"/>
-          </feComponentTransfer>
-        </filter>
-      </svg>
-
-      <img
-        src="assets/film-reel.png"
-        alt=""
-        onError={()=> setOk(false)}
-        style={{
-          position:'absolute', inset:0, width:'100%', height:'100%',
-          objectFit:'cover', objectPosition:'center 30%',
-          filter:'url(#mm-duotone) contrast(1.04)',
-          opacity:0.62,
-        }}
-      />
-      {/* coral tie-in glow toward the top */}
-      <div style={{
-        position:'absolute', inset:0,
-        background:'radial-gradient(92% 55% at 50% 6%, rgba(0,58,108,0.32), transparent 60%)',
-      }}/>
-      {/* periwinkle sliver, echoing the liquid-glass accent */}
-      <div style={{
-        position:'absolute', inset:0,
-        background:'radial-gradient(60% 40% at 88% 4%, rgba(253,137,115,0.16), transparent 62%)',
-      }}/>
-      {/* legibility scrim — darken toward the bottom for the text/buttons */}
-      <div style={{
-        position:'absolute', inset:0,
-        background:'linear-gradient(200deg, rgba(var(--bg-rgb),0.20) 0%, rgba(var(--bg-rgb),0.55) 52%, rgba(var(--bg-rgb),0.94) 100%)',
-      }}/>
-      {/* top-down fade so the wordmark + heading read clearly */}
-      <div style={{
-        position:'absolute', left:0, right:0, top:0, height:'58%',
-        background:'linear-gradient(180deg, rgba(16,10,9,0.82) 0%, rgba(16,10,9,0.5) 32%, transparent 100%)',
-        pointerEvents:'none',
-      }}/>
-    </div>
-  );
-}
-
 // ─── Welcome (Sign in / Sign up) ────────────────────────────────────
 function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
   const legalLink = { color:'var(--cream)', textDecoration:'underline', cursor:'pointer' };
@@ -477,7 +418,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=190")',
+      backgroundImage: 'url("assets/logo-app.png?v=191")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',

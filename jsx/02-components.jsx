@@ -217,10 +217,12 @@ function Avatar({ person, size = 44, ring = false, ringColor = '#FD8973' }) {
     }}>
       {person.initials}
       {person.online && (
-        <span style={{
+        <span title="Active now" style={{
           position:'absolute', right: -1, bottom: 1,
           width: size*0.26, height: size*0.26, borderRadius:'50%',
-          background:'#FFBF65', border:'2px solid var(--ink)',
+          /* the app's positive tone reads as "active now" (palette has no green) */
+          background:'var(--green)', border:'2px solid var(--ink)',
+          boxShadow:'0 0 6px rgba(143,180,230,0.6)',
         }}/>
       )}
     </div>
@@ -301,7 +303,7 @@ function TabBar({ active, onChange }) {
           appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
           width: 56, height: 56, borderRadius: '50%',
           border: '2px solid rgba(240,238,235,0.92)',
-          backgroundImage: 'url("assets/logo-app.png?v=180")',
+          backgroundImage: 'url("assets/logo-app.png?v=181")',
           backgroundSize: '116%', backgroundPosition: 'center 47%',
           backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
           boxShadow: on

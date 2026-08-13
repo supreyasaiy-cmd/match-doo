@@ -233,10 +233,11 @@ window.I18N = {
       'fp.watchedTogether': 'เคยดูด้วยกัน', 'fp.watchedCap': 'เรื่องที่ดูกับ',
       // Friend-detail stat labels — each two lines (\n) so all three align.
       'fd.statMatches': 'หนัง\nที่แมตช์', 'fd.statWatched': 'ดู\nด้วยกัน', 'fd.statMutual': 'เพื่อน\nร่วมกัน',
-      'fd.mutualCap': 'เพื่อนที่รู้จักร่วมกัน', 'empty.mutual': 'ยังไม่มีเพื่อนร่วมกัน',
+      'fd.mutualCap': 'เพื่อนที่รู้จักร่วมกัน', 'empty.mutual': 'ยังไม่มีเพื่อนร่วมกัน — ยิ่งเพิ่มเพื่อนด้วยกัน ยิ่งเจอคนที่รู้จักร่วมกัน 🤝',
 
       // ── Misc ──
-      'ms.logWatched': 'พอดูแมตช์แล้ว แตะ “เคยดู” เพื่อบันทึกไว้ตรงนี้',
+      'ms.logWatched': 'ดูหนังที่แมตช์ด้วยกันแล้ว? แตะ “เคยดูแล้ว” เดี๋ยวมาโผล่ตรงนี้ 🍿',
+      'search.noneA': 'ไม่พบผลลัพธ์สำหรับ', 'search.noneB': 'ลองชื่อเรื่องหรือแนวอื่นดู',
       'profile.email':          'อีเมล',
       'profile.birthday':       'วันเกิด',
       'profile.gender':         'เพศ',

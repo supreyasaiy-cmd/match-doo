@@ -452,7 +452,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=175")',
+      backgroundImage: 'url("assets/logo-app.png?v=176")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
@@ -1256,7 +1256,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
         <div ref={watchedRef} style={{scrollMarginTop: 8}}>
           <Section title={tr('fp.watchedTogether','Watched together')} caption={`${watched.length} ${tr('fp.watchedCap','films you’ve seen with')} ${friend.name.split(' ')[0]}`}>
             {watched.length === 0 ? (
-              <EmptySectionRow text={tr("ms.logWatched","Once you watch a match, tap “Watched” to log it here.")}/>
+              <EmptySectionRow text={tr("ms.logWatched","Seen one together? Tap “Seen” on a match and it lands here. 🍿")}/>
             ) : (
               <PosterRow movies={watched} dim onTap={(m)=>onOpenMovie(m, friend)}/>
             )}
@@ -1267,7 +1267,7 @@ function FriendProfileScreen({ friend, onBack, onOpenMovie, onMarkWatched }) {
         <div ref={mutualRef} style={{scrollMarginTop: 8}}>
           <Section title={tr('friends.mutual','Mutual friends')} caption={tr('fd.mutualCap','Friends you both know')}>
             {mutualFriends.length === 0 ? (
-              <EmptySectionRow text={tr('empty.mutual','No mutual friends yet.')}/>
+              <EmptySectionRow text={tr('empty.mutual','No friends in common yet — the more you both add, the more you’ll share. 🤝')}/>
             ) : (
               <div style={{display:'flex', gap: 16, overflowX:'auto', padding:'2px 0 6px'}}>
                 {mutualFriends.map((f, i) => (

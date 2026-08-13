@@ -470,7 +470,7 @@ function SearchOverlay({ onClose, onPick }) {
         </div>
         {q && results.length === 0 && (
           <div style={{textAlign:'center', padding:'40px 20px', color:'var(--muted)', fontSize: 13}}>
-            No results for "<span style={{color:'var(--cream)'}}>{query}</span>". Try another title or genre.
+            {tr('search.noneA','No results for')} “<span style={{color:'var(--cream)'}}>{query}</span>”. {tr('search.noneB','Try another title or genre.')}
           </div>
         )}
       </div>

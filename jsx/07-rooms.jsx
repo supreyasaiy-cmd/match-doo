@@ -591,7 +591,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
               width: 46, height: 46, borderRadius: 'var(--r-md)', flexShrink: 0,
               background:'rgba(255,255,255,0.18)', border:'0.5px solid rgba(255,255,255,0.28)',
               display:'flex', alignItems:'center', justifyContent:'center',
-            }}><Icon name="cards" size={22} color="#fff" stroke={2.4}/></div>
+            }}><Icon name="film" size={22} color="#fff" stroke={2}/></div>
             <div style={{flex:1, minWidth:0}}>
               <div style={{fontFamily:'var(--serif)', fontSize: 21, fontWeight: 700, color:'#fff', lineHeight:1.1}}>
                 {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}

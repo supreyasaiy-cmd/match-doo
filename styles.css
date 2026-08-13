@@ -24,6 +24,8 @@
 
   --serif: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
   --sans: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  /* Wordmark ("Match Doo") — Kodchasan, a friendly rounded Thai/Latin face. */
+  --logo: 'Kodchasan', 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
 }
 
 /* Thai: head titles (the --serif display var) render in Kanit for proper,

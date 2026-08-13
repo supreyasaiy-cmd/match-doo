@@ -436,10 +436,10 @@ function Wordmark({ small=false }) {
     <div style={{display:'flex', alignItems:'center', gap: 10}}>
       <Logomark size={small? 28:34}/>
       <div style={{
-        fontFamily:'var(--serif)', fontSize: small? 21:26, color:'var(--cream)',
-        letterSpacing:'-0.015em', lineHeight: 1,
+        fontFamily:'var(--logo)', fontWeight: 600, fontSize: small? 20:25, color:'var(--cream)',
+        letterSpacing:'-0.005em', lineHeight: 1,
       }}>
-        Match<em style={{fontStyle:'italic', color:'var(--gold)', marginLeft: 4}}>Doo</em>
+        Match<em style={{fontStyle:'italic', fontWeight: 600, color:'var(--gold)', marginLeft: 5}}>Doo</em>
       </div>
     </div>
   );
@@ -452,11 +452,11 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=2")',
-      backgroundSize: '132%', backgroundPosition: 'center 48%',
+      backgroundImage: 'url("assets/logo-app.png?v=174")',
+      backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
-      boxShadow: '0 2px 12px rgba(253,137,115,0.30)',
-      border: '0.5px solid rgba(255,150,90,0.28)',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
+      border: '0.5px solid rgba(240,238,235,0.14)',
     }} aria-label="Match Doo logo"/>
   );
 }

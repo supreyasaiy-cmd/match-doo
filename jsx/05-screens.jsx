@@ -1395,14 +1395,14 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
         </div>
 
         <SettingsGroup title={tr('profile.group.taste','Taste')}>
-          <SettingsRow icon="sparkle" label={tr('profile.genres','Genres')} detail={`${genres.size} ${tr('profile.selectedN','selected')}`} onClick={()=> setSheet('genres')}/>
-          <SettingsRow icon="film" label={tr('profile.streaming','Streaming services')} detail={servicesDetail} onClick={()=> setSheet('services')}/>
+          <SettingsRow icon="clapperboard" label={tr('profile.genres','Genres')} detail={`${genres.size} ${tr('profile.selectedN','selected')}`} onClick={()=> setSheet('genres')}/>
+          <SettingsRow icon="tv" label={tr('profile.streaming','Streaming services')} detail={servicesDetail} onClick={()=> setSheet('services')}/>
           <SettingsRow icon="clock" label={tr('profile.runtime','Run time preference')} detail={tr('rt.'+runtime, runtime)} onClick={()=> setSheet('runtime')}/>
         </SettingsGroup>
 
         <SettingsGroup title={tr('profile.group.account','Account')}>
           <SettingsRow icon="mail" label={tr('profile.email','Email')} detail={email} onClick={()=> setSheet('email')}/>
-          <SettingsRow icon="calendar" label={tr('profile.birthday','Birthday')} detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
+          <SettingsRow icon="cake" label={tr('profile.birthday','Birthday')} detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
           <SettingsRow icon="user" label={tr('profile.gender','Gender')} detail={tr('g.'+gender, gender)} onClick={()=> setSheet('gender')}/>
           <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={`${notifOn} ${tr('profile.notifOn','on')}`} onClick={()=> setSheet('notifications')}/>
         </SettingsGroup>
@@ -1411,14 +1411,23 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
             row needed. (TmdbConnectSheet stays wired for local-dev fallback.) */}
 
         <SettingsGroup title={tr('profile.group.app','App')}>
-          <SettingsRow icon="sparkle" label={tr('profile.language','Language')} detail={lang === 'th' ? 'ไทย' : 'English'} onClick={()=> onSetLang?.(lang === 'en' ? 'th' : 'en')}/>
-          <SettingsRow icon="settings" label={tr('profile.themes','Themes')} detail={theme === 'light' ? tr('theme.light','Light') : tr('theme.dark','Dark')} onClick={()=> setShowTheme(true)}/>
-          <SettingsRow icon="x" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
+          <SettingsToggleRow
+            icon="languages" label={tr('profile.language','Language')}
+            options={[{val:'th', label:'ไทย'}, {val:'en', label:'EN'}]}
+            value={lang} onChange={(v)=> onSetLang?.(v)}/>
+          <SettingsToggleRow
+            icon="settings" label={tr('profile.themes','Themes')}
+            options={[{val:'dark', label:tr('theme.dark','Dark')}, {val:'light', label:tr('theme.light','Light')}]}
+            value={theme === 'light' ? 'light' : 'dark'} onChange={(v)=> onSetTheme?.(v)}/>
         </SettingsGroup>
 
         <SettingsGroup title={tr('profile.group.legal','Legal')}>
           <SettingsRow icon="bookmark" label={tr('profile.terms','Terms & Conditions')} onClick={()=> onOpenLegal?.('terms')}/>
           <SettingsRow icon="user" label={tr('profile.privacy','Privacy Policy')} onClick={()=> onOpenLegal?.('privacy')}/>
+        </SettingsGroup>
+
+        <SettingsGroup title="">
+          <SettingsRow icon="x" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
         </SettingsGroup>
 
         <div style={{
@@ -2066,8 +2075,10 @@ function SettingsGroup({ title, children }) {
 // Spread the Midnight Sunset palette across the settings rows (coral/gold/
 // blue/sky) instead of a single gold, so each row's icon carries a theme hue.
 const SETTING_TONES = {
-  sparkle:'#FD8973', calendar:'#FD8973', bookmark:'#FFBF65', film:'#FFBF65',
-  bell:'#FFBF65', clock:'#6F93E0', user:'#6F93E0', mail:'#8FB4E6', settings:'#8FB4E6',
+  sparkle:'#FD8973', clapperboard:'#FD8973', cake:'#FD8973',
+  bookmark:'#FFBF65', film:'#FFBF65', tv:'#FFBF65', bell:'#FFBF65',
+  clock:'#6F93E0', user:'#6F93E0', languages:'#6F93E0',
+  mail:'#8FB4E6', settings:'#8FB4E6',
 };
 function SettingsRow({ icon, label, detail, onClick, danger }) {
   return (
@@ -2084,6 +2095,40 @@ function SettingsRow({ icon, label, detail, onClick, danger }) {
       {detail && <div style={{fontSize: 12.5, color:'var(--muted)'}}>{detail}</div>}
       {!danger && <Icon name="chev" size={14} color="var(--muted-2)"/>}
     </button>
+  );
+}
+
+// A settings row with an inline segmented toggle on the right (for
+// Language / Theme) instead of a chevron — flips the value in place.
+function SettingsToggleRow({ icon, label, options, value, onChange }) {
+  return (
+    <div style={{
+      display:'flex', alignItems:'center', gap: 14,
+      padding:'12px 18px', color:'var(--cream)',
+      borderBottom:'0.5px solid var(--line)',
+    }}>
+      <IconBadge icon={icon} size={34} tone={SETTING_TONES[icon] || '#FD8973'}/>
+      <div style={{flex:1, fontSize: 14, fontWeight: 500}}>{label}</div>
+      <div style={{
+        display:'flex', gap: 2, padding: 3, borderRadius: 999,
+        background:'rgba(var(--fg-rgb),0.08)',
+        border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+      }}>
+        {options.map(o => {
+          const on = value === o.val;
+          return (
+            <button key={o.val} className="press-soft" onClick={()=> !on && onChange(o.val)} style={{
+              appearance:'none', border:0, cursor:'pointer',
+              padding:'5px 13px', borderRadius: 999,
+              fontFamily:'var(--sans)', fontSize: 12, fontWeight: 600,
+              color: on ? 'var(--ink)' : 'var(--muted)',
+              background: on ? 'var(--cream)' : 'transparent',
+              transition:'background .2s ease, color .2s ease',
+            }}>{o.label}</button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

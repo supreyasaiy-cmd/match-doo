@@ -186,7 +186,7 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
         <div style={{display:'flex', flexDirection:'column', gap: 10}}>
           <PrimaryBtn full onClick={onSignIn} style={{height: 50, fontSize: 16}}>
             <span style={{display:'inline-flex', alignItems:'center', gap: 8}}>
-              <Icon name="arrow" size={14} stroke={2.4} color="var(--ink)"/>
+              <Icon name="arrow" size={14} stroke={2.6} color="var(--ink)"/>
               {tr('welcome.signin','Sign In')}
             </span>
           </PrimaryBtn>
@@ -477,7 +477,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=189")',
+      backgroundImage: 'url("assets/logo-app.png?v=190")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
@@ -892,7 +892,7 @@ function FriendsScreen({ onBack, onOpenFriend, onOpenAdd }) {
             display:'flex', alignItems:'center', justifyContent:'center',
             boxShadow:'0 6px 16px rgba(253,137,115,0.35)',
           }}>
-            <Icon name="plus" size={20} stroke={2.4}/>
+            <Icon name="plus" size={20} stroke={2.6}/>
           </button>
         }
       />
@@ -1060,7 +1060,7 @@ function AddFriendScreen({ onBack }) {
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)',
         }}>
-          <Icon name="check" size={14} color="#FFBF65" stroke={2.4}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
           {addedToast}
         </div>
       )}
@@ -1536,7 +1536,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)', whiteSpace:'nowrap',
         }}>
-          <Icon name="check" size={14} color="#FFBF65" stroke={2.4}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
           {toast}
         </div>
       )}
@@ -1969,7 +1969,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
                     background: on ? 'var(--red)' : 'transparent',
                     display:'flex', alignItems:'center', justifyContent:'center',
                   }}>
-                    {on && <Icon name="check" size={13} color="#fff" stroke={2.4}/>}
+                    {on && <Icon name="check" size={13} color="#fff" stroke={2.6}/>}
                   </div>
                 </div>
               </button>
@@ -2059,7 +2059,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
                       width: 22, height: 22, borderRadius:'50%', background:'var(--red)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <Icon name="check" size={13} color="#fff" stroke={2.4}/>
+                      <Icon name="check" size={13} color="#fff" stroke={2.6}/>
                     </span>
                   )}
                 </button>
@@ -2122,6 +2122,12 @@ function SettingsGroup({ title, children }) {
   );
 }
 
+// Spread the Midnight Sunset palette across the settings rows (coral/gold/
+// blue/sky) instead of a single gold, so each row's icon carries a theme hue.
+const SETTING_TONES = {
+  sparkle:'#FD8973', calendar:'#FD8973', bookmark:'#FFBF65', film:'#FFBF65',
+  bell:'#FFBF65', clock:'#6F93E0', user:'#6F93E0', mail:'#8FB4E6', settings:'#8FB4E6',
+};
 function SettingsRow({ icon, label, detail, onClick, danger }) {
   return (
     <button onClick={onClick} className="tap-row" style={{
@@ -2132,7 +2138,7 @@ function SettingsRow({ icon, label, detail, onClick, danger }) {
       color: danger ? '#E8798A' : 'var(--cream)',
       borderBottom:'0.5px solid var(--line)',
     }}>
-      <IconBadge icon={icon} size={34} tone={danger ? '#E8798A' : '#FFBF65'}/>
+      <IconBadge icon={icon} size={34} tone={danger ? '#E8798A' : (SETTING_TONES[icon] || '#FD8973')}/>
       <div style={{flex:1, fontSize: 14, fontWeight: 500}}>{label}</div>
       {detail && <div style={{fontSize: 12.5, color:'var(--muted)'}}>{detail}</div>}
       {!danger && <Icon name="chev" size={14} color="var(--muted-2)"/>}
@@ -2350,7 +2356,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
             <>
               <PrimaryBtn full onClick={()=>onMarkWatched?.(movie, friend)}>
                 <span style={{display:'inline-flex', alignItems:'center', gap: 8}}>
-                  <Icon name="check" size={16} stroke={2.4}/>
+                  <Icon name="check" size={16} stroke={2.6}/>
                   Watched together
                 </span>
               </PrimaryBtn>

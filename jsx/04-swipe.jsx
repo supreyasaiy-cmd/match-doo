@@ -354,7 +354,7 @@ function ActionBtn({ icon, color, size, onClick, filled=false, label }) {
         transition:'transform .14s ease',
         boxShadow: filled ? `0 8px 22px ${color}66` : '0 6px 18px rgba(0,0,0,0.45)',
       }}>
-        <Icon name={icon} size={size*0.42} stroke={filled? 2.2:1.8} color={filled? '#13181B' : color}/>
+        <Icon name={icon} size={size*0.42} stroke={filled? 2.6:2.2} color={filled? '#13181B' : color}/>
       </button>
       <span style={{
         fontSize: 10.5, fontWeight: 600, color:'rgba(255,255,255,0.92)', letterSpacing:'0.02em',
@@ -486,7 +486,7 @@ function SwipeCoach({ onDone }) {
                   display:'flex', alignItems:'center', justifyContent:'center',
                   boxShadow:`0 4px 14px ${g.color}88`, transform:`rotate(${g.rot}deg)`,
                 }}>
-                  <Icon name="arrow" size={17} color="#fff" stroke={2.4}/>
+                  <Icon name="arrow" size={17} color="#fff" stroke={2.6}/>
                 </div>
                 <span style={{fontSize: 10, fontWeight: 700, color: g.color, letterSpacing:'0.02em'}}>{g.label}</span>
               </div>
@@ -538,7 +538,7 @@ function SwipeCoach({ onDone }) {
                   boxShadow:'0 6px 18px rgba(253,137,115,0.4)', cursor:'pointer', display:'inline-flex', alignItems:'center', gap: 6,
                 }}>
                   {last ? tr('coach.gotit','Got it!') : tr('coach.next','Next')}
-                  {!last && <Icon name="arrow" size={14} color="#fff" stroke={2.4}/>}
+                  {!last && <Icon name="arrow" size={14} color="#fff" stroke={2.6}/>}
                 </button>
               </div>
             </div>

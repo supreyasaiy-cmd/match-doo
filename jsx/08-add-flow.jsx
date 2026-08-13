@@ -112,7 +112,7 @@ function AddRoomMembersSheet({ room, onClose, onAdd }) {
                   background: on ? 'var(--cream)' : 'transparent',
                   display:'flex', alignItems:'center', justifyContent:'center', flexShrink: 0,
                 }}>
-                  {on && <Icon name="check" size={12} color="var(--ink)" stroke={2.4}/>}
+                  {on && <Icon name="check" size={12} color="var(--ink)" stroke={2.6}/>}
                 </div>
               </button>
             );

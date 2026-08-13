@@ -1016,6 +1016,13 @@ function CreateRoomScreen({ onBack, onCreate }) {
         </div>
       </div>
 
+      {/* fade scrim so the members list fades out cleanly behind the floating
+          button instead of bleeding around its edges as you scroll */}
+      <div aria-hidden="true" style={{
+        position:'absolute', left: 0, right: 0, bottom: 0, height: 132, zIndex: 4,
+        pointerEvents:'none',
+        background:'linear-gradient(180deg, transparent 0%, var(--ink) 60%)',
+      }}/>
       <div style={{
         position:'absolute', left: 16, right: 16, bottom: 26, zIndex: 5,
       }}>

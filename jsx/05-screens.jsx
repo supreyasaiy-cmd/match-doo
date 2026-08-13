@@ -452,7 +452,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=174")',
+      backgroundImage: 'url("assets/logo-app.png?v=175")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
@@ -1035,7 +1035,7 @@ function AddFriendScreen({ onBack }) {
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)',
         }}>
-          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.4}/>
           {addedToast}
         </div>
       )}
@@ -1511,7 +1511,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)', whiteSpace:'nowrap',
         }}>
-          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.4}/>
           {toast}
         </div>
       )}
@@ -1944,7 +1944,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
                     background: on ? 'var(--red)' : 'transparent',
                     display:'flex', alignItems:'center', justifyContent:'center',
                   }}>
-                    {on && <Icon name="check" size={13} color="#fff" stroke={3}/>}
+                    {on && <Icon name="check" size={13} color="#fff" stroke={2.4}/>}
                   </div>
                 </div>
               </button>
@@ -2034,7 +2034,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
                       width: 22, height: 22, borderRadius:'50%', background:'var(--red)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <Icon name="check" size={13} color="#fff" stroke={3}/>
+                      <Icon name="check" size={13} color="#fff" stroke={2.4}/>
                     </span>
                   )}
                 </button>

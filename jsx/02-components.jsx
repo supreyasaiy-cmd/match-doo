@@ -20,7 +20,7 @@ function Icon({ name, size = 20, color = 'currentColor', stroke = 1.6 }) {
     chevup:   <path d="M18 15l-6-6-6 6"/>,
     chevl:    <path d="M15 18l-6-6 6-6"/>,
     search:   <><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></>,
-    qr:       <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z M21 14v3 M14 21h3 M21 21v0"/></>,
+    qr:       <><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3z"/><path d="M20.5 14v3M14 20.5h3M19 19.5h2.5"/></>,
     phone:    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>,
     mail:     <><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></>,
     settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></>,
@@ -301,7 +301,7 @@ function TabBar({ active, onChange }) {
           appearance:'none', cursor:'pointer', padding: 0, flexShrink: 0,
           width: 56, height: 56, borderRadius: '50%',
           border: '2px solid rgba(240,238,235,0.92)',
-          backgroundImage: 'url("assets/logo-app.png?v=174")',
+          backgroundImage: 'url("assets/logo-app.png?v=175")',
           backgroundSize: '116%', backgroundPosition: 'center 47%',
           backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
           boxShadow: on

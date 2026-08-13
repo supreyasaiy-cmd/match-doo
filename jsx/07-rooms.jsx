@@ -667,7 +667,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
               display:'flex', alignItems:'center', justifyContent:'center', gap: 9,
               boxShadow:`0 10px 24px ${hexA(room.tone,0.4)}`,
             }}>
-              <Icon name="cards" size={19} color="#fff" stroke={2.2}/>
+              <Icon name="cards" size={19} color="#fff" stroke={2.4}/>
               {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
               <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
                 {deckLeft > 0 ? (window.I18N && window.I18N.lang==='th' ? `· ${tr('room.left','left')} ${deckLeft}` : `· ${deckLeft} left`) : `· ${tr('room.deckDone','deck done')}`}
@@ -806,7 +806,7 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
           zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
           boxShadow:'0 12px 30px rgba(0,0,0,0.4)',
         }}>
-          <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
+          <Icon name="check" size={14} color="#FFBF65" stroke={2.4}/>
           {memberToast}
         </div>
       )}
@@ -1007,7 +1007,7 @@ function CreateRoomScreen({ onBack, onCreate }) {
                     background: on ? 'var(--cream)' : 'transparent',
                     display:'flex', alignItems:'center', justifyContent:'center', flexShrink: 0,
                   }}>
-                    {on && <Icon name="check" size={12} color="var(--ink)" stroke={3}/>}
+                    {on && <Icon name="check" size={12} color="var(--ink)" stroke={2.4}/>}
                   </div>
                 </button>
               );
@@ -1182,7 +1182,7 @@ function ShareRoomSheet({ room, onClose }) {
                 display:'flex', flexDirection:'column', alignItems:'center', gap: 8,
                 color:'#13181B', textAlign:'center',
               }}>
-                <Icon name="qr" size={64} color="#13181B" stroke={1.4}/>
+                <Icon name="qr" size={64} color="#13181B" stroke={1.6}/>
                 <div style={{fontSize: 11, fontWeight: 600, letterSpacing:'0.02em'}}>{code}</div>
               </div>
             )}
@@ -1246,7 +1246,7 @@ function ShareRoomSheet({ room, onClose }) {
             zIndex: 220, display:'inline-flex', alignItems:'center', gap: 8,
             boxShadow:'0 12px 30px rgba(0,0,0,0.4)', whiteSpace:'nowrap',
           }}>
-            <Icon name="check" size={14} color="#FFBF65" stroke={2.6}/>
+            <Icon name="check" size={14} color="#FFBF65" stroke={2.4}/>
             {toast}
           </div>
         )}
@@ -1317,7 +1317,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
           {TONES.map(t=>(
             <button key={t} onClick={()=>setTone(t)} aria-label={`Color ${t}`} style={{appearance:'none', width:30, height:30, borderRadius:999, background:t, border:'0.5px solid rgba(0,0,0,0.2)',
               boxShadow: tone===t ? `0 0 0 2px var(--ink), 0 0 0 3.5px ${t}` : 'none', display:'flex', alignItems:'center', justifyContent:'center'}}>
-              {tone===t && <Icon name="check" size={14} color="#fff" stroke={3}/>}
+              {tone===t && <Icon name="check" size={14} color="#fff" stroke={2.4}/>}
             </button>
           ))}
         </div>
@@ -1355,7 +1355,7 @@ function RoomSettingsSheet({ room, members = [], onClose, onUpdate, onRemoveMemb
           ))}
         </div>
         <button onClick={onAddMembers} style={{appearance:'none', border:'0.5px dashed rgba(var(--fg-rgb),0.22)', background:'transparent', borderRadius:12, padding:'11px', width:'100%', color:'var(--cream)', display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, fontSize:13.5, fontWeight:600, marginBottom:14}}>
-          <Icon name="plus" size={15} stroke={2.2}/> {tr("cr.addMembers","Add members")}
+          <Icon name="plus" size={15} stroke={2.4}/> {tr("cr.addMembers","Add members")}
         </button>
 
         {/* share shortcut */}
@@ -1500,7 +1500,7 @@ function RoomGenreVoteSheet({ room, onClose, onSaved }) {
                   background: on ? 'var(--red)' : 'transparent',
                   display:'flex', alignItems:'center', justifyContent:'center',
                 }}>
-                  {on && <Icon name="check" size={12} color="#fff" stroke={3}/>}
+                  {on && <Icon name="check" size={12} color="#fff" stroke={2.4}/>}
                 </div>
                 <div style={{flex:1, fontWeight: 600, fontSize: 15, color: on ? 'var(--red)' : 'var(--cream)'}}>{genreLabel(g)}</div>
                 <div style={{fontSize: 11.5, color:'var(--muted)'}}>

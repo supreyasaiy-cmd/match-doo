@@ -692,13 +692,15 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         </div>
 
         {/* Ranked round results — the movies everyone wants, most-wanted first */}
-        <Section title={tr('rooms.topPicks','Top picks this round')} caption={
+        <Section title={tr('rooms.topPicks','What everyone wants')} caption={
           groupMatches.length
-            ? `Ranked by how many of you want it (${groupMatches.length} everyone-match${groupMatches.length===1?'':'es'})`
-            : tr('rooms.swipePrompt','Swipe together — your most-wanted films climb to the top')
+            ? (window.I18N && window.I18N.lang==='th'
+                ? `เรียงตามจำนวนคนที่อยากดู · ทุกคนตรงกัน ${groupMatches.length} เรื่อง`
+                : `Ranked by how many of you want it · ${groupMatches.length} full match${groupMatches.length===1?'':'es'}`)
+            : tr('rooms.swipePrompt','The more of you want a film, the higher it climbs')
         }>
           {roundResults.length === 0 ? (
-            <EmptySectionRow text={tr('rooms.noPicks','No picks yet — tap “Swipe together” and let your swipes do the voting. 🍿')}/>
+            <EmptySectionRow text={tr('rooms.noPicks','No matches yet — start swiping; the films the most of you want show up here. 🍿')}/>
           ) : (
             <div style={{display:'flex', flexDirection:'column', gap: 8, padding:'0 18px'}}>
               {roundResults.slice(0, 8).map((r, i) => (

@@ -57,8 +57,8 @@ window.I18N = {
       'rooms.search':   'ค้นหาห้อง',
       'rooms.round':          'รอบนี้',
       'rooms.voteGenres':     'โหวตแนวหนัง',
-      'rooms.swipeTogether':  'ปัดด้วยกัน',
-      'rooms.topPicks':       'ตัวเลือกยอดนิยมรอบนี้',
+      'rooms.swipeTogether':  'มาปัดหาหนังกัน',
+      'rooms.topPicks':       'หนังที่ทุกคนอยากดู',
       'rooms.everyoneIn':     'ทุกคนอยากดู',
 
       // ── Matches ──
@@ -117,8 +117,8 @@ window.I18N = {
       'empty.matchesTitle': 'ยังไม่มีแมตช์ — เดี๋ยวก็มา! 💫',
       'empty.matchesSub':   'ปัดต่อไปเรื่อย ๆ พอคุณสองคนถูกใจเรื่องเดียวกัน เดี๋ยวมันโผล่มาตรงนี้เอง',
       'empty.sharedQueue':  'ยังไม่มีหนังที่ตรงกัน — ปัดต่อไปอีกนิด! 🍿',
-      'rooms.noPicks':      'ยังไม่มีตัวเลือกเลย — แตะ "ปัดด้วยกัน" แล้วให้การปัดเป็นการโหวตของคุณ 🍿',
-      'rooms.swipePrompt':  'ปัดด้วยกัน แล้วหนังที่ทุกคนอยากดูจะไต่ขึ้นอันดับต้น ๆ',
+      'rooms.noPicks':      'ยังไม่มีหนังที่ตรงกัน — เริ่มปัดหาหนังกันเลย เรื่องที่หลายคนอยากดูจะมาโผล่ตรงนี้ 🍿',
+      'rooms.swipePrompt':  'ยิ่งหลายคนปัด “อยากดู” เรื่องไหน เรื่องนั้นยิ่งขึ้นอันดับบน',
       'toast.profileSaved': 'ดูดีขึ้นเยอะ! ✨',
       'toast.roomCreated':  'สร้างห้องแล้ว — ไปหาหนังกันเลย! 🍿',
       'toast.friendAdded':  'เพิ่ม {name} เข้ากลุ่มแล้ว! 🎉',
@@ -152,7 +152,7 @@ window.I18N = {
 
       // ── Room detail ──
       'room.typePartner': 'คู่รัก', 'room.typeFamily': 'ครอบครัว', 'room.typeFriends': 'เพื่อน',
-      'room.member': 'คน', 'room.members': 'คน', 'room.invite': 'เชิญเพื่อนมาปัดด้วยกัน',
+      'room.member': 'คน', 'room.members': 'คน', 'room.invite': 'ชวนเพื่อนมาปัดหนังกัน',
       'room.movieNight':  'คืนดูหนัง',
       'room.pickDay':     'เลือกวันดูหนังด้วยกัน',
       'room.tonight':     'คืนนี้', 'room.tomorrow': 'พรุ่งนี้', 'room.weekend': 'สุดสัปดาห์นี้', 'room.pickDate': 'เลือกวันที่',

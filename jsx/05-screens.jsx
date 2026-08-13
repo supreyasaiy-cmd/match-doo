@@ -102,6 +102,27 @@ function FilmReelBG() {
 // ─── Welcome (Sign in / Sign up) ────────────────────────────────────
 function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
   const legalLink = { color:'var(--cream)', textDecoration:'underline', cursor:'pointer' };
+  const headRef = React.useRef(null);
+  const lang = window.I18N && window.I18N.lang;
+  // Auto-fit the headline: shrink the font until the widest line fits its
+  // column, so it never clips — regardless of language or whether the web font
+  // has loaded yet (fallback metrics are wider). Re-runs on language + fonts.
+  React.useLayoutEffect(() => {
+    const el = headRef.current;
+    if (!el) return;
+    const fit = () => {
+      const avail = (el.parentElement?.clientWidth || 346) - 2;
+      const max = lang === 'th' ? 54 : 50;
+      el.style.fontSize = max + 'px';
+      let size = max;
+      while (el.scrollWidth > avail && size > 26) { size -= 1; el.style.fontSize = size + 'px'; }
+    };
+    fit();
+    let cancelled = false;
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!cancelled) fit(); });
+    window.addEventListener('resize', fit);
+    return () => { cancelled = true; window.removeEventListener('resize', fit); };
+  }, [lang]);
   return (
     <div className="fade-in" style={{
       position:'relative', overflow:'hidden',
@@ -128,7 +149,7 @@ function WelcomeScreen({ onSignIn, onSignUp, onOpenLegal }) {
             // ดูอะไรดี? / ปัดเลย  —  What to watch? / Just swipe.
             // Thai (Kanit) gets a looser line-height so tone marks don't crowd.
             return (
-              <div style={{
+              <div ref={headRef} style={{
                 fontFamily:'var(--serif)',
                 fontSize: isTH ? 54 : 50, lineHeight: isTH ? 1.2 : 1.08,
                 letterSpacing: isTH ? '-0.005em' : '-0.02em', fontWeight: 600,
@@ -452,7 +473,7 @@ function Logomark({ size = 32 }) {
     <div style={{
       width: size, height: size, borderRadius: size * 0.28,
       flexShrink: 0, overflow: 'hidden',
-      backgroundImage: 'url("assets/logo-app.png?v=178")',
+      backgroundImage: 'url("assets/logo-app.png?v=179")',
       backgroundSize: '100%', backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat', backgroundColor: '#13181B',
       boxShadow: '0 2px 10px rgba(0,0,0,0.35)',

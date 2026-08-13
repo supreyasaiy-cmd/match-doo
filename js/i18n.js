@@ -152,7 +152,7 @@ window.I18N = {
 
       // ── Room detail ──
       'room.typePartner': 'คู่รัก', 'room.typeFamily': 'ครอบครัว', 'room.typeFriends': 'เพื่อน',
-      'room.member': 'คน', 'room.members': 'คน',
+      'room.member': 'คน', 'room.members': 'คน', 'room.invite': 'เชิญเพื่อนมาปัดด้วยกัน',
       'room.movieNight':  'คืนดูหนัง',
       'room.pickDay':     'เลือกวันดูหนังด้วยกัน',
       'room.tonight':     'คืนนี้', 'room.tomorrow': 'พรุ่งนี้', 'room.weekend': 'สุดสัปดาห์นี้', 'room.pickDate': 'เลือกวันที่',

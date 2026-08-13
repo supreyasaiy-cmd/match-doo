@@ -534,87 +534,96 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
         </div>
       }/>
 
-      {/* Hero */}
-      <div style={{
-        padding:'4px 28px 22px', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
-      }}>
-        <div style={{
-          width: 90, height: 90, borderRadius: 'var(--r-lg)',
-          background: `linear-gradient(135deg, ${hexA(room.tone, 0.4)}, ${hexA(room.tone, 0.1)})`,
-          border: `0.5px solid ${hexA(room.tone, 0.4)}`,
-          display:'flex', alignItems:'center', justifyContent:'center',
-          fontSize: 38, marginBottom: 14,
-        }}>{room.emoji}</div>
-
-        <div style={{
-          fontFamily:'var(--serif)', fontSize: 32, lineHeight: 1.05,
-          color:'var(--cream)', letterSpacing:'-0.01em',
-        }}>{room.name}</div>
-        <div style={{fontSize: 12.5, color:'var(--muted)', marginTop: 5, textTransform:'capitalize'}}>
-          {room.type ? `${room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')} · ` : ''}{members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')} · {relTime(room.lastActivity)}
-        </div>
-
-        {/* Member avatars in a row, with + Add */}
-        <div style={{
-          display:'flex', alignItems:'center', gap: 10, marginTop: 18,
-          flexWrap:'wrap', justifyContent:'center', maxWidth: 320,
-        }}>
-          {members.map(m => (
-            <div key={m.id} style={{display:'flex', flexDirection:'column', alignItems:'center', gap: 4}}>
-              <Avatar person={m} size={44}/>
-              <div style={{fontSize: 10, color:'var(--muted)'}}>{m.name.split(' ')[0]}</div>
+      <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'0 0 130px'}}>
+        {/* ── Hero: identity → members → primary action → stats ── */}
+        <div style={{padding:'6px 18px 4px'}}>
+          {/* Identity — avatar tile beside the name (left-aligned) */}
+          <div style={{display:'flex', alignItems:'center', gap: 14}}>
+            <div style={{
+              width: 76, height: 76, borderRadius: 'var(--r-lg)', flexShrink: 0,
+              background: `linear-gradient(135deg, ${hexA(room.tone, 0.4)}, ${hexA(room.tone, 0.1)})`,
+              border: `0.5px solid ${hexA(room.tone, 0.4)}`,
+              display:'flex', alignItems:'center', justifyContent:'center', fontSize: 34,
+            }}>{room.emoji}</div>
+            <div style={{flex:1, minWidth:0}}>
+              <div style={{
+                fontFamily:'var(--serif)', fontSize: 27, lineHeight: 1.1, color:'var(--cream)',
+                letterSpacing:'-0.01em', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
+              }}>{room.name}</div>
+              <div style={{display:'flex', alignItems:'center', gap: 8, marginTop: 7, flexWrap:'wrap'}}>
+                {room.type && (
+                  <span style={{
+                    fontSize: 11.5, fontWeight: 700, padding:'3px 10px', borderRadius: 999,
+                    color: room.tone, background: hexA(room.tone, 0.14), border:`0.5px solid ${hexA(room.tone,0.4)}`,
+                  }}>{room.type === 'couple' ? tr('room.typePartner','Partner') : room.type === 'family' ? tr('room.typeFamily','Family') : tr('room.typeFriends','Friends')}</span>
+                )}
+                <span style={{fontSize: 12.5, color:'var(--muted)'}}>
+                  {members.length} {members.length===1?tr('room.member','member'):tr('room.members','members')} · {relTime(room.lastActivity)}
+                </span>
+              </div>
             </div>
-          ))}
-          <button onClick={()=> setShowAddMembers(true)} style={{
-            appearance:'none', border:'1px dashed rgba(var(--fg-rgb),0.24)',
-            background:'rgba(var(--fg-rgb),0.03)',
-            display:'flex', flexDirection:'column', alignItems:'center', gap: 4,
-            padding: 0, color:'var(--muted)', width: 44,
+          </div>
+
+          {/* Members + invite */}
+          <div style={{display:'flex', alignItems:'center', gap: 8, marginTop: 16}}>
+            {members.map(m => <Avatar key={m.id} person={m} size={38}/>)}
+            <button onClick={()=> setShowAddMembers(true)} aria-label={tr('am.add','Add')} className="press" style={{
+              appearance:'none', width: 38, height: 38, borderRadius: 999, flexShrink: 0, cursor:'pointer',
+              background:'rgba(var(--fg-rgb),0.05)', border:'1px dashed rgba(var(--fg-rgb),0.24)',
+              color:'var(--muted)', display:'flex', alignItems:'center', justifyContent:'center',
+            }}><Icon name="plus" size={16}/></button>
+            <button onClick={()=> setShowAddMembers(true)} style={{
+              appearance:'none', border:0, background:'transparent', color:'var(--muted)',
+              fontSize: 13, textAlign:'left', cursor:'pointer', padding:0, minWidth:0,
+              overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+            }}>{tr('room.invite','Invite friends to swipe together')}</button>
+          </div>
+
+          {/* Primary action — big CTA card */}
+          <button onClick={()=> onSwipeRoom?.(room, ()=> setRoundTick(t=>t+1))} className="press" style={{
+            appearance:'none', border:0, width:'100%', marginTop: 18, cursor:'pointer',
+            background:`linear-gradient(135deg, ${room.tone}, ${hexA(room.tone,0.72)})`,
+            borderRadius: 'var(--r-lg)', padding:'16px 18px', textAlign:'left',
+            display:'flex', alignItems:'center', gap: 14,
+            boxShadow:`0 14px 32px ${hexA(room.tone,0.5)}`,
           }}>
             <div style={{
-              width: 44, height: 44, borderRadius: 999,
+              width: 46, height: 46, borderRadius: 'var(--r-md)', flexShrink: 0,
+              background:'rgba(255,255,255,0.18)', border:'0.5px solid rgba(255,255,255,0.28)',
               display:'flex', alignItems:'center', justifyContent:'center',
-              background:'rgba(var(--fg-rgb),0.05)',
-              border:'1px dashed rgba(var(--fg-rgb),0.24)',
-            }}>
-              <Icon name="plus" size={16}/>
+            }}><Icon name="cards" size={22} color="#fff" stroke={2.4}/></div>
+            <div style={{flex:1, minWidth:0}}>
+              <div style={{fontFamily:'var(--serif)', fontSize: 21, fontWeight: 700, color:'#fff', lineHeight:1.1}}>
+                {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
+              </div>
+              <div style={{fontSize: 13, color:'rgba(255,255,255,0.92)', marginTop: 3}}>
+                {deckLeft > 0
+                  ? (window.I18N && window.I18N.lang==='th' ? `เหลืออีก ${deckLeft} เรื่องในรอบนี้` : `${deckLeft} more this round`)
+                  : (window.I18N && window.I18N.lang==='th' ? 'ดูครบทุกเรื่องแล้ว' : 'All caught up this round')}
+              </div>
             </div>
-            <div style={{fontSize: 10, color:'var(--muted)'}}>{tr('am.add','Add')}</div>
+            <Icon name="arrow" size={20} color="#fff" stroke={2.4}/>
           </button>
+
+          {/* Stats — three separate cards */}
+          <div style={{display:'flex', gap: 10, marginTop: 16}}>
+            {[
+              { v: groupMatches.length, l: tr('room.groupMatches','Group matches') },
+              { v: almost.length,       l: tr('room.almostThere','Almost there') },
+              { v: members.length,      l: tr('room.membersStat','Members') },
+            ].map(s => (
+              <div key={s.l} style={{
+                flex:1, padding:'15px 6px', borderRadius:'var(--r-md)', textAlign:'center',
+                background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.09), rgba(var(--fg-rgb),0.03))',
+                border:'0.5px solid rgba(var(--fg-rgb),0.08)',
+              }}>
+                <div style={{fontFamily:'var(--serif)', fontSize: 26, color:'var(--cream)', lineHeight:1}}>{s.v}</div>
+                <div style={{fontSize: 10.5, color:'var(--muted)', marginTop: 6, lineHeight:1.3}}>{s.l}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Primary action — the room's whole point. Sits right under the members
-            so it's the first thing you reach, no scrolling. */}
-        <button onClick={()=> onSwipeRoom?.(room, ()=> setRoundTick(t=>t+1))} className="press" style={{
-          appearance:'none', border:0, width:'100%', marginTop: 22, cursor:'pointer',
-          background:`linear-gradient(135deg, ${room.tone}, ${hexA(room.tone,0.75)})`,
-          color:'#fff', borderRadius: 'var(--r-md)', padding:'15px',
-          fontFamily:'var(--sans)', fontWeight: 700, fontSize: 15.5,
-          display:'flex', alignItems:'center', justifyContent:'center', gap: 9,
-          boxShadow:`0 12px 28px ${hexA(room.tone,0.45)}`,
-        }}>
-          <Icon name="cards" size={19} color="#fff" stroke={2.4}/>
-          {deckLeft > 0 ? tr('rooms.swipeTogether','Swipe together') : tr('rooms.reviewPicks','Review picks')}
-          <span style={{fontSize: 12, fontWeight: 600, opacity: 0.9}}>
-            {deckLeft > 0 ? (window.I18N && window.I18N.lang==='th' ? `· ${tr('room.left','left')} ${deckLeft}` : `· ${deckLeft} left`) : `· ${tr('room.deckDone','deck done')}`}
-          </span>
-        </button>
-
-        <div style={{
-          display:'flex', gap: 22, marginTop: 14, padding:'14px 22px',
-          background:'linear-gradient(160deg, rgba(var(--fg-rgb),0.10), rgba(var(--fg-rgb),0.035))', backdropFilter:'blur(18px) saturate(150%)', WebkitBackdropFilter:'blur(18px) saturate(150%)',
-          border:'0.5px solid rgba(var(--fg-rgb),0.08)',
-          borderRadius: 'var(--r-md)',
-        }}>
-          <Stat label={tr('room.groupMatches','Group matches')} value={groupMatches.length}/>
-          <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label={tr('room.almostThere','Almost there')} value={almost.length}/>
-          <div style={{width:0.5, background:'var(--line)'}}/>
-          <Stat label={tr('room.membersStat','Members')} value={members.length}/>
-        </div>
-      </div>
-
-      <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'0 0 130px'}}>
         {/* ── This round — the room's voting + swipe session ── */}
         <div style={{padding:'4px 18px 6px'}}>
           <div style={{
@@ -668,12 +677,12 @@ function RoomDetailScreen({ room: initialRoom, onBack, onOpenMovie, onModal, onS
 
             {/* Winning genres */}
             {activeGenres.length > 0 && (
-              <div style={{display:'flex', gap: 6, flexWrap:'wrap', marginBottom: 14}}>
+              <div style={{display:'flex', gap: 8, flexWrap:'wrap', marginBottom: 2}}>
                 {activeGenres.map(g => (
                   <span key={g} style={{
-                    fontSize: 11.5, fontWeight: 600, padding:'5px 11px', borderRadius: 999,
-                    background:'rgba(253,137,115,0.12)', color:'var(--red)',
-                    border:'0.5px solid rgba(253,137,115,0.28)',
+                    fontSize: 12, fontWeight: 600, padding:'6px 14px', borderRadius: 999,
+                    background:'transparent', color:'var(--red)',
+                    border:'1px solid rgba(253,137,115,0.5)',
                   }}>{genreLabel(g)}</span>
                 ))}
               </div>

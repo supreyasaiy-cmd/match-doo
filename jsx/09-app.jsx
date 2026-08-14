@@ -528,7 +528,7 @@ function App() {
           )}
           {addFriend && (
             <div style={{position:'absolute', inset:0, background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)', zIndex: 250}}>
-              <AddFriendScreen onBack={()=> setAddFriend(false)}/>
+              <AddFriendScreen onBack={()=> setAddFriend(false)} user={user}/>
             </div>
           )}
           {friendsOpen && (

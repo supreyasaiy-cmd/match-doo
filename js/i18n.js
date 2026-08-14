@@ -316,6 +316,19 @@ window.I18N = {
       'sl.scanHint':     'สแกนเพื่อเปิดลิสต์',
       'sl.empty':        'ลิสต์ยังว่างอยู่ — ปัดเก็บหนังก่อนแล้วค่อยแชร์นะ 🍿',
 
+      // ── Add friend · QR / Link ──
+      'qrp.title':    'แชร์ Match Doo ของคุณ',
+      'qrp.sub':      'เพื่อนสแกน QR ค้นหาจากรหัส หรือกดลิงก์เพื่อเพิ่มคุณได้เลย',
+      'qrp.save':     'บันทึกรูป QR',
+      'qrp.saved':    'บันทึกรูป QR แล้ว',
+      'qrp.yourCode': 'รหัสของคุณ — ให้เพื่อนค้นหา',
+      'qrp.code':     'รหัส',
+      'qrp.copy':     'คัดลอก',
+      'qrp.copyCaps': 'คัดลอก',
+      'qrp.link':     'ลิงก์',
+      'qrp.copied':   'คัดลอกแล้ว',
+      'qrp.copyFail': 'คัดลอกไม่สำเร็จ',
+
       // ── Common ──
       'common.save':   'บันทึก',
       'common.cancel': 'ยกเลิก',

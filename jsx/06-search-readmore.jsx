@@ -389,23 +389,23 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass, review, onReview }) {
       }}>
         <button onClick={onPass} style={{
           appearance:'none', flex: 1, height: 52, borderRadius: 999, pointerEvents:'auto',
-          background:'rgba(var(--fg-rgb),0.10)', color:'var(--cream)',
-          border:'0.5px solid rgba(var(--fg-rgb),0.16)',
+          background:'rgba(253,137,115,0.12)', color:'#FD8973',
+          border:'0.5px solid rgba(253,137,115,0.38)',
           backdropFilter:'blur(20px) saturate(160%)',
           WebkitBackdropFilter:'blur(20px) saturate(160%)',
           fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
         }}>
-          <Icon name="x" size={16}/> {window.tr ? tr('swipe.pass','Pass') : 'Pass'}
+          <Icon name="x" size={16} color="#FD8973"/> {window.tr ? tr('swipe.pass','Pass') : 'Pass'}
         </button>
         <button onClick={onLike} style={{
           appearance:'none', flex: 1, height: 52, borderRadius: 999, pointerEvents:'auto',
-          background:'var(--red)', color:'#fff',
+          background:'#8FB4E6', color:'#13181B',
           border:0, fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15,
           display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
-          boxShadow:'0 8px 24px rgba(253,137,115,0.45)',
+          boxShadow:'0 8px 24px rgba(143,180,230,0.45)',
         }}>
-          <Icon name="bookmark" size={16} color="#fff"/> {window.tr ? tr('swipe.watchlist','Watchlist') : 'Watchlist'}
+          <Icon name="bookmark" size={16} color="#13181B"/> {window.tr ? tr('swipe.watchlist','Watchlist') : 'Watchlist'}
         </button>
       </div>
     </div>

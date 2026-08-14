@@ -475,9 +475,9 @@ function OnboardingScreen({ initialName = '', onDone }) {
       body: (
         <div style={{display:'flex', flexDirection:'column', gap: 10}}>
           {[
-            { id:'movies', label:tr('onb.movies','Movies'),  desc:tr('onb.moviesDesc','Films only — feature-length picks.'), icon:'film' },
-            { id:'series', label:tr('onb.series','Series'),  desc:tr('onb.seriesDesc','Shows only — episodic stories.'),     icon:'cards' },
-            { id:'both',   label:tr('onb.both','Both'),    desc:tr('onb.bothDesc','Mix it up. Show me everything.'),     icon:'sparkle' },
+            { id:'movies', label:tr('onb.movies','Movies'),  desc:tr('onb.moviesDesc','Films only — feature-length picks.'), icon:'film', sz: 19 },
+            { id:'series', label:tr('onb.series','Series'),  desc:tr('onb.seriesDesc','Shows only — episodic stories.'),     icon:'video', sz: 22 },
+            { id:'both',   label:tr('onb.both','Both'),    desc:tr('onb.bothDesc','Mix it up. Show me everything.'),     icon:'popcorn', sz: 20 },
           ].map(o => {
             const on = contentType === o.id;
             return (
@@ -940,7 +940,7 @@ function FriendRow({ friend, onClick }) {
 }
 
 // ─── Add Friend modal ───────────────────────────────────────────────
-function AddFriendScreen({ onBack }) {
+function AddFriendScreen({ onBack, user }) {
   const [method, setMethod] = React.useState('search');
   const [addedToast, setAddedToast] = React.useState('');
 
@@ -987,7 +987,7 @@ function AddFriendScreen({ onBack }) {
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'4px 18px 120px'}}>
         {method === 'search' && <SearchUsername onAdd={handleAdd}/>}
         {method === 'contacts' && <ContactsList onAdd={handleAdd}/>}
-        {method === 'qr' && <QRPanel/>}
+        {method === 'qr' && <QRPanel handle={user?.username || 'alex'} userId={user?.userId || 'MD-XXXXXXXX'}/>}
       </div>
 
       {addedToast && (
@@ -1081,36 +1081,114 @@ function ContactsList({ onAdd }) {
   );
 }
 
-function QRPanel() {
+function QRPanel({ handle = 'alex', userId = 'MD-XXXXXXXX' }) {
+  const [qrFailed, setQrFailed] = React.useState(false);
+  const [toast, setToast] = React.useState('');
+  const link = `https://match-doo.vercel.app/u/${handle}`;
+  // Real, scannable QR of the add-me link — rendered on a cream card
+  // (dark modules) for reliable scanning. Fetched live from a QR renderer.
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=460x460&margin=1&qzone=1&color=13181b&bgcolor=f0eeeb&data=${encodeURIComponent(link)}`;
+
+  const flash = (m) => { setToast(m); setTimeout(()=> setToast(''), 1600); };
+  const copy = async (text, label) => {
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+      else { const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+      flash(`${label} ${tr('qrp.copied','copied')}`);
+    } catch { flash(tr('qrp.copyFail',"Couldn't copy")); }
+  };
+  const saveImage = async () => {
+    try {
+      const res = await fetch(qrSrc, { mode: 'cors' });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `matchdoo-${handle}-qr.png`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=> URL.revokeObjectURL(url), 1000);
+      flash(tr('qrp.saved','QR image saved'));
+    } catch {
+      window.open(qrSrc, '_blank');   // fallback: open full-size so it can be long-pressed to save
+    }
+  };
+
   return (
-    <div style={{display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', padding:'20px 0 0'}}>
+    <div style={{display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', padding:'16px 0 0', position:'relative'}}>
       <div style={{
         width: 220, height: 220, borderRadius: 'var(--r-lg)',
-        background:'var(--cream)', padding: 18, boxSizing:'border-box',
+        background:'var(--cream)', padding: 16, boxSizing:'border-box',
         boxShadow:'0 24px 60px rgba(0,0,0,0.4)',
+        display:'flex', alignItems:'center', justifyContent:'center',
       }}>
-        <QRArt/>
+        {!qrFailed ? (
+          <img src={qrSrc} alt={`QR code to add @${handle}`} width={188} height={188}
+            onError={()=> setQrFailed(true)}
+            style={{display:'block', width: 188, height: 188, imageRendering:'pixelated'}}/>
+        ) : (
+          <QRArt/>
+        )}
       </div>
-      <div style={{
-        fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)',
-        marginTop: 24, lineHeight: 1.1,
-      }}>Share your Match Doo</div>
-      <div style={{fontSize: 13, color:'var(--muted)', marginTop: 8, maxWidth: 240, lineHeight:1.5}}>
-        Friends can scan this — or use the link below — to add you instantly.
+
+      <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', marginTop: 20, lineHeight: 1.1}}>
+        {tr('qrp.title','Share your Match Doo')}
       </div>
-      <div style={{
-        marginTop: 22, padding:'12px 16px', borderRadius: 'var(--r-sm)',
-        background:'rgba(var(--fg-rgb),0.07)',
-        border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+      <div style={{fontSize: 13, color:'var(--muted)', marginTop: 8, maxWidth: 250, lineHeight:1.5}}>
+        {tr('qrp.sub','Friends can scan this, search your code, or use the link to add you instantly.')}
+      </div>
+
+      {/* Save the QR as an image */}
+      <button onClick={saveImage} className="press-soft" style={{
+        appearance:'none', marginTop: 16, cursor:'pointer',
+        border:'0.5px solid rgba(var(--fg-rgb),0.16)', background:'rgba(var(--fg-rgb),0.07)',
+        color:'var(--cream)', borderRadius: 999, padding:'10px 18px',
+        display:'inline-flex', alignItems:'center', gap: 8,
+        fontFamily:'var(--sans)', fontSize: 13.5, fontWeight: 600,
+      }}>
+        <Icon name="download" size={16}/> {tr('qrp.save','Save QR image')}
+      </button>
+
+      {/* Your code — friends can search this */}
+      <div style={{width:'100%', marginTop: 22, textAlign:'left'}}>
+        <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 8px 2px'}}>
+          {tr('qrp.yourCode','Your code — friends search this')}
+        </div>
+        <button onClick={()=> copy('@'+handle, tr('qrp.code','Code'))} className="press-soft" style={{
+          appearance:'none', width:'100%', cursor:'pointer', textAlign:'left',
+          padding:'12px 14px', borderRadius:'var(--r-sm)',
+          background:'rgba(143,180,230,0.10)', border:'0.5px solid rgba(143,180,230,0.32)',
+          display:'flex', alignItems:'center', gap: 10, color:'var(--cream)',
+        }}>
+          <Icon name="user" size={18} color="var(--green)"/>
+          <span style={{flex:1, fontFamily:'var(--sans)', fontWeight: 700, fontSize: 18, letterSpacing:'0.01em', color:'var(--green)'}}>@{handle}</span>
+          <span style={{display:'inline-flex', alignItems:'center', gap: 5, fontSize: 12, fontWeight: 600, color:'var(--muted-2)'}}>
+            <Icon name="copy" size={14}/> {tr('qrp.copy','Copy')}
+          </span>
+        </button>
+      </div>
+
+      {/* Share link */}
+      <button onClick={()=> copy(link, tr('qrp.link','Link'))} className="press-soft" style={{
+        appearance:'none', width:'100%', cursor:'pointer', textAlign:'left',
+        marginTop: 10, padding:'12px 16px', borderRadius: 'var(--r-sm)',
+        background:'rgba(var(--fg-rgb),0.07)', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
         display:'flex', alignItems:'center', gap: 10,
         fontFamily:'var(--sans)', fontSize: 13, color:'var(--cream)',
       }}>
         <Icon name="link" size={14} color="var(--muted)"/>
-        moviematch.app/u/alex
-        <span style={{
-          marginLeft: 8, fontSize: 11, color:'var(--gold)', fontWeight: 600,
-        }}>COPY</span>
-      </div>
+        <span style={{flex:1, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>match-doo.vercel.app/u/{handle}</span>
+        <span style={{fontSize: 11, color:'var(--gold)', fontWeight: 700, letterSpacing:'0.02em'}}>{tr('qrp.copyCaps','COPY')}</span>
+      </button>
+
+      {toast && (
+        <div className="rise" style={{
+          position:'absolute', left:'50%', bottom: -16, transform:'translateX(-50%)',
+          padding:'9px 15px', borderRadius: 999, whiteSpace:'nowrap',
+          background:'rgba(var(--bg-rgb),0.92)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+          border:'0.5px solid rgba(255,191,101,0.40)', color:'var(--cream)', fontSize: 12.5, fontWeight: 500,
+          zIndex: 8, display:'inline-flex', alignItems:'center', gap: 7,
+        }}>
+          <Icon name="check" size={13} color="#FFBF65" stroke={2.6}/> {toast}
+        </div>
+      )}
     </div>
   );
 }
@@ -1413,14 +1491,14 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
             options={[{val:'th', label:'ไทย'}, {val:'en', label:'EN'}]}
             value={lang} onChange={(v)=> onSetLang?.(v)}/>
           <SettingsToggleRow
-            icon="settings" label={tr('profile.themes','Themes')}
+            icon="palette" label={tr('profile.themes','Themes')}
             options={[{val:'dark', label:tr('theme.dark','Dark')}, {val:'light', label:tr('theme.light','Light')}]}
             value={theme === 'light' ? 'light' : 'dark'} onChange={(v)=> onSetTheme?.(v)}/>
         </SettingsGroup>
 
         <SettingsGroup title={tr('profile.group.legal','Legal')}>
           <SettingsRow icon="bookmark" label={tr('profile.terms','Terms & Conditions')} onClick={()=> onOpenLegal?.('terms')}/>
-          <SettingsRow icon="user" label={tr('profile.privacy','Privacy Policy')} onClick={()=> onOpenLegal?.('privacy')}/>
+          <SettingsRow icon="badgeCheck" label={tr('profile.privacy','Privacy Policy')} onClick={()=> onOpenLegal?.('privacy')}/>
         </SettingsGroup>
 
         <SettingsGroup title="">
@@ -2432,7 +2510,7 @@ const SETTING_TONES = {
   sparkle:'#FD8973', clapperboard:'#FD8973', cake:'#FD8973',
   bookmark:'#FFBF65', film:'#FFBF65', tv:'#FFBF65', bell:'#FFBF65',
   clock:'#6F93E0', user:'#6F93E0', languages:'#6F93E0',
-  mail:'#8FB4E6', settings:'#8FB4E6',
+  mail:'#8FB4E6', settings:'#8FB4E6', palette:'#FFBF65', badgeCheck:'#FD8973',
 };
 function SettingsRow({ icon, label, detail, onClick, danger }) {
   return (
@@ -2444,7 +2522,9 @@ function SettingsRow({ icon, label, detail, onClick, danger }) {
       color: danger ? '#E8798A' : 'var(--cream)',
       borderBottom:'0.5px solid var(--line)',
     }}>
-      <IconBadge icon={icon} size={34} tone={danger ? '#E8798A' : (SETTING_TONES[icon] || '#FD8973')}/>
+      <span style={{width: 30, height: 30, flexShrink: 0, display:'flex', alignItems:'center', justifyContent:'center'}}>
+        <Icon name={icon} size={25} color={danger ? '#E8798A' : (SETTING_TONES[icon] || '#FD8973')} stroke={2.2}/>
+      </span>
       <div style={{flex:1, fontSize: 14, fontWeight: 500}}>{label}</div>
       {detail && <div style={{fontSize: 12.5, color:'var(--muted)'}}>{detail}</div>}
       {!danger && <Icon name="chev" size={14} color="var(--muted-2)"/>}
@@ -2461,7 +2541,9 @@ function SettingsToggleRow({ icon, label, options, value, onChange }) {
       padding:'12px 18px', color:'var(--cream)',
       borderBottom:'0.5px solid var(--line)',
     }}>
-      <IconBadge icon={icon} size={34} tone={SETTING_TONES[icon] || '#FD8973'}/>
+      <span style={{width: 30, height: 30, flexShrink: 0, display:'flex', alignItems:'center', justifyContent:'center'}}>
+        <Icon name={icon} size={25} color={SETTING_TONES[icon] || '#FD8973'} stroke={2.2}/>
+      </span>
       <div style={{flex:1, fontSize: 14, fontWeight: 500}}>{label}</div>
       <div style={{
         display:'flex', gap: 2, padding: 3, borderRadius: 999,

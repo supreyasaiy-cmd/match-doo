@@ -1,8 +1,8 @@
 // swipe.jsx — Card stack with 4-direction gestures (right=want, left=pass, up=seen, down=super)
 
 const SWIPE_LABELS = {
-  right: { text: 'WATCHLIST',  color: '#FD8973', rot: -8 },  // like → save to watchlist (coral)
-  left:  { text: 'PASS',       color: '#5F7A8C', rot:  8 },  // clearly distinct cool slate
+  right: { text: 'WATCHLIST',  color: '#8FB4E6', rot: -8 },  // like → cool sky (positive, calm)
+  left:  { text: 'PASS',       color: '#FD8973', rot:  8 },  // pass → warm coral
   up:    { text: 'READ MORE',  color: '#FFBF65', rot:  0 },
   down:  { text: 'SEEN',       color: '#6F93E0', rot:  0 },
 };
@@ -214,8 +214,10 @@ function SwipeCard({ movie, isTop, onSwipe, onTap, drag, setDrag, depth=0, densi
         {activeLabel && (
           <div style={{
             position:'absolute',
-            top: activeLabel === 'up' ? 42 : (activeLabel === 'down' ? 'auto' : 66),
-            bottom: activeLabel === 'down' ? 42 : 'auto',
+            // Down (SEEN) sits high on the card so it stays on-screen as the
+            // card slides downward (the bottom is the first edge to be clipped).
+            top: activeLabel === 'up' ? 42 : 66,
+            bottom: 'auto',
             // Stamp sits on the side that stays on-screen as the card slides
             // away: LIKE on the left (swipe right), PASS on the right (swipe left).
             left: activeLabel === 'right' ? 28 : (activeLabel === 'left' ? 'auto' : '50%'),
@@ -327,10 +329,10 @@ function SwipeDeck({ movies, onSwipe, onTap, density='regular', ads=[], adCadenc
           display:'flex', justifyContent:'center', alignItems:'flex-end', gap: 16,
           pointerEvents:'none',
         }}>
-          <ActionBtn label={tr('swipe.pass','Pass')}           icon="x"        color="#5F7A8C" size={60} onClick={()=>programmatic('left')} />
+          <ActionBtn label={tr('swipe.pass','Pass')}           icon="x"        color="#FD8973" size={60} onClick={()=>programmatic('left')} />
           <ActionBtn label={tr('swipe.more','More')}           icon="chevup"   color="#FFBF65" size={48} onClick={()=>programmatic('up')} />
           <ActionBtn label={tr('swipe.seen','Seen')}           icon="eye"      color="#6F93E0" size={48} onClick={()=>programmatic('down')} />
-          <ActionBtn label={tr('swipe.watchlist','Watchlist')} icon="bookmark" color="#FD8973" size={60} onClick={()=>programmatic('right')} filled/>
+          <ActionBtn label={tr('swipe.watchlist','Watchlist')} icon="bookmark" color="#8FB4E6" size={60} onClick={()=>programmatic('right')} filled/>
         </div>
       )}
     </div>
@@ -447,8 +449,8 @@ function SwipeCoach({ onDone }) {
   const caretLeft = rect ? Math.min(Math.max((rect.left + rect.width/2) - 20 - 7, 16), (rootW - 40) - 30) : 0;
 
   const arrows = [
-    { d:'right',  label:tr('swipe.watchlist','Watchlist'), color:'#FD8973', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
-    { d:'left',   label:tr('swipe.pass','Pass'),      color:'#5F7A8C', rot: 180, pos:{ left:12,  top:'50%',  ty:'translateY(-50%)' } },
+    { d:'right',  label:tr('swipe.watchlist','Watchlist'), color:'#8FB4E6', rot: 0,   pos:{ right:12, top:'50%',  ty:'translateY(-50%)' } },
+    { d:'left',   label:tr('swipe.pass','Pass'),      color:'#FD8973', rot: 180, pos:{ left:12,  top:'50%',  ty:'translateY(-50%)' } },
     { d:'up',     label:tr('swipe.more','More'), color:'#FFBF65', rot: -90, pos:{ top:14,   left:'50%', ty:'translateX(-50%)' } },
     { d:'down',   label:tr('swipe.seen','Seen'), color:'#6F93E0', rot: 90,  pos:{ bottom:14,left:'50%', ty:'translateX(-50%)' } },
   ];

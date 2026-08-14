@@ -260,7 +260,7 @@ const SERVICE_SLUGS = {
 // Some brand logo files ship with built-in padding, so their mark looks
 // small in the tile. Zoom those up (the tile clips the overflow) so every
 // logo reads at a similar visual size.
-const LOGO_ZOOM = { 'Max': 1.4, 'Apple TV+': 1.32, 'WeTV': 1.34, 'MUBI': 1.16, 'Disney+': 1.12, 'Hulu': 1.12 };
+const LOGO_ZOOM = { 'Max': 1.4, 'Apple TV+': 1.32, 'Viu': 1.24, 'WeTV': 1.06, 'MUBI': 1.16, 'Disney+': 1.12, 'Hulu': 1.12 };
 function ServiceChip({ name, size = 22 }) {
   const s = window.SERVICES[name] || { color:'#333', short: name[0] };
   const slug = SERVICE_SLUGS[name] || name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');

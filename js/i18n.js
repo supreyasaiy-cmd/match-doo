@@ -317,7 +317,7 @@ window.I18N = {
       'sl.empty':        'ลิสต์ยังว่างอยู่ — ปัดเก็บหนังก่อนแล้วค่อยแชร์นะ 🍿',
 
       // ── Onboarding · popcorn genre picker ──
-      'onb.tapToFill':  'เลือกแนว\nที่ชอบ 🍿',
+      'onb.tapToFill':  'เลือกแนวหนัง',
       'onb.bucketFull': 'เต็มถังเลย! รสนิยมดีมาก 🍿',
       'onb.genresLabel': 'แนว',
 

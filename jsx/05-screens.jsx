@@ -613,23 +613,38 @@ function OnboardingScreen({ initialName = '', onDone }) {
 // ─── Onboarding · popcorn genre picker ─────────────────────────────
 // Genres float as "kernels" up top; tap one and it drops into the
 // popcorn box below, turning golden. Tap it again and it pops back up.
-// A single popcorn piece — a cream popped-kernel cloud with the genre name
-// printed on it. Sizes to the text; `small` is the in-bucket size.
-const POPCORN_CLOUD = "M23 60C9 60 3 45 14 37 5 25 17 11 30 18 34 3 55 3 61 16 69 3 90 8 89 23 103 22 108 39 95 48 106 57 97 71 83 66 79 78 57 78 51 67 42 77 22 74 23 60Z";
+// A single popcorn piece — a cluster of overlapping round lobes (their union
+// reads as a bumpy popped kernel) with the genre name printed on it. The
+// cluster grows with the word length, so lobes stay round at any width.
+function popcornLobes(vbW) {
+  const lobes = [];
+  let x = 15, k = 0;
+  while (x <= vbW - 13) {
+    lobes.push({ cx: x, cy: 28 + (k % 2 ? -5 : 4) + (k % 3 === 0 ? -2 : 0), r: 16 + (k % 2 ? 1.5 : -0.5) });
+    x += 13; k++;
+  }
+  return lobes;
+}
 function PopcornChip({ label, onClick, small, i = 0, cls }) {
   const rot = [-7, 5, -3, 8, -5, 4, -8, 6, -4, 7][i % 10];
+  const vbW = Math.round(46 + 8.6 * label.length);
+  const lobes = popcornLobes(vbW);
   return (
     <button onClick={onClick} className={cls} aria-pressed={!!small} style={{
       position:'relative', appearance:'none', border: 0, background:'transparent', cursor:'pointer',
-      padding: small ? '11px 14px 13px' : '14px 18px 16px',
+      padding: small ? '11px 15px 12px' : '14px 19px 15px',
       transform:`rotate(${rot}deg)`, lineHeight: 1, flexShrink: 0,
     }}>
-      <svg viewBox="0 0 112 78" preserveAspectRatio="none" style={{
+      <svg viewBox={`0 0 ${vbW} 56`} preserveAspectRatio="none" style={{
         position:'absolute', inset: 0, width:'100%', height:'100%', overflow:'visible',
         filter:'drop-shadow(0 3px 4px rgba(0,0,0,0.30))',
       }}>
-        <path d={POPCORN_CLOUD} transform="translate(3.5,4.5)" fill="#eec36b"/>
-        <path d={POPCORN_CLOUD} fill="#faedd3"/>
+        <g transform="translate(2.5,3.5)" fill="#eec36b">
+          {lobes.map((l, j) => <circle key={j} cx={l.cx} cy={l.cy} r={l.r}/>)}
+        </g>
+        <g fill="#faedd3">
+          {lobes.map((l, j) => <circle key={j} cx={l.cx} cy={l.cy} r={l.r}/>)}
+        </g>
       </svg>
       <span style={{
         position:'relative', zIndex: 1, color:'#7a2222', fontWeight: 800,
@@ -659,7 +674,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
         {picked.length > 0 && (
           <div style={{
             display:'flex', flexWrap:'wrap', gap:'2px 1px', justifyContent:'center',
-            position:'relative', zIndex: 3, marginBottom: -16, padding:'0 26px',
+            position:'relative', zIndex: 3, marginBottom: -34, padding:'0 30px',
           }}>
             {picked.map((g, i) => (
               <PopcornChip key={g} i={i} small cls="pop-drop" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
@@ -668,10 +683,10 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
         )}
         <BucketTop label={
           picked.length === 0
-            ? <span style={{fontFamily:'var(--sans)', fontSize: 12, fontWeight: 800, lineHeight: 1.15, color:'#6E3200', whiteSpace:'pre-line'}}>{tr('onb.tapToFill','Pick a\ngenre 🍿')}</span>
+            ? <span style={{fontFamily:'var(--sans)', fontSize: 15, fontWeight: 800, color:'#6E3200', whiteSpace:'nowrap', letterSpacing:'-0.01em'}}>{tr('onb.tapToFill','Pick a genre')}</span>
             : <span style={{fontFamily:'var(--sans)', color:'#6E3200', lineHeight: 0.92, display:'flex', flexDirection:'column', alignItems:'center'}}>
-                <span style={{fontSize: 28, fontWeight: 800}}>{picked.length}</span>
-                <span style={{fontSize: 9, fontWeight: 800, letterSpacing:'0.12em', textTransform:'uppercase', opacity: 0.85}}>{tr('onb.genresLabel','genres')}</span>
+                <span style={{fontSize: 32, fontWeight: 800}}>{picked.length}</span>
+                <span style={{fontSize: 9.5, fontWeight: 800, letterSpacing:'0.12em', textTransform:'uppercase', opacity: 0.85}}>{tr('onb.genresLabel','genres')}</span>
               </span>
         }/>
       </div>
@@ -683,7 +698,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
 // own popcorn is above the crop, so it's hidden) — a compact "bucket mouth"
 // the chosen popcorn can sit in. `label` prints on the oval.
 function BucketTop({ label }) {
-  const W = 182;                 // rendered box width (fills the crop)
+  const W = 224;                 // rendered box width (fills the crop)
   const bx = 322, by = 414, bw = 480;   // box bounding-box in the 1122 artwork
   const s = W / bw;              // scale so the box fills the width
   const revealH = (812 - by) * s;       // reveal down to just past the oval
@@ -700,7 +715,7 @@ function BucketTop({ label }) {
           position:'absolute',
           left: `${((549 - bx) * s / W) * 100}%`,
           top:  `${((690 - by) * s / revealH) * 100}%`,
-          transform:'translate(-50%,-50%)', width:'42%', textAlign:'center', pointerEvents:'none',
+          transform:'translate(-50%,-50%)', width:'50%', textAlign:'center', pointerEvents:'none',
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>{label}</div>
       )}

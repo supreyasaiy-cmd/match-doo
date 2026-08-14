@@ -613,43 +613,37 @@ function OnboardingScreen({ initialName = '', onDone }) {
 // ─── Onboarding · popcorn genre picker ─────────────────────────────
 // Genres float as "kernels" up top; tap one and it drops into the
 // popcorn box below, turning golden. Tap it again and it pops back up.
-// A single popcorn piece — a cluster of overlapping round lobes (their union
-// reads as a bumpy popped kernel) with the genre name printed on it. The
-// cluster grows with the word length, so lobes stay round at any width.
-function popcornLobes(vbW) {
-  const lobes = [];
-  let x = 15, k = 0;
-  while (x <= vbW - 13) {
-    lobes.push({ cx: x, cy: 28 + (k % 2 ? -5 : 4) + (k % 3 === 0 ? -2 : 0), r: 16 + (k % 2 ? 1.5 : -0.5) });
-    x += 13; k++;
-  }
-  return lobes;
-}
+// A single popcorn piece — three cream "puffs" over three offset butter
+// shadows, with the genre name in the middle. Geometry is straight from the
+// Pencil design (reference frame 108×56); x/width scale with the word length,
+// y/height stay put, so long words widen rather than balloon.
+const PC_SHADOWS = [[22.36,21.12,36.72,25.76],[52.6,14.96,38.88,26.88],[35.32,32.32,49.68,22.4]];
+const PC_PUFFS   = [[16.2,12.32,41.04,28,'#FFF4D8'],[45.36,6.72,42.12,29.12,'#FFF7E8'],[28.08,23.52,54,24.64,'#FFF1CC']];
 function PopcornChip({ label, onClick, small, i = 0, cls }) {
   const rot = [-7, 5, -3, 8, -5, 4, -8, 6, -4, 7][i % 10];
-  const vbW = Math.round(46 + 8.6 * label.length);
-  const lobes = popcornLobes(vbW);
+  const len = label.length;
+  const scale = small ? 0.78 : 1;
+  const Ws = Math.round((46 + 8 * len) * scale), Hs = Math.round(56 * scale);
+  const fx = Ws / 108, fy = scale;   // x/width scale with length; y/height constant
+  const fontSize = Math.max(8, Math.min(11.5, 104 / len)) * scale;
+  const ell = (a, bg, z) => (
+    <div key={z} style={{ position:'absolute', left: a[0]*fx, top: a[1]*fy, width: a[2]*fx, height: a[3]*fy, background: bg, borderRadius:'50%', zIndex: z }}/>
+  );
   return (
     <button onClick={onClick} className={cls} aria-pressed={!!small} style={{
-      position:'relative', appearance:'none', border: 0, background:'transparent', cursor:'pointer',
-      padding: small ? '11px 15px 12px' : '14px 19px 15px',
-      transform:`rotate(${rot}deg)`, lineHeight: 1, flexShrink: 0,
+      position:'relative', width: Ws, height: Hs, flexShrink: 0,
+      appearance:'none', border: 0, background:'transparent', cursor:'pointer', padding: 0,
     }}>
-      <svg viewBox={`0 0 ${vbW} 56`} preserveAspectRatio="none" style={{
-        position:'absolute', inset: 0, width:'100%', height:'100%', overflow:'visible',
-        filter:'drop-shadow(0 3px 4px rgba(0,0,0,0.30))',
-      }}>
-        <g transform="translate(2.5,3.5)" fill="#eec36b">
-          {lobes.map((l, j) => <circle key={j} cx={l.cx} cy={l.cy} r={l.r}/>)}
-        </g>
-        <g fill="#faedd3">
-          {lobes.map((l, j) => <circle key={j} cx={l.cx} cy={l.cy} r={l.r}/>)}
-        </g>
-      </svg>
-      <span style={{
-        position:'relative', zIndex: 1, color:'#7a2222', fontWeight: 800,
-        fontSize: small ? 10 : 12, fontFamily:'var(--sans)', whiteSpace:'nowrap', letterSpacing:'-0.01em',
-      }}>{label}</span>
+      <div style={{ position:'absolute', inset: 0, transform:`rotate(${rot}deg)`, filter:'drop-shadow(0 3px 5px rgba(0,0,0,0.30))' }}>
+        {PC_SHADOWS.map((a, j) => ell(a, '#EAB84A', j))}
+        {PC_PUFFS.map((a, j) => ell(a, a[4], j + 3))}
+        <div style={{
+          position:'absolute', inset: 0, zIndex: 6,
+          display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center',
+          color:'#7A1E22', fontFamily:"'Nunito', var(--sans)", fontWeight: 900,
+          fontSize, letterSpacing:'-0.01em', padding:'0 6px', lineHeight: 1,
+        }}>{label}</div>
+      </div>
     </button>
   );
 }

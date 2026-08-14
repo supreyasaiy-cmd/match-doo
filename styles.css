@@ -137,6 +137,22 @@ button{ font-family: inherit; cursor: default; }
 @keyframes mm-rise    { from { transform: translateY(40px); opacity:0 } to { transform: translateY(0); opacity:1 } }
 @keyframes mm-spin    { to { transform: rotate(360deg); } }
 @keyframes mm-coach-pulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+/* Onboarding popcorn picker — genres drop into / pop out of the bucket */
+@keyframes mm-pop-drop {
+  0%   { transform: translateY(-54px) scale(.6);  opacity: 0; }
+  55%  { transform: translateY(6px)  scale(1.08); opacity: 1; }
+  78%  { transform: translateY(-3px) scale(.98); }
+  100% { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+@keyframes mm-pop-rise {
+  from { transform: translateY(26px) scale(.88); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+.pop-drop { animation: mm-pop-drop .46s cubic-bezier(.34,1.56,.64,1) both; }
+.pop-rise { animation: mm-pop-rise .28s ease both; }
+@media (prefers-reduced-motion: reduce){
+  .pop-drop, .pop-rise { animation: none; }
+}
 /* Popcorn/confetti burst — shoots out from the centre, then falls with gravity */
 @keyframes mm-confetti {
   0%   { opacity: 0; transform: translate(0,0) rotate(0deg) scale(.3); }

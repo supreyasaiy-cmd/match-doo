@@ -1,7 +1,7 @@
 // search-readmore.jsx — Search screen + Read More sheet
 
 // ─── Read More sheet (swipe up) ─────────────────────────────────────
-function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
+function ReadMoreSheet({ movie, onClose, onLike, onPass, review, onReview }) {
   if (!movie) return null;
 
   // Mock cast — in production fetched from TMDB /movie/{id}/credits
@@ -245,6 +245,36 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass }) {
           <RatingCard label="Rotten Tomatoes" value={`${movie.rt}%`} color="#fa320a"/>
           <RatingCard label="IMDb" value={(movie.imdb||7.5).toFixed(1)} color="#f5c518" sub="/ 10"/>
         </div>
+
+        {/* Your chill review */}
+        {onReview && (
+          <Section title={window.tr ? tr('rev.yourReview','Your review') : 'Your review'}>
+            <div style={{
+              padding:'14px 16px', borderRadius:'var(--r-sm)',
+              background:'rgba(var(--fg-rgb),0.05)', border:'0.5px solid rgba(var(--fg-rgb),0.12)',
+            }}>
+              {review ? (
+                <>
+                  <ReviewSummary review={review}/>
+                  <button onClick={()=> onReview(movie)} className="press-soft" style={{
+                    appearance:'none', marginTop: 12, border:'0.5px solid rgba(255,191,101,0.4)',
+                    background:'rgba(255,191,101,0.12)', color:'var(--gold)', borderRadius: 999,
+                    padding:'7px 14px', cursor:'pointer', fontFamily:'var(--sans)', fontSize: 12.5, fontWeight: 600,
+                  }}>{tr('rev.edit','Edit your review')}</button>
+                </>
+              ) : (
+                <button onClick={()=> onReview(movie)} className="press-soft" style={{
+                  appearance:'none', width:'100%', border:0, background:'transparent', cursor:'pointer',
+                  display:'flex', alignItems:'center', gap: 10, color:'var(--cream)', textAlign:'left', padding: 0,
+                }}>
+                  <span style={{fontSize: 24, lineHeight: 1}}>🍿</span>
+                  <span style={{flex:1, fontSize: 14, fontWeight: 600}}>{tr('rev.write','Write a chill review')}</span>
+                  <Icon name="chev" size={14} color="var(--muted-2)"/>
+                </button>
+              )}
+            </div>
+          </Section>
+        )}
 
         {/* Movie night — pick a date to watch */}
         <Section title={window.tr ? tr("rm.movieNight","Movie night") : "Movie night"}>

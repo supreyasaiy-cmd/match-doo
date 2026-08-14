@@ -60,6 +60,9 @@ function App() {
   const [seen, setSeen] = React.useState(new Set());
   const [history, setHistory] = React.useState([]);  // [{ id, dir }] for Undo
 
+  // Chill reviews — { [movieId]: { rating, mood, text, tags, ts } }
+  const [reviews, setReviews] = React.useState({});
+
   const [watchedWith, setWatchedWith] = React.useState(()=> {
     const m = {};
     Object.entries(window.MATCHES).forEach(([fid, v]) => { m[fid] = new Set(v.watched); });
@@ -67,6 +70,8 @@ function App() {
   });
 
   // Modals
+  const [reviewFor, setReviewFor]     = React.useState(null);  // { movie } — review composer
+  const [reviewNudge, setReviewNudge] = React.useState(null);  // { movie } — post-Seen prompt
   const [movieDetail, setMovieDetail] = React.useState(null);  // { movie, friend? | room? }
   const [readMore, setReadMore]       = React.useState(null);  // { movie }
   const [search, setSearch]           = React.useState(null);  // { initialQuery }
@@ -255,10 +260,20 @@ function App() {
       // card on 'up', so the same movie stays on top when the sheet closes.
       setReadMore({ movie });
     } else if (dir === 'down') {
-      // Mark as already seen (search is still available from the top bar)
+      // Mark as already seen, then gently offer a chill review (unless one exists).
       setSeen(s => new Set(s).add(movie.id));
+      if (!reviews[movie.id]) setReviewNudge({ movie });
     }
   };
+
+  // Save / update a chill review, then celebrate.
+  const saveReview = (movie, data) => {
+    setReviews(r => ({ ...r, [movie.id]: { ...data, ts: Date.now() } }));
+    setReviewFor(null);
+    setReviewNudge(null);
+    showToast(tr('rev.saved','Review posted! 🎉'));
+  };
+  const openReview = (movie) => { setReviewNudge(null); setReviewFor({ movie }); };
 
   // Undo the last swipe — remove it from its set so the card returns to top.
   const undoSwipe = () => {
@@ -382,6 +397,7 @@ function App() {
           setTab(t);
           setRoomDetail(null); setRoomDetailModal(false); setRoomSwipe(null); setCreateRoom(false); setAddFriend(false); setFriendProfile(null); setFriendsOpen(false);
           setMovieDetail(null); setReadMore(null); setSearch(null);
+          setReviewFor(null); setReviewNudge(null);
           setNotifOpen(false); setCalendarOpen(false); setTmdbSheetOpen(false); setMatchesOpen(false);
         }}/>
       </>
@@ -427,6 +443,8 @@ function App() {
           {readMore && (
             <ReadMoreSheet
               movie={readMore.movie}
+              review={reviews[readMore.movie.id]}
+              onReview={openReview}
               onClose={()=> setReadMore(null)}
               onLike={()=>{
                 setLikes(s => new Set(s).add(readMore.movie.id));
@@ -464,6 +482,8 @@ function App() {
             <MovieDetailSheet
               movie={movieDetail.movie}
               friend={movieDetail.friend}
+              review={reviews[movieDetail.movie.id]}
+              onReview={openReview}
               onClose={()=> setMovieDetail(null)}
               onMarkWatched={markWatched}
             />
@@ -550,6 +570,21 @@ function App() {
               campaign={popupAd}
               onClose={()=> setPopupAd(null)}
               onOpenCTA={(c)=>{ onOpenAdCTA(c); setPopupAd(null); }}
+            />
+          )}
+          {reviewFor && (
+            <ReviewSheet
+              movie={reviewFor.movie}
+              existing={reviews[reviewFor.movie.id]}
+              onClose={()=> setReviewFor(null)}
+              onSave={(data)=> saveReview(reviewFor.movie, data)}
+            />
+          )}
+          {reviewNudge && !reviewFor && screen === 'main' && (
+            <ReviewNudge
+              movie={reviewNudge.movie}
+              onReview={()=> openReview(reviewNudge.movie)}
+              onDismiss={()=> setReviewNudge(null)}
             />
           )}
           {toast && <Toast text={toast}/>}

@@ -1749,6 +1749,7 @@ function ProfileStatCard({ label, value, accent, onClick }) {
 // ─── Movie list (poster grid) — opened from the profile stat cards ──
 function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }) {
   const [genre, setGenre] = React.useState(null);  // null = all
+  const [showShare, setShowShare] = React.useState(false);
   // Genres present in this list, ranked by frequency then alphabetically.
   const genreOptions = React.useMemo(() => {
     const count = {};
@@ -1763,10 +1764,25 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
       background:'var(--ink)', display:'flex', flexDirection:'column',
     }}>
       <TopBar title={title} onBack={onClose} right={
-        <div style={{fontSize: 12.5, color:'var(--muted)', paddingRight: 4}}>
-          {shown.length} {shown.length === 1 ? 'title' : 'titles'}
+        <div style={{display:'flex', alignItems:'center', gap: 8}}>
+          <span style={{fontSize: 12.5, color:'var(--muted)'}}>
+            {shown.length} {shown.length === 1 ? 'title' : 'titles'}
+          </span>
+          {shown.length > 0 && (
+            <button onClick={()=> setShowShare(true)} aria-label={tr('sl.title','Share this list')} className="press-soft" style={{
+              appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
+              width: 34, height: 34, borderRadius: 999, color:'var(--cream)',
+              display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
+            }}>
+              <Icon name="share" size={16}/>
+            </button>
+          )}
         </div>
       }/>
+
+      {showShare && (
+        <ShareListSheet title={title} movies={shown} onClose={()=> setShowShare(false)}/>
+      )}
 
       {/* Genre filter */}
       {genreOptions.length > 0 && (
@@ -1842,6 +1858,323 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── Chill review ──────────────────────────────────────────────────
+// A low-pressure, playful review composer for a film you've watched.
+// Stars + a gut-feeling mood + free text + vibe tags — "talk like a
+// friend, not a critic". Opened from the post-"Seen" nudge, a movie's
+// detail sheet, or its Read-More sheet. Emojis live in code; labels i18n.
+const REVIEW_MOODS = [
+  { key: 'love',     emoji: '🫠', label: 'melted' },
+  { key: 'laugh',    emoji: '😂', label: 'cried laughing' },
+  { key: 'wow',      emoji: '🤯', label: 'mind blown' },
+  { key: 'cry',      emoji: '😭', label: 'sobbed' },
+  { key: 'confused', emoji: '🤔', label: 'confused but liked it' },
+  { key: 'sleep',    emoji: '😴', label: 'dozed off' },
+];
+const REVIEW_TAGS = [
+  { key: 'rewatch', label: 'would rewatch' },
+  { key: 'mustsee', label: 'friends must see' },
+  { key: 'funny',   label: 'hilarious' },
+  { key: 'feels',   label: 'all the feels' },
+  { key: 'twist',   label: 'plot twist!' },
+  { key: 'cried',   label: 'tissues needed' },
+  { key: 'meh',     label: 'kinda meh' },
+];
+
+function ReviewSheet({ movie, existing, onClose, onSave }) {
+  const [rating, setRating] = React.useState(existing?.rating || 0);
+  const [hover, setHover]   = React.useState(0);
+  const [mood, setMood]     = React.useState(existing?.mood || null);
+  const [text, setText]     = React.useState(existing?.text || '');
+  const [tags, setTags]     = React.useState(() => new Set(existing?.tags || []));
+  const toggleTag = (k) => setTags(s => { const n = new Set(s); n.has(k) ? n.delete(k) : n.add(k); return n; });
+  const canPost = rating > 0;
+  const posterSrc = movie.posterUrl || movie.backdropUrl || null;
+
+  return (
+    <div className="fade-in" style={{ position:'absolute', inset:0, zIndex: 300, background:'var(--ink)', display:'flex', flexDirection:'column' }}>
+      <TopBar title={tr('rev.title','Chill review')} onBack={onClose}/>
+      <div className="phone-scroll" style={{ flex:1, overflowY:'auto', padding:'2px 18px 132px' }}>
+        <div style={{ fontSize: 13, color:'var(--muted)', marginTop:-2, marginBottom: 16, lineHeight: 1.4 }}>
+          {tr('rev.subtitle','Talk like a friend who just watched — not a critic.')}
+        </div>
+
+        {/* Locked movie context */}
+        <div style={{ display:'flex', alignItems:'center', gap: 14, padding: 12, borderRadius:'var(--r-md)',
+          background:'linear-gradient(135deg, rgba(253,137,115,0.16), rgba(255,191,101,0.05))',
+          border:'0.5px solid rgba(253,137,115,0.25)' }}>
+          <div style={{ width: 52, height: 74, borderRadius: 10, overflow:'hidden', flexShrink:0, boxShadow:'0 6px 16px rgba(0,0,0,0.35)' }}>
+            {posterSrc ? <img src={posterSrc} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                       : <Poster movie={movie} size="sm" hideTitle style={{width:'100%',height:'100%'}}/>}
+          </div>
+          <div style={{ minWidth:0 }}>
+            <div style={{ fontFamily:'var(--serif)', fontSize: 22, lineHeight: 1.05, color:'var(--cream)' }}>{movie.title}</div>
+            <div style={{ fontSize: 12.5, color:'var(--muted)', marginTop: 5, lineHeight: 1.35 }}>{tr('rev.moviePrompt','You watched this — spill the tea 🍿')}</div>
+          </div>
+        </div>
+
+        {/* Stars */}
+        <div style={{ marginTop: 24, textAlign:'center' }}>
+          <div style={{ fontFamily:'var(--serif)', fontSize: 20, color:'var(--cream)' }}>{tr('rev.stars','How many stars, honestly?')}</div>
+          <div style={{ display:'inline-flex', gap: 8, marginTop: 12 }}>
+            {[1,2,3,4,5].map(n => {
+              const on = (hover || rating) >= n;
+              return (
+                <button key={n} className="press" onClick={()=> setRating(n)}
+                  onMouseEnter={()=> setHover(n)} onMouseLeave={()=> setHover(0)}
+                  aria-label={`${n} star${n>1?'s':''}`}
+                  style={{ appearance:'none', border:0, background:'transparent', cursor:'pointer', padding: 2, lineHeight:0 }}>
+                  <Icon name={on ? 'starf' : 'star'} size={38} color={on ? 'var(--gold)' : 'var(--muted-2)'}/>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Mood */}
+        <div style={{ marginTop: 26 }}>
+          <div style={{ fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 10 }}>{tr('rev.mood','First feeling after the credits')}</div>
+          <div className="phone-scroll" style={{ display:'flex', gap: 8, overflowX:'auto', margin:'0 -18px', padding:'0 18px 4px' }}>
+            {REVIEW_MOODS.map(m => {
+              const on = mood === m.key;
+              return (
+                <button key={m.key} className="press-soft" onClick={()=> setMood(on ? null : m.key)}
+                  style={{ appearance:'none', flexShrink:0, cursor:'pointer', width: 94, padding:'12px 8px', borderRadius:'var(--r-sm)',
+                    border:`0.5px solid ${on ? 'var(--gold)' : 'rgba(var(--fg-rgb),0.14)'}`,
+                    background: on ? 'rgba(255,191,101,0.14)' : 'rgba(var(--fg-rgb),0.05)',
+                    display:'flex', flexDirection:'column', alignItems:'center', gap: 7 }}>
+                  <span style={{ fontSize: 26, lineHeight:1 }}>{m.emoji}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: on ? 'var(--gold)' : 'var(--cream)', textAlign:'center', lineHeight:1.2 }}>{tr('rev.mood.'+m.key, m.label)}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Note */}
+        <div style={{ marginTop: 24 }}>
+          <div style={{ fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 10 }}>{tr('rev.note','Anything you wanna say?')}</div>
+          <textarea value={text} onChange={e=> setText(e.target.value)} rows={4}
+            placeholder={tr('rev.notePlaceholder',"e.g. 'so hot I forgot the plot', 'popcorn > the movie' 🍿")}
+            style={{ width:'100%', resize:'none', boxSizing:'border-box', padding:'14px', borderRadius:'var(--r-sm)',
+              background:'rgba(var(--fg-rgb),0.05)', border:'0.5px solid rgba(var(--fg-rgb),0.14)',
+              color:'var(--cream)', fontFamily:'var(--sans)', fontSize: 14.5, lineHeight: 1.5, outline:'none' }}/>
+        </div>
+
+        {/* Vibe tags */}
+        <div style={{ marginTop: 22 }}>
+          <div style={{ fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 10 }}>{tr('rev.tags','Slap on some tags')}</div>
+          <div style={{ display:'flex', flexWrap:'wrap', gap: 8 }}>
+            {REVIEW_TAGS.map(t => {
+              const on = tags.has(t.key);
+              return (
+                <button key={t.key} className="press-soft" onClick={()=> toggleTag(t.key)}
+                  style={{ appearance:'none', cursor:'pointer', padding:'8px 14px', borderRadius: 999, fontSize: 12.5, fontWeight: 600,
+                    border:`0.5px solid ${on ? 'var(--red)' : 'rgba(var(--fg-rgb),0.14)'}`,
+                    background: on ? 'rgba(253,137,115,0.14)' : 'rgba(var(--fg-rgb),0.04)',
+                    color: on ? 'var(--red)' : 'var(--cream)' }}>
+                  {tr('rev.tag.'+t.key, t.label)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky CTA */}
+      <div style={{ position:'absolute', left:0, right:0, bottom:0, padding:'22px 16px 26px',
+        background:'linear-gradient(180deg, rgba(var(--bg-rgb),0) 0%, var(--ink) 42%)' }}>
+        <button onClick={()=> canPost && onSave({ rating, mood, text: text.trim(), tags: Array.from(tags) })} disabled={!canPost}
+          className={canPost ? 'press' : ''}
+          style={{ appearance:'none', width:'100%', height: 54, borderRadius: 999, border:0,
+            background: canPost ? 'var(--red)' : 'rgba(var(--fg-rgb),0.12)',
+            color: canPost ? '#fff' : 'var(--muted)', cursor: canPost ? 'pointer' : 'default',
+            fontFamily:'var(--sans)', fontWeight: 600, fontSize: 16,
+            display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8,
+            boxShadow: canPost ? '0 10px 28px rgba(253,137,115,0.45)' : 'none' }}>
+          <span style={{ fontSize: 18 }}>🎉</span> {existing ? tr('rev.update','Update review') : tr('rev.post','Post it')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Compact read-only summary of a review (stars + mood + note) — reused
+// inside the movie detail and read-more sheets.
+function ReviewSummary({ review }) {
+  if (!review) return null;
+  const mood = REVIEW_MOODS.find(m => m.key === review.mood);
+  return (
+    <div>
+      <div style={{ display:'flex', alignItems:'center', gap: 8 }}>
+        <div style={{ display:'inline-flex', gap: 2 }}>
+          {[1,2,3,4,5].map(n => (
+            <Icon key={n} name={review.rating >= n ? 'starf' : 'star'} size={16} color={review.rating >= n ? 'var(--gold)' : 'var(--muted-2)'}/>
+          ))}
+        </div>
+        {mood && <span style={{ fontSize: 13, color:'var(--muted)' }}>{mood.emoji} {tr('rev.mood.'+mood.key, mood.label)}</span>}
+      </div>
+      {review.text && <div style={{ fontSize: 13.5, color:'var(--cream-2)', marginTop: 8, lineHeight: 1.5 }}>“{review.text}”</div>}
+      {review.tags?.length > 0 && (
+        <div style={{ display:'flex', flexWrap:'wrap', gap: 6, marginTop: 10 }}>
+          {review.tags.map(k => {
+            const t = REVIEW_TAGS.find(x => x.key === k);
+            return <span key={k} style={{ fontSize: 11, fontWeight: 600, color:'var(--red)', padding:'4px 10px', borderRadius: 999, background:'rgba(253,137,115,0.12)', border:'0.5px solid rgba(253,137,115,0.25)' }}>{tr('rev.tag.'+k, t?.label || k)}</span>;
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// A gentle, auto-dismissing prompt shown right after you mark a film as
+// "Seen" — the warmest moment to nudge a chill review. Tappable; never blocks.
+function ReviewNudge({ movie, onReview, onDismiss }) {
+  React.useEffect(() => { const tm = setTimeout(onDismiss, 5200); return () => clearTimeout(tm); }, []);
+  const posterSrc = movie.posterUrl || movie.backdropUrl || null;
+  return (
+    <div className="rise" style={{
+      position:'absolute', left: 14, right: 14, bottom: 108, zIndex: 998,
+      padding:'11px 12px', borderRadius:'var(--r-md)',
+      background:'rgba(var(--bg-rgb),0.9)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+      border:'0.5px solid rgba(255,191,101,0.35)', boxShadow:'0 12px 30px rgba(0,0,0,0.45)',
+      display:'flex', alignItems:'center', gap: 11, color:'var(--cream)',
+    }}>
+      <div style={{ width: 40, height: 58, borderRadius: 8, overflow:'hidden', flexShrink:0 }}>
+        {posterSrc ? <img src={posterSrc} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/> : <Poster movie={movie} size="xs"/>}
+      </div>
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ fontSize: 13.5, fontWeight: 600, lineHeight: 1.2 }}>{tr('rev.nudgeTitle','Done watching?')}</div>
+        <div style={{ fontSize: 12, color:'var(--muted)', marginTop: 2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{movie.title}</div>
+      </div>
+      <button onClick={onDismiss} style={{ appearance:'none', border:0, background:'transparent', color:'var(--muted)', fontSize: 12.5, fontWeight: 600, cursor:'pointer', padding:'6px 6px' }}>{tr('rev.nudgeSkip','Later')}</button>
+      <button onClick={onReview} className="press" style={{ appearance:'none', border:0, background:'var(--gold)', color:'var(--ink)', fontWeight: 700, fontSize: 12.5, borderRadius: 999, padding:'8px 14px', cursor:'pointer' }}>{tr('rev.nudgeCta','Review')}</button>
+    </div>
+  );
+}
+
+// ─── Share a list ──────────────────────────────────────────────────
+// Bottom sheet to send a curated set of films to a friend — a "Match
+// Doo List" with a link + QR. Mirrors the room-invite share pattern.
+function ShareListSheet({ title, movies = [], onClose }) {
+  const [toast, setToast]   = React.useState('');
+  const [qrFailed, setQrFailed] = React.useState(false);
+  const [showQr, setShowQr] = React.useState(false);
+  const code = React.useMemo(() => Array.from({ length: 6 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join(''), []);
+  const link = `https://match-doo.vercel.app/l/${code}`;
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=1&qzone=1&color=0b0f18&bgcolor=ffffff&data=${encodeURIComponent(link)}`;
+  const n = movies.length;
+  const preview = movies.slice(0, 5);
+
+  const flash = (m) => { setToast(m); setTimeout(() => setToast(''), 1800); };
+  const copy = async (t) => {
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(t);
+      else { const ta = document.createElement('textarea'); ta.value = t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+      flash(tr('sl.linkCopied','Link copied'));
+    } catch { flash("Couldn't copy"); }
+  };
+  const share = async () => {
+    const payload = { title: `${title} · Match Doo`, text: `${n} ${tr('sl.heroSuffix','films I want you to see')}`, url: link };
+    if (navigator.share) { try { await navigator.share(payload); } catch {} }
+    else copy(link);
+  };
+
+  return (
+    <div onClick={onClose} style={{
+      position:'absolute', inset:0, zIndex: 260,
+      background:'rgba(var(--bg-rgb),0.7)',
+      backdropFilter:'blur(16px) saturate(140%)', WebkitBackdropFilter:'blur(16px) saturate(140%)',
+      display:'flex', flexDirection:'column', justifyContent:'flex-end',
+    }}>
+      <div onClick={e=>e.stopPropagation()} className="rise" style={{
+        background:'var(--ink)', borderRadius:'28px 28px 0 0',
+        padding:'14px 20px 24px', boxShadow:'0 -20px 40px rgba(0,0,0,0.5)',
+        border:'0.5px solid rgba(var(--fg-rgb),0.10)', borderBottom: 0,
+        maxHeight:'90%', display:'flex', flexDirection:'column',
+      }}>
+        <div style={{ width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px' }}/>
+
+        {/* Header */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap: 8 }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontFamily:'var(--serif)', fontSize: 24, lineHeight: 1.1, color:'var(--cream)' }}>{tr('sl.title','Share this list')}</div>
+            <div style={{ fontSize: 12, color:'var(--muted)', marginTop: 2 }}>{tr('sl.subtitle','Send your picks to a friend')}</div>
+          </div>
+          <button onClick={onClose} style={{ appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)', width: 34, height: 34, borderRadius: 999, color:'var(--muted)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink: 0 }}>
+            <Icon name="x" size={16}/>
+          </button>
+        </div>
+
+        <div className="phone-scroll" style={{ flex:1, overflowY:'auto', margin:'16px -20px 0', padding:'0 20px' }}>
+          {/* Hero list card */}
+          <div style={{ position:'relative', overflow:'hidden', borderRadius:'var(--r-lg)', padding:'20px 20px 22px',
+            background:'linear-gradient(150deg, rgba(111,147,224,0.28), rgba(253,137,115,0.16) 60%, rgba(255,191,101,0.14))',
+            border:'0.5px solid rgba(var(--fg-rgb),0.12)' }}>
+            <div style={{ fontSize: 11, letterSpacing:'0.2em', fontWeight: 700, color:'rgba(var(--fg-rgb),0.55)' }}>MATCH DOO LIST</div>
+            <div style={{ fontFamily:'var(--serif)', fontSize: 30, lineHeight: 1.05, color:'var(--cream)', marginTop: 8 }}>
+              {n} {tr('sl.heroSuffix','films I want you to see')} <span style={{ fontSize: 26 }}>🍿</span>
+            </div>
+            <div style={{ fontSize: 13, color:'var(--cream-2)', marginTop: 12, lineHeight: 1.45 }}>{tr('sl.heroCaption','Hand-picked: feel-good, easy watches, perfect for a Friday night.')}</div>
+          </div>
+
+          {/* Numbered preview */}
+          <div style={{ marginTop: 14, display:'flex', flexDirection:'column', gap: 8 }}>
+            {preview.map((m, i) => (
+              <div key={m.id} style={{ display:'flex', alignItems:'center', gap: 14, padding:'12px 14px', borderRadius:'var(--r-sm)', background:'rgba(var(--fg-rgb),0.05)', border:'0.5px solid rgba(var(--fg-rgb),0.10)' }}>
+                <span style={{ fontFamily:'var(--serif)', fontSize: 20, color:'var(--gold)', width: 26, flexShrink: 0 }}>{String(i+1).padStart(2,'0')}</span>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color:'var(--cream)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{m.title}</div>
+                  <div style={{ fontSize: 11.5, color:'var(--muted)', marginTop: 2 }}>{genreLabel(m.genres?.[0] || 'Film')}{m.year ? ` · ${m.year}` : ''}</div>
+                </div>
+              </div>
+            ))}
+            {n > preview.length && (
+              <div style={{ fontSize: 12, color:'var(--muted)', padding:'2px 4px' }}>+{n - preview.length} more</div>
+            )}
+          </div>
+
+          {/* QR (revealed on demand) */}
+          {showQr && (
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: 8, margin:'18px 0 4px' }}>
+              <div style={{ width: 176, height: 176, borderRadius:'var(--r-md)', padding: 12, background:'#fff', border:'0.5px solid rgba(var(--fg-rgb),0.14)', boxShadow:'0 10px 30px rgba(0,0,0,0.35)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                {!qrFailed ? (
+                  <img src={qrSrc} alt="QR to open the list" width={152} height={152} onError={()=> setQrFailed(true)} style={{ display:'block', width: 152, height: 152, imageRendering:'pixelated' }}/>
+                ) : (
+                  <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: 8, color:'#13181B' }}>
+                    <Icon name="qr" size={56} color="#13181B" stroke={2.2}/>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing:'0.08em' }}>{code}</div>
+                  </div>
+                )}
+              </div>
+              <div style={{ fontSize: 11.5, color:'var(--muted)' }}>{tr('sl.scanHint','Scan to open the list')}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Quick actions */}
+        <div style={{ display:'flex', gap: 8, marginTop: 14 }}>
+          <button onClick={()=> copy(link)} className="press-soft" style={{ appearance:'none', flex: 1, border:'0.5px solid rgba(var(--fg-rgb),0.14)', background:'rgba(var(--fg-rgb),0.07)', color:'var(--cream)', padding:'12px 10px', borderRadius:'var(--r-sm)', display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 7, fontFamily:'var(--sans)', fontWeight: 600, fontSize: 13.5 }}>
+            <Icon name="link" size={16}/> {tr('sl.copy','Copy link')}
+          </button>
+          <button onClick={()=> setShowQr(v=>!v)} className="press-soft" style={{ appearance:'none', width: 52, flexShrink: 0, border:`0.5px solid ${showQr ? 'var(--gold)' : 'rgba(var(--fg-rgb),0.14)'}`, background: showQr ? 'rgba(255,191,101,0.14)' : 'rgba(var(--fg-rgb),0.07)', color: showQr ? 'var(--gold)' : 'var(--cream)', padding:'12px 0', borderRadius:'var(--r-sm)', display:'inline-flex', alignItems:'center', justifyContent:'center' }} aria-label="QR code">
+            <Icon name="qr" size={18} color={showQr ? 'var(--gold)' : 'var(--cream)'} stroke={2.2}/>
+          </button>
+        </div>
+
+        {/* Primary share */}
+        <button onClick={share} className="press" style={{ appearance:'none', width:'100%', height: 52, marginTop: 8, border:0, borderRadius: 999, background:'var(--red)', color:'#fff', display:'inline-flex', alignItems:'center', justifyContent:'center', gap: 8, fontFamily:'var(--sans)', fontWeight: 600, fontSize: 15, boxShadow:'0 8px 24px rgba(253,137,115,0.45)' }}>
+          <Icon name="share" size={16} color="#fff"/> {tr('sl.cta','Share this list')}
+        </button>
+
+        {toast && (
+          <div className="rise" style={{ position:'absolute', left:'50%', bottom: 24, transform:'translateX(-50%)', padding:'10px 16px', borderRadius: 999, background:'rgba(var(--bg-rgb),0.92)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', border:'0.5px solid rgba(255,191,101,0.40)', color:'var(--cream)', fontSize: 12.5, fontWeight: 500, zIndex: 8 }}>{toast}</div>
+        )}
+      </div>
     </div>
   );
 }
@@ -2231,7 +2564,7 @@ function TmdbConnectSheet({ connected, status, onSave, onDisconnect, onClose }) 
 }
 
 // ─── Movie detail sheet ─────────────────────────────────────────────
-function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
+function MovieDetailSheet({ movie, friend, onClose, onMarkWatched, review, onReview }) {
   if (!movie) return null;
   return (
     <div className="fade-in" style={{
@@ -2334,6 +2667,24 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched }) {
               <div style={{fontWeight: 600, fontSize: 14, color:'var(--cream)'}}>You and {friend.name.split(' ')[0]} both want this</div>
               <div style={{fontSize: 12, color:'var(--muted)', marginTop: 2}}>Matched 2 days ago</div>
             </div>
+          </div>
+        )}
+
+        {/* Your chill review */}
+        {onReview && (
+          <div style={{
+            marginTop: 26, padding:'16px', borderRadius:'var(--r-md)',
+            background:'rgba(var(--fg-rgb),0.05)', border:'0.5px solid rgba(var(--fg-rgb),0.10)',
+          }}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', gap: 8}}>
+              <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)'}}>{tr('rev.yourReview','Your review')}</div>
+              <button onClick={()=> onReview(movie)} className="press-soft" style={{
+                appearance:'none', border:'0.5px solid rgba(255,191,101,0.4)', background:'rgba(255,191,101,0.12)',
+                color:'var(--gold)', borderRadius: 999, padding:'6px 12px', cursor:'pointer',
+                fontFamily:'var(--sans)', fontSize: 12, fontWeight: 600,
+              }}>{review ? tr('rev.edit','Edit your review') : tr('rev.write','Write a chill review')}</button>
+            </div>
+            {review && <div style={{marginTop: 12}}><ReviewSummary review={review}/></div>}
           </div>
         )}
 
@@ -2553,4 +2904,5 @@ Object.assign(window, {
   FriendsScreen, AddFriendScreen, FriendProfileScreen, ProfileScreen,
   MovieDetailSheet, MatchCelebration, Wordmark, Logomark, TmdbConnectSheet,
   Stat, Section, PosterRow, EmptySectionRow, RatingCard, LegalScreen,
+  ReviewSheet, ReviewSummary, ReviewNudge, ShareListSheet,
 });

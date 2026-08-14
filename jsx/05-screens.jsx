@@ -1400,12 +1400,9 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
           <SettingsRow icon="clock" label={tr('profile.runtime','Run time preference')} detail={tr('rt.'+runtime, runtime)} onClick={()=> setSheet('runtime')}/>
         </SettingsGroup>
 
-        <SettingsGroup title={tr('profile.group.account','Account')}>
-          <SettingsRow icon="mail" label={tr('profile.email','Email')} detail={email} onClick={()=> setSheet('email')}/>
-          <SettingsRow icon="cake" label={tr('profile.birthday','Birthday')} detail={fmtBirthday(birthday)} onClick={()=> setSheet('birthday')}/>
-          <SettingsRow icon="user" label={tr('profile.gender','Gender')} detail={tr('g.'+gender, gender)} onClick={()=> setSheet('gender')}/>
-          <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={`${notifOn} ${tr('profile.notifOn','on')}`} onClick={()=> setSheet('notifications')}/>
-        </SettingsGroup>
+        {/* Account settings now live inside the profile editor (the gear /
+            profile card) — one tap away, keeping this page focused on taste,
+            app, and lists. */}
 
         {/* TMDB is served automatically from the backend now — no user-facing
             row needed. (TmdbConnectSheet stays wired for local-dev fallback.) */}
@@ -1427,7 +1424,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
         </SettingsGroup>
 
         <SettingsGroup title="">
-          <SettingsRow icon="x" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
+          <SettingsRow icon="logOut" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
         </SettingsGroup>
 
         <div style={{
@@ -1470,6 +1467,13 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
           name={profileName} handle={handle} userId={userId}
           avatarSrc={avatarSrc}
           pool={window.AVATAR_POOL || []}
+          account={{
+            email,
+            birthday: fmtBirthday(birthday),
+            gender: tr('g.'+gender, gender),
+            notif: `${notifOn} ${tr('profile.notifOn','on')}`,
+          }}
+          onOpenField={(k)=> setSheet(k)}
           onSave={(n, h, src)=>{ setProfileName(n); setHandle(h); setAvatarSrc(src); setShowProfileEdit(false); flash(tr('toast.profileSaved','Looking sharp! ✨')); }}
           onClose={()=> setShowProfileEdit(false)}
         />
@@ -1667,7 +1671,7 @@ function ProfileSettingSheet({ kind, state, onClose, onSaved }) {
 
   return (
     <div onClick={onClose} style={{
-      position:'absolute', inset:0, zIndex: 200,
+      position:'absolute', inset:0, zIndex: 210,   // above the profile editor (200) when opened from there
       background:'rgba(var(--bg-rgb),0.7)',
       backdropFilter:'blur(16px) saturate(140%)',
       WebkitBackdropFilter:'blur(16px) saturate(140%)',
@@ -2265,7 +2269,7 @@ function ThemePickerSheet({ theme, onPick, onClose }) {
 }
 
 // ─── Edit profile (name + handle) ──────────────────────────────────
-function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, onClose }) {
+function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], account, onOpenField, onSave, onClose }) {
   const [n, setN] = React.useState(name);
   const [h, setH] = React.useState(handle);
   const [src, setSrc] = React.useState(avatarSrc || pool[0] || null);
@@ -2303,10 +2307,11 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
         background:'var(--ink)', borderRadius:'28px 28px 0 0',
         padding:'14px 20px 26px', boxShadow:'0 -20px 40px rgba(0,0,0,0.5)',
         border:'0.5px solid rgba(var(--fg-rgb),0.10)', borderBottom: 0,
+        maxHeight:'92%', display:'flex', flexDirection:'column',
       }}>
-        <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px'}}/>
+        <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 14px', flexShrink: 0}}/>
 
-        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 18}}>
+        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 18, flexShrink: 0}}>
           <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>{tr("ep.editProfile","Edit profile")}</div>
           <button onClick={onClose} style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
@@ -2317,6 +2322,7 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
           </button>
         </div>
 
+        <div className="phone-scroll" style={{flex:1, overflowY:'auto', margin:'0 -20px', padding:'2px 20px 4px', minHeight: 0}}>
         <div style={{marginBottom: 20}}>
           <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px'}}>{tr('ep.profilePic','Profile picture')}</div>
           <div
@@ -2378,7 +2384,22 @@ function ProfileEditSheet({ name, handle, userId, avatarSrc, pool = [], onSave, 
           </div>
         </div>
 
-        <PrimaryBtn full disabled={!n.trim() || !h.trim()} onClick={()=> onSave(n.trim(), h.trim(), src)}>
+        {/* Account — moved here from the profile page so everything about
+            "you" lives in one editor. Each row opens its own editor sheet. */}
+        {account && onOpenField && (
+          <div style={{marginTop: 22}}>
+            <div style={{fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--muted)', margin:'0 0 10px 2px'}}>{tr('profile.group.account','Account')}</div>
+            <div style={{borderRadius:'var(--r-md)', background:'rgba(var(--fg-rgb),0.05)', border:'0.5px solid rgba(var(--fg-rgb),0.10)', overflow:'hidden'}}>
+              <SettingsRow icon="mail" label={tr('profile.email','Email')} detail={account.email} onClick={()=> onOpenField('email')}/>
+              <SettingsRow icon="cake" label={tr('profile.birthday','Birthday')} detail={account.birthday} onClick={()=> onOpenField('birthday')}/>
+              <SettingsRow icon="user" label={tr('profile.gender','Gender')} detail={account.gender} onClick={()=> onOpenField('gender')}/>
+              <SettingsRow icon="bell" label={tr('profile.notifications','Notifications')} detail={account.notif} onClick={()=> onOpenField('notifications')}/>
+            </div>
+          </div>
+        )}
+        </div>{/* /scroll */}
+
+        <PrimaryBtn full disabled={!n.trim() || !h.trim()} onClick={()=> onSave(n.trim(), h.trim(), src)} style={{marginTop: 14, flexShrink: 0}}>
           {tr('ep.save','Save')}
         </PrimaryBtn>
       </div>

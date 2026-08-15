@@ -652,7 +652,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
   const loose  = all.filter(g => !selected.has(g));
   const picked = all.filter(g => selected.has(g));
   return (
-    <div style={{display:'flex', flexDirection:'column', height: 458}}>
+    <div style={{display:'flex', flexDirection:'column', height: 504}}>
       {/* floating popcorn (un-chosen genres) */}
       <div style={{display:'flex', flexWrap:'wrap', gap:'6px 2px', justifyContent:'center', alignContent:'flex-start'}}>
         {loose.map((g, i) => (
@@ -663,53 +663,43 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
         )}
       </div>
 
-      {/* the bucket top, with chosen popcorn sitting in its mouth */}
+      {/* the full carton (popcorn spilling over) with chosen genres nestled
+          into the popcorn at the mouth, and a big "Pick" on the oval */}
       <div style={{marginTop:'auto', position:'relative'}}>
+        <BucketFull label={
+          <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 30, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
+            {tr('onb.pick','Pick')}
+          </span>
+        }/>
         {picked.length > 0 && (
           <div style={{
-            display:'flex', flexWrap:'wrap', gap:'2px 1px', justifyContent:'center',
-            position:'relative', zIndex: 3, marginBottom: -34, padding:'0 30px',
+            position:'absolute', left: 0, right: 0, top:'26%', zIndex: 4,
+            display:'flex', flexWrap:'wrap', gap:'1px 1px', justifyContent:'center',
+            padding:'0 40px',
           }}>
             {picked.map((g, i) => (
               <PopcornChip key={g} i={i} small cls="pop-drop" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
             ))}
           </div>
         )}
-        <BucketTop label={
-          picked.length === 0
-            ? <span style={{fontFamily:'var(--sans)', fontSize: 15, fontWeight: 800, color:'#6E3200', whiteSpace:'nowrap', letterSpacing:'-0.01em'}}>{tr('onb.tapToFill','Pick a genre')}</span>
-            : <span style={{fontFamily:'var(--sans)', color:'#6E3200', lineHeight: 0.92, display:'flex', flexDirection:'column', alignItems:'center'}}>
-                <span style={{fontSize: 32, fontWeight: 800}}>{picked.length}</span>
-                <span style={{fontSize: 9.5, fontWeight: 800, letterSpacing:'0.12em', textTransform:'uppercase', opacity: 0.85}}>{tr('onb.genresLabel','genres')}</span>
-              </span>
-        }/>
       </div>
     </div>
   );
 }
 
-// The carton, cropped to just its striped top + oval label (the artwork's
-// own popcorn is above the crop, so it's hidden) — a compact "bucket mouth"
-// the chosen popcorn can sit in. `label` prints on the oval.
-function BucketTop({ label }) {
-  const W = 224;                 // rendered box width (fills the crop)
-  const bx = 322, by = 414, bw = 480;   // box bounding-box in the 1122 artwork
-  const s = W / bw;              // scale so the box fills the width
-  const revealH = (812 - by) * s;       // reveal down to just past the oval
+// The full illustrated carton — popcorn spilling over the striped box, with
+// the oval label. Chosen genres are layered on top (in the picker) so they
+// nestle into the popcorn. `label` prints on the oval (~48.9% / 61.5%).
+function BucketFull({ label, W = 290 }) {
   return (
-    <div style={{width: W, margin:'0 auto', position:'relative'}}>
-      <div style={{width:'100%', height: revealH, overflow:'hidden', position:'relative',
-        filter:'drop-shadow(0 12px 18px rgba(0,0,0,0.42))'}}>
-        <img src="assets/popcorn.svg?v=209" alt="" style={{
-          display:'block', width: 1122 * s, marginLeft: -bx * s, marginTop: -by * s,
-        }}/>
-      </div>
+    <div style={{ width: W, margin:'0 auto', position:'relative' }}>
+      <img src="assets/popcorn.svg?v=209" alt="" style={{
+        display:'block', width: W, filter:'drop-shadow(0 14px 22px rgba(0,0,0,0.45))',
+      }}/>
       {label && (
         <div style={{
-          position:'absolute',
-          left: `${((549 - bx) * s / W) * 100}%`,
-          top:  `${((690 - by) * s / revealH) * 100}%`,
-          transform:'translate(-50%,-50%)', width:'50%', textAlign:'center', pointerEvents:'none',
+          position:'absolute', left:'48.9%', top:'61.5%', transform:'translate(-50%,-50%)',
+          width:'30%', textAlign:'center', pointerEvents:'none',
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>{label}</div>
       )}

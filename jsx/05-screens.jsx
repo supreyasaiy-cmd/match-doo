@@ -660,10 +660,10 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
   const loose  = all.filter(g => !selected.has(g));
   const picked = all.filter(g => selected.has(g));
   return (
-    <div style={{display:'flex', flexDirection:'column', flex: 1, minHeight: 0, paddingTop: 4}}>
+    <div style={{position:'relative', flex: 1, minHeight: 0}}>
       {/* floating popcorn — scattered, not a grid (stable position per genre
           so the rest stay put when one drops into the bucket) */}
-      <div style={{position:'relative', flex: 1, minHeight: 150}}>
+      <div style={{position:'absolute', top: 2, left: 0, right: 0, height: 228}}>
         {loose.map((g) => {
           const idx = all.indexOf(g);
           const p = POPCORN_SCATTER[idx] || [50, 50];
@@ -677,7 +677,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
 
       {/* the full carton — large, bleeding off the sides + bottom — with the
           chosen genres nestled into the popcorn at the mouth, big "Pick" oval */}
-      <div style={{position:'relative', marginBottom: 46}}>
+      <div style={{position:'absolute', left: 0, right: 0, bottom: 70}}>
         <BucketFull W={402} label={
           <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 46, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
             {tr('onb.pick','Pick')}
@@ -685,7 +685,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
         }/>
         {picked.length > 0 && (
           <div style={{
-            position:'absolute', left: 0, right: 0, top:'30%', zIndex: 4,
+            position:'absolute', left: 0, right: 0, top:'40%', zIndex: 4,
             display:'flex', flexWrap:'wrap', gap:'1px 3px', justifyContent:'center',
             padding:'0 66px',
           }}>
@@ -704,9 +704,9 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
 // (the artwork's side whitespace is ignored) and the box bottom bleeds below
 // the reserved height. Chosen genres are layered on top (in the picker).
 function BucketFull({ label, W = 410 }) {
-  const cx = 292, cy = 152, cw = 516;    // popcorn+box content box in the 1122 art
+  const cx = 292, cy = 206, cw = 516;    // popcorn+box content box in the 1122 art
   const s = W / cw;
-  const revealH = (752 - cy) * s;        // reveal popcorn → just past the oval; rest bleeds
+  const revealH = (704 - cy) * s;        // reserve down to the oval; the box below bleeds
   return (
     <div style={{ width: W, height: revealH, margin:'0 auto', position:'relative' }}>
       <img src="assets/popcorn.svg?v=209" alt="" style={{

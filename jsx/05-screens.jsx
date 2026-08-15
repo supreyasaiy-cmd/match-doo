@@ -596,7 +596,7 @@ function OnboardingScreen({ initialName = '', onDone }) {
         {cur.body}
       </div>
 
-      <div style={{marginTop:'auto', display:'flex', gap: 10}}>
+      <div style={{marginTop:'auto', display:'flex', gap: 10, position:'relative', zIndex: 5}}>
         {step > 0 && (
           <PrimaryBtn secondary onClick={()=>setStep(s=>s-1)}>{tr('onb.back','Back')}</PrimaryBtn>
         )}
@@ -620,6 +620,13 @@ function OnboardingScreen({ initialName = '', onDone }) {
 // y/height stay put, so long words widen rather than balloon.
 const PC_SHADOWS = [[22.36,21.12,36.72,25.76],[52.6,14.96,38.88,26.88],[35.32,32.32,49.68,22.4]];
 const PC_PUFFS   = [[16.2,12.32,41.04,28,'#FFF4D8'],[45.36,6.72,42.12,29.12,'#FFF7E8'],[28.08,23.52,54,24.64,'#FFF1CC']];
+// Scattered [x%, y%] slots for the floating genres — hand-placed so the
+// pile reads like tossed popcorn rather than a grid. Indexed by GENRES order.
+const POPCORN_SCATTER = [
+  [30, 12], [72, 8], [50, 22], [86, 18], [14, 27],
+  [37, 33], [65, 32], [21, 46], [48, 45], [82, 44],
+  [34, 60], [63, 56], [26, 74], [53, 72], [80, 70], [46, 86],
+];
 function PopcornChip({ label, onClick, small, i = 0, cls }) {
   const rot = [-7, 5, -3, 8, -5, 4, -8, 6, -4, 7][i % 10];
   const len = label.length;
@@ -653,31 +660,34 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
   const loose  = all.filter(g => !selected.has(g));
   const picked = all.filter(g => selected.has(g));
   return (
-    <div style={{display:'flex', flexDirection:'column', flex: 1, minHeight: 0, paddingTop: 8}}>
-      {/* floating popcorn (un-chosen genres) */}
-      <div style={{display:'flex', flexWrap:'wrap', gap:'10px 2px', justifyContent:'center', alignContent:'flex-start'}}>
-        {loose.map((g, i) => (
-          <PopcornChip key={g} i={i} cls="pop-rise" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
-        ))}
-        {loose.length === 0 && (
-          <div style={{fontSize: 13, color:'var(--muted)', padding:'8px 2px'}}>{tr('onb.bucketFull','Whole bucket full — nice taste! 🍿')}</div>
-        )}
+    <div style={{display:'flex', flexDirection:'column', flex: 1, minHeight: 0, paddingTop: 4}}>
+      {/* floating popcorn — scattered, not a grid (stable position per genre
+          so the rest stay put when one drops into the bucket) */}
+      <div style={{position:'relative', flex: 1, minHeight: 150}}>
+        {loose.map((g) => {
+          const idx = all.indexOf(g);
+          const p = POPCORN_SCATTER[idx] || [50, 50];
+          return (
+            <div key={g} style={{position:'absolute', left:`${p[0]}%`, top:`${p[1]}%`, transform:'translate(-50%,-50%)'}}>
+              <PopcornChip i={idx} cls="pop-rise" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
+            </div>
+          );
+        })}
       </div>
 
-      {/* the full carton (popcorn spilling over) — big and bleeding off the
-          bottom — with chosen genres nestled into the popcorn at the mouth,
-          and a big "Pick" on the oval */}
-      <div style={{marginTop:'auto', position:'relative', marginBottom: -74}}>
-        <BucketFull W={392} label={
-          <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 40, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
+      {/* the full carton — large, bleeding off the sides + bottom — with the
+          chosen genres nestled into the popcorn at the mouth, big "Pick" oval */}
+      <div style={{position:'relative', marginBottom: 46}}>
+        <BucketFull W={402} label={
+          <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 46, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
             {tr('onb.pick','Pick')}
           </span>
         }/>
         {picked.length > 0 && (
           <div style={{
-            position:'absolute', left: 0, right: 0, top:'25%', zIndex: 4,
-            display:'flex', flexWrap:'wrap', gap:'1px 2px', justifyContent:'center',
-            padding:'0 44px',
+            position:'absolute', left: 0, right: 0, top:'30%', zIndex: 4,
+            display:'flex', flexWrap:'wrap', gap:'1px 3px', justifyContent:'center',
+            padding:'0 66px',
           }}>
             {picked.map((g, i) => (
               <PopcornChip key={g} i={i} small cls="pop-drop" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
@@ -690,18 +700,25 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
 }
 
 // The full illustrated carton — popcorn spilling over the striped box, with
-// the oval label. Chosen genres are layered on top (in the picker) so they
-// nestle into the popcorn. `label` prints on the oval (~48.9% / 61.5%).
-function BucketFull({ label, W = 290 }) {
+// the oval label. Scaled so the popcorn+box *content* fills the width `W`
+// (the artwork's side whitespace is ignored) and the box bottom bleeds below
+// the reserved height. Chosen genres are layered on top (in the picker).
+function BucketFull({ label, W = 410 }) {
+  const cx = 292, cy = 152, cw = 516;    // popcorn+box content box in the 1122 art
+  const s = W / cw;
+  const revealH = (752 - cy) * s;        // reveal popcorn → just past the oval; rest bleeds
   return (
-    <div style={{ width: W, margin:'0 auto', position:'relative' }}>
+    <div style={{ width: W, height: revealH, margin:'0 auto', position:'relative' }}>
       <img src="assets/popcorn.svg?v=209" alt="" style={{
-        display:'block', width: W, filter:'drop-shadow(0 14px 22px rgba(0,0,0,0.45))',
+        position:'absolute', left: -cx * s, top: -cy * s, width: 1122 * s, display:'block',
+        filter:'drop-shadow(0 12px 20px rgba(0,0,0,0.45))',
       }}/>
       {label && (
         <div style={{
-          position:'absolute', left:'48.9%', top:'61.5%', transform:'translate(-50%,-50%)',
-          width:'30%', textAlign:'center', pointerEvents:'none',
+          position:'absolute',
+          left: `${((549 - cx) * s / W) * 100}%`,
+          top:  `${((690 - cy) * s / revealH) * 100}%`,
+          transform:'translate(-50%,-50%)', pointerEvents:'none',
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>{label}</div>
       )}

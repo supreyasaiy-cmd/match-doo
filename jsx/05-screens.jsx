@@ -544,16 +544,26 @@ function OnboardingScreen({ initialName = '', onDone }) {
       ),
     },
     {
-      // Immersive step — no heading; the popcorn scene does the talking.
-      title: null,
-      sub: null,
+      title: (window.I18N && window.I18N.lang === 'th') ? tr('onb.t3','') : <>Pick a few<br/><em style={{fontStyle:'italic'}}>genres.</em></>,
+      sub: (window.I18N && window.I18N.lang === 'th') ? `${tr('onb.sub3a','Pick at least 3 so we can learn your taste —')} ${genres.size} ${tr('onb.sub3b','so far.')}` : `Pick at least 3 so we can learn your taste — ${genres.size} so far.`,
       can: genres.size >= 3,
       body: (
-        <GenrePopcornPicker
-          all={GENRES}
-          selected={genres}
-          onToggle={(g)=> setGenres(s=>toggle(s,g))}
-        />
+        <div style={{display:'flex', flexWrap:'wrap', gap: 8}}>
+          {GENRES.map(g=>{
+            const on = genres.has(g);
+            return (
+              <button key={g} onClick={()=>setGenres(s=>toggle(s,g))} style={{
+                appearance:'none', border:0,
+                padding:'10px 14px', borderRadius: 999,
+                background: on ? 'var(--cream)' : 'rgba(var(--fg-rgb),0.06)',
+                color: on ? 'var(--ink)' : 'var(--cream)',
+                fontFamily:'var(--sans)', fontWeight: on? 600:500, fontSize: 13,
+                border: `0.5px solid ${on? 'var(--cream)' : 'rgba(var(--fg-rgb),0.12)'}`,
+                transition:'all .14s ease',
+              }}>{genreLabel(g)}</button>
+            );
+          })}
+        </div>
       ),
     },
   ];
@@ -587,16 +597,16 @@ function OnboardingScreen({ initialName = '', onDone }) {
         </div>
       )}
 
-      <div key={step} className="fade-in" style={{flex: 1, display:'flex', flexDirection:'column', minHeight: 0}}>
-        {cur.title ? <div style={{
+      <div key={step} className="fade-in">
+        <div style={{
           fontFamily:'var(--serif)', fontSize: 40, lineHeight: 0.98, letterSpacing:'-0.02em',
           color:'var(--cream)', marginBottom: 12,
-        }}>{cur.title}</div> : null}
-        {cur.sub ? <div style={{color:'var(--muted)', fontSize: 14, marginBottom: 28}}>{cur.sub}</div> : null}
+        }}>{cur.title}</div>
+        <div style={{color:'var(--muted)', fontSize: 14, marginBottom: 28}}>{cur.sub}</div>
         {cur.body}
       </div>
 
-      <div style={{marginTop:'auto', display:'flex', gap: 10, position:'relative', zIndex: 5}}>
+      <div style={{marginTop:'auto', display:'flex', gap: 10}}>
         {step > 0 && (
           <PrimaryBtn secondary onClick={()=>setStep(s=>s-1)}>{tr('onb.back','Back')}</PrimaryBtn>
         )}
@@ -607,121 +617,6 @@ function OnboardingScreen({ initialName = '', onDone }) {
           {step < steps.length - 1 ? tr('onb.continue','Continue') : tr('onb.start','Start matching')}
         </PrimaryBtn>
       </div>
-    </div>
-  );
-}
-
-// ─── Onboarding · popcorn genre picker ─────────────────────────────
-// Genres float as "kernels" up top; tap one and it drops into the
-// popcorn box below, turning golden. Tap it again and it pops back up.
-// A single popcorn piece — three cream "puffs" over three offset butter
-// shadows, with the genre name in the middle. Geometry is straight from the
-// Pencil design (reference frame 108×56); x/width scale with the word length,
-// y/height stay put, so long words widen rather than balloon.
-const PC_SHADOWS = [[22.36,21.12,36.72,25.76],[52.6,14.96,38.88,26.88],[35.32,32.32,49.68,22.4]];
-const PC_PUFFS   = [[16.2,12.32,41.04,28,'#FFF4D8'],[45.36,6.72,42.12,29.12,'#FFF7E8'],[28.08,23.52,54,24.64,'#FFF1CC']];
-// Scattered [x%, y%] slots for the floating genres — hand-placed so the
-// pile reads like tossed popcorn rather than a grid. Indexed by GENRES order.
-const POPCORN_SCATTER = [
-  [30, 12], [72, 8], [50, 22], [86, 18], [14, 27],
-  [37, 33], [65, 32], [21, 46], [48, 45], [82, 44],
-  [34, 60], [63, 56], [26, 74], [53, 72], [80, 70], [46, 86],
-];
-function PopcornChip({ label, onClick, small, i = 0, cls }) {
-  const rot = [-7, 5, -3, 8, -5, 4, -8, 6, -4, 7][i % 10];
-  const len = label.length;
-  const scale = small ? 0.78 : 1;
-  const Ws = Math.round((46 + 8 * len) * scale), Hs = Math.round(56 * scale);
-  const fx = Ws / 108, fy = scale;   // x/width scale with length; y/height constant
-  const fontSize = Math.max(8, Math.min(11.5, 104 / len)) * scale;
-  const ell = (a, bg, z) => (
-    <div key={z} style={{ position:'absolute', left: a[0]*fx, top: a[1]*fy, width: a[2]*fx, height: a[3]*fy, background: bg, borderRadius:'50%', zIndex: z }}/>
-  );
-  return (
-    <button onClick={onClick} className={cls} aria-pressed={!!small} style={{
-      position:'relative', width: Ws, height: Hs, flexShrink: 0,
-      appearance:'none', border: 0, background:'transparent', cursor:'pointer', padding: 0,
-    }}>
-      <div style={{ position:'absolute', inset: 0, transform:`rotate(${rot}deg)`, filter:'drop-shadow(0 3px 5px rgba(0,0,0,0.30))' }}>
-        {PC_SHADOWS.map((a, j) => ell(a, '#EAB84A', j))}
-        {PC_PUFFS.map((a, j) => ell(a, a[4], j + 3))}
-        <div style={{
-          position:'absolute', inset: 0, zIndex: 6,
-          display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center',
-          color:'#7A1E22', fontFamily:"'Nunito', var(--sans)", fontWeight: 900,
-          fontSize, letterSpacing:'-0.01em', padding:'0 6px', lineHeight: 1,
-        }}>{label}</div>
-      </div>
-    </button>
-  );
-}
-
-function GenrePopcornPicker({ all = [], selected, onToggle }) {
-  const loose  = all.filter(g => !selected.has(g));
-  const picked = all.filter(g => selected.has(g));
-  return (
-    <div style={{position:'relative', flex: 1, minHeight: 0}}>
-      {/* floating popcorn — scattered, not a grid (stable position per genre
-          so the rest stay put when one drops into the bucket) */}
-      <div style={{position:'absolute', top: 2, left: 0, right: 0, height: 228}}>
-        {loose.map((g) => {
-          const idx = all.indexOf(g);
-          const p = POPCORN_SCATTER[idx] || [50, 50];
-          return (
-            <div key={g} style={{position:'absolute', left:`${p[0]}%`, top:`${p[1]}%`, transform:'translate(-50%,-50%)'}}>
-              <PopcornChip i={idx} cls="pop-rise" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* the full carton — large, bleeding off the sides + bottom — with the
-          chosen genres nestled into the popcorn at the mouth, big "Pick" oval */}
-      <div style={{position:'absolute', left: 0, right: 0, bottom: 70, pointerEvents:'none'}}>
-        <BucketFull W={402} label={
-          <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 46, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
-            {tr('onb.pick','Pick')}
-          </span>
-        }/>
-        {picked.length > 0 && (
-          <div style={{
-            position:'absolute', left: 0, right: 0, top:'40%', zIndex: 4, pointerEvents:'auto',
-            display:'flex', flexWrap:'wrap', gap:'1px 3px', justifyContent:'center',
-            padding:'0 66px',
-          }}>
-            {picked.map((g, i) => (
-              <PopcornChip key={g} i={i} small cls="pop-drop" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// The full illustrated carton — popcorn spilling over the striped box, with
-// the oval label. Scaled so the popcorn+box *content* fills the width `W`
-// (the artwork's side whitespace is ignored) and the box bottom bleeds below
-// the reserved height. Chosen genres are layered on top (in the picker).
-function BucketFull({ label, W = 410 }) {
-  const cx = 292, cy = 206, cw = 516;    // popcorn+box content box in the 1122 art
-  const s = W / cw;
-  const revealH = (704 - cy) * s;        // reserve down to the oval; the box below bleeds
-  return (
-    <div style={{ width: W, height: revealH, margin:'0 auto', position:'relative' }}>
-      <img src="assets/popcorn.svg?v=209" alt="" style={{
-        position:'absolute', left: -cx * s, top: -cy * s, width: 1122 * s, display:'block',
-        filter:'drop-shadow(0 12px 20px rgba(0,0,0,0.45))',
-      }}/>
-      {label && (
-        <div style={{
-          position:'absolute',
-          left: `${((549 - cx) * s / W) * 100}%`,
-          top:  `${((690 - cy) * s / revealH) * 100}%`,
-          transform:'translate(-50%,-50%)', pointerEvents:'none',
-          display:'flex', alignItems:'center', justifyContent:'center',
-        }}>{label}</div>
-      )}
     </div>
   );
 }

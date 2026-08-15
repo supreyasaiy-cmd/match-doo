@@ -544,8 +544,9 @@ function OnboardingScreen({ initialName = '', onDone }) {
       ),
     },
     {
-      title: (window.I18N && window.I18N.lang === 'th') ? tr('onb.t3','') : <>Pick a few<br/><em style={{fontStyle:'italic'}}>genres.</em></>,
-      sub: (window.I18N && window.I18N.lang === 'th') ? `${tr('onb.sub3a','Pick at least 3 so we can learn your taste —')} ${genres.size} ${tr('onb.sub3b','so far.')}` : `Pick at least 3 so we can learn your taste — ${genres.size} so far.`,
+      // Immersive step — no heading; the popcorn scene does the talking.
+      title: null,
+      sub: null,
       can: genres.size >= 3,
       body: (
         <GenrePopcornPicker
@@ -586,12 +587,12 @@ function OnboardingScreen({ initialName = '', onDone }) {
         </div>
       )}
 
-      <div key={step} className="fade-in">
-        <div style={{
+      <div key={step} className="fade-in" style={{flex: 1, display:'flex', flexDirection:'column', minHeight: 0}}>
+        {cur.title ? <div style={{
           fontFamily:'var(--serif)', fontSize: 40, lineHeight: 0.98, letterSpacing:'-0.02em',
           color:'var(--cream)', marginBottom: 12,
-        }}>{cur.title}</div>
-        <div style={{color:'var(--muted)', fontSize: 14, marginBottom: 28}}>{cur.sub}</div>
+        }}>{cur.title}</div> : null}
+        {cur.sub ? <div style={{color:'var(--muted)', fontSize: 14, marginBottom: 28}}>{cur.sub}</div> : null}
         {cur.body}
       </div>
 
@@ -652,9 +653,9 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
   const loose  = all.filter(g => !selected.has(g));
   const picked = all.filter(g => selected.has(g));
   return (
-    <div style={{display:'flex', flexDirection:'column', height: 504}}>
+    <div style={{display:'flex', flexDirection:'column', flex: 1, minHeight: 0, paddingTop: 8}}>
       {/* floating popcorn (un-chosen genres) */}
-      <div style={{display:'flex', flexWrap:'wrap', gap:'6px 2px', justifyContent:'center', alignContent:'flex-start'}}>
+      <div style={{display:'flex', flexWrap:'wrap', gap:'10px 2px', justifyContent:'center', alignContent:'flex-start'}}>
         {loose.map((g, i) => (
           <PopcornChip key={g} i={i} cls="pop-rise" label={genreLabel(g)} onClick={()=> onToggle(g)}/>
         ))}
@@ -663,19 +664,20 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
         )}
       </div>
 
-      {/* the full carton (popcorn spilling over) with chosen genres nestled
-          into the popcorn at the mouth, and a big "Pick" on the oval */}
-      <div style={{marginTop:'auto', position:'relative'}}>
-        <BucketFull label={
-          <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 30, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
+      {/* the full carton (popcorn spilling over) — big and bleeding off the
+          bottom — with chosen genres nestled into the popcorn at the mouth,
+          and a big "Pick" on the oval */}
+      <div style={{marginTop:'auto', position:'relative', marginBottom: -74}}>
+        <BucketFull W={392} label={
+          <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 40, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
             {tr('onb.pick','Pick')}
           </span>
         }/>
         {picked.length > 0 && (
           <div style={{
-            position:'absolute', left: 0, right: 0, top:'26%', zIndex: 4,
-            display:'flex', flexWrap:'wrap', gap:'1px 1px', justifyContent:'center',
-            padding:'0 40px',
+            position:'absolute', left: 0, right: 0, top:'25%', zIndex: 4,
+            display:'flex', flexWrap:'wrap', gap:'1px 2px', justifyContent:'center',
+            padding:'0 44px',
           }}>
             {picked.map((g, i) => (
               <PopcornChip key={g} i={i} small cls="pop-drop" label={genreLabel(g)} onClick={()=> onToggle(g)}/>

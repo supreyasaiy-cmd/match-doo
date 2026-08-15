@@ -677,7 +677,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
 
       {/* the full carton — large, bleeding off the sides + bottom — with the
           chosen genres nestled into the popcorn at the mouth, big "Pick" oval */}
-      <div style={{position:'absolute', left: 0, right: 0, bottom: 70}}>
+      <div style={{position:'absolute', left: 0, right: 0, bottom: 70, pointerEvents:'none'}}>
         <BucketFull W={402} label={
           <span style={{fontFamily:"'Baloo 2', var(--sans)", fontWeight: 800, fontSize: 46, color:'#7A1E22', lineHeight: 1, letterSpacing:'-0.01em'}}>
             {tr('onb.pick','Pick')}
@@ -685,7 +685,7 @@ function GenrePopcornPicker({ all = [], selected, onToggle }) {
         }/>
         {picked.length > 0 && (
           <div style={{
-            position:'absolute', left: 0, right: 0, top:'40%', zIndex: 4,
+            position:'absolute', left: 0, right: 0, top:'40%', zIndex: 4, pointerEvents:'auto',
             display:'flex', flexWrap:'wrap', gap:'1px 3px', justifyContent:'center',
             padding:'0 66px',
           }}>

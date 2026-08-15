@@ -15,7 +15,7 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass, review, onReview }) {
   const posterSrc = movie.posterUrl || movie.backdropUrl || null;
   const isSeries = movie.type === 'series';
   const lengthText = isSeries
-    ? `${movie.seasons || 1} season${(movie.seasons || 1) > 1 ? 's' : ''}${movie.episodes ? ` · ${movie.episodes} episodes` : ''}`
+    ? `${movie.seasons || 1} ${window.tr?tr('media.seasonN','seasons'):'seasons'}${movie.episodes ? ` · ${movie.episodes} ${window.tr?tr('media.episodeN','episodes'):'episodes'}` : ''}`
     : `${Math.floor((movie.runtime || 120) / 60)}h ${(movie.runtime || 120) % 60}m`;
   // Only show streaming services we have a logo/chip for.
   const knownWhere = (movie.where || []).filter(n => window.SERVICES && window.SERVICES[n]);
@@ -207,10 +207,10 @@ function ReadMoreSheet({ movie, onClose, onLike, onPass, review, onReview }) {
             border:`0.5px solid ${isSeries ? 'rgba(111,147,224,0.4)' : 'rgba(255,191,101,0.4)'}`,
             color: isSeries ? '#6F93E0' : '#FFBF65',
             fontSize: 10, fontWeight: 700, letterSpacing:'0.08em',
-          }}>{isSeries ? 'SERIES' : 'MOVIE'}</span>
+          }}>{isSeries ? (window.tr?tr('rm.series','SERIES'):'SERIES') : (window.tr?tr('rm.movie','MOVIE'):'MOVIE')}</span>
           <span>{movie.year}</span><span>·</span>
           <span>{lengthText}</span><span>·</span>
-          <span>{movie.genres?.join(', ')}</span>
+          <span>{(movie.genres || []).map(g => window.genreLabel ? genreLabel(g) : g).join(', ')}</span>
         </div>
 
         {/* Streaming tag — where to watch, right up top for easy reading */}
@@ -445,7 +445,7 @@ function SearchOverlay({ onClose, onPick }) {
 
       {/* Big centered input */}
       <div style={{padding:'18px 24px 10px'}}>
-        <div style={{fontSize: 11, letterSpacing:'0.2em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 12}}>Search</div>
+        <div style={{fontSize: 11, letterSpacing:'0.2em', textTransform:'uppercase', color:'var(--muted)', marginBottom: 12}}>{window.tr?tr('search.label','Search'):'Search'}</div>
         <div style={{
           display:'flex', alignItems:'center', gap: 12,
           borderBottom:'2px solid var(--red)', paddingBottom: 12,
@@ -476,7 +476,7 @@ function SearchOverlay({ onClose, onPick }) {
 
       <div className="phone-scroll" style={{flex:1, overflowY:'auto', padding:'8px 18px 40px'}}>
         <div style={{fontSize: 12, color:'var(--muted)', padding:'6px 6px 12px'}}>
-          {q ? `${results.length} result${results.length===1?'':'s'}` : 'Popular right now'}
+          {q ? `${results.length} ${window.tr?tr('search.resultN','results'):'results'}` : (window.tr?tr('search.popular','Popular right now'):'Popular right now')}
         </div>
         <div style={{display:'flex', flexDirection:'column', gap: 8}}>
           {results.map(m => (
@@ -491,7 +491,7 @@ function SearchOverlay({ onClose, onPick }) {
               <div style={{flex:1, minWidth:0}}>
                 <div style={{fontFamily:'var(--serif)', fontSize: 19, lineHeight: 1.05, letterSpacing:'-0.01em', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{m.title}</div>
                 <div style={{fontSize: 11, color:'var(--muted)', marginTop: 4, letterSpacing:'0.05em', textTransform:'uppercase'}}>
-                  {m.year} · {m.type === 'series' ? `${m.seasons||1} season${(m.seasons||1)>1?'s':''}` : genreLabel(m.genres?.[0] || 'Film')} · {m.rt}% RT
+                  {m.year} · {m.type === 'series' ? `${m.seasons||1} ${window.tr?tr('media.seasonN','seasons'):'seasons'}` : genreLabel(m.genres?.[0] || 'Film')} · {m.rt}% RT
                 </div>
               </div>
               <Icon name="chev" size={14} color="var(--muted-2)"/>

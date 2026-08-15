@@ -238,8 +238,11 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
             fontFamily:'var(--serif)', fontSize: 40, lineHeight: 0.98, letterSpacing:'-0.02em',
             color:'var(--cream)', textWrap:'pretty',
           }}>
-            {isSignup ? <>Let's get<br/><em style={{fontStyle:'italic', color:'var(--gold)'}}>matched.</em></>
-                      : <>Welcome<br/><em style={{fontStyle:'italic', color:'var(--gold)'}}>back.</em></>}
+            {(window.I18N && window.I18N.lang === 'th')
+              ? (isSignup ? <>มาเริ่ม<br/><em style={{fontStyle:'italic', color:'var(--gold)'}}>จับคู่หนัง</em></>
+                          : <>ยินดีต้อนรับ<br/><em style={{fontStyle:'italic', color:'var(--gold)'}}>กลับมา</em></>)
+              : (isSignup ? <>Let's get<br/><em style={{fontStyle:'italic', color:'var(--gold)'}}>matched.</em></>
+                          : <>Welcome<br/><em style={{fontStyle:'italic', color:'var(--gold)'}}>back.</em></>)}
           </div>
           <div style={{marginTop: 12, color:'var(--muted)', fontSize: 14, lineHeight: 1.5, maxWidth: 320, marginBottom: 22}}>
             {isSignup
@@ -265,7 +268,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
             {isSignup && (
               <label style={{display:'block'}}>
                 <div style={fieldLabel}>{tr('auth.fullName','Full name')}</div>
-                <input value={name} onChange={e=>setName(e.target.value)} placeholder="Alex Carter" style={inputStyle(touched && !nameOk)}/>
+                <input value={name} onChange={e=>setName(e.target.value)} placeholder={tr('auth.namePh','Alex Carter')} style={inputStyle(touched && !nameOk)}/>
               </label>
             )}
             <label style={{display:'block'}}>
@@ -277,7 +280,7 @@ function AuthScreen({ mode: initialMode = 'signin', onBack, onAuth, onOpenLegal 
               <div style={fieldLabel}>{tr('auth.password','Password')}</div>
               <div style={{position:'relative'}}>
                 <input type={showPw ? 'text' : 'password'} value={pw} onChange={e=>setPw(e.target.value)}
-                  placeholder={isSignup ? 'At least 6 characters' : 'Your password'}
+                  placeholder={isSignup ? tr('auth.pwPhNew','At least 6 characters') : tr('auth.pwPh','Your password')}
                   style={{...inputStyle(touched && !pwOk), paddingRight: 46}}/>
                 <button type="button" onClick={()=>setShowPw(s=>!s)} aria-label="Toggle password visibility" style={{
                   position:'absolute', right: 6, top: 6, width: 38, height: 38, borderRadius: 999,
@@ -753,7 +756,7 @@ function FriendMatchSection({ friend, matched, watched, onOpen, onOpenMovie }) {
             fontSize: 10, letterSpacing:'0.14em', textTransform:'uppercase',
             color:'var(--muted)', marginBottom: 8, display:'flex', alignItems:'center', gap: 6,
           }}>
-            <Icon name="check" size={11}/> Watched together
+            <Icon name="check" size={11}/> {tr('md.watchedTogether','Watched together')}
           </div>
           <div style={{display:'flex', gap: 8}}>
             {watched.map(m=> (
@@ -1505,12 +1508,7 @@ function ProfileScreen({ user, prefs, onSignOut, onOpenTweaks, likedMovies = [],
           <SettingsRow icon="logOut" label={tr('profile.signout','Sign out')} onClick={onSignOut} danger/>
         </SettingsGroup>
 
-        <div style={{
-          textAlign:'center', padding:'24px 18px', fontSize: 11, color:'var(--muted-2)',
-          fontFamily:'var(--serif)', fontStyle:'italic', fontSize: 14,
-        }}>
-          {tr('profile.tagline','Match Doo · made for movie nights')}
-        </div>
+        <div style={{height: 24}}/>
       </div>
 
       {sheet && (
@@ -1848,7 +1846,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
       <TopBar title={title} onBack={onClose} right={
         <div style={{display:'flex', alignItems:'center', gap: 8}}>
           <span style={{fontSize: 12.5, color:'var(--muted)'}}>
-            {shown.length} {shown.length === 1 ? 'title' : 'titles'}
+            {shown.length} {tr('list.titleN','titles')}
           </span>
           {shown.length > 0 && (
             <button onClick={()=> setShowShare(true)} aria-label={tr('sl.title','Share this list')} className="press-soft" style={{
@@ -1932,7 +1930,7 @@ function MovieListSheet({ title, movies = [], onClose, onOpenMovie, friendsFor }
                   );
                 })() : (
                   <div style={{fontSize: 10.5, color:'var(--muted)', marginTop: 1}}>
-                    {m.type === 'series' ? `${m.seasons || 1} season${(m.seasons||1)>1?'s':''}` : m.year}
+                    {m.type === 'series' ? `${m.seasons || 1} ${tr('media.seasonN','seasons')}` : m.year}
                   </div>
                 )}
               </button>
@@ -2797,7 +2795,7 @@ function MovieDetailSheet({ movie, friend, onClose, onMarkWatched, review, onRev
               <PrimaryBtn full onClick={()=>onMarkWatched?.(movie, friend)}>
                 <span style={{display:'inline-flex', alignItems:'center', gap: 8}}>
                   <Icon name="check" size={16} stroke={2.6}/>
-                  Watched together
+                  {tr('md.watchedTogether','Watched together')}
                 </span>
               </PrimaryBtn>
             </>
@@ -2939,7 +2937,7 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
         fontSize: 13, color:'var(--muted)', marginBottom: 32, textAlign:'center',
         position:'relative', zIndex:1,
       }}>
-        You and {friend.name.split(' ')[0]} both want to watch this.
+        {tr('mc.bothWant','You and {name} both want to watch this.').replace('{name}', friend.name.split(' ')[0])}
       </div>
 
       <div className="rise" style={{
@@ -2949,10 +2947,10 @@ function MatchCelebration({ movie, friend, onWatch, onKeep }) {
         <PrimaryBtn full onClick={onWatch}>
           <span style={{display:'inline-flex', alignItems:'center', gap: 8}}>
             <Icon name="play" size={14}/>
-            Watched it together
+            {tr('mc.watchedTogether','Watched it together')}
           </span>
         </PrimaryBtn>
-        <PrimaryBtn full secondary onClick={onKeep}>Keep swiping</PrimaryBtn>
+        <PrimaryBtn full secondary onClick={onKeep}>{tr('mc.keepSwiping','Keep swiping')}</PrimaryBtn>
       </div>
     </div>
   );

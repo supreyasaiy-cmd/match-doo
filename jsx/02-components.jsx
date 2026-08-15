@@ -265,9 +265,10 @@ function ServiceChip({ name, size = 22 }) {
   const s = window.SERVICES[name] || { color:'#333', short: name[0] };
   const slug = SERVICE_SLUGS[name] || name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
   // try svg → png → tinted-letter fallback
-  const [stage, setStage] = React.useState('svg');
-  const src = stage === 'svg' ? `assets/logos/${slug}.svg`
-            : stage === 'png' ? `assets/logos/${slug}.png`
+  // Logos ship as PNG only — start there so we don't fire a doomed .svg
+  // request (404) for every chip.
+  const [stage, setStage] = React.useState('png');
+  const src = stage === 'png' ? `assets/logos/${slug}.png`
             : null;
 
   if (src) {
@@ -281,7 +282,7 @@ function ServiceChip({ name, size = 22 }) {
         <img
           src={src}
           alt={name}
-          onError={()=> setStage(stage === 'svg' ? 'png' : 'fallback')}
+          onError={()=> setStage('fallback')}
           style={{ width:'100%', height:'100%', objectFit:'cover', display:'block',
             transform:`scale(${LOGO_ZOOM[name] || 1})` }}
         />

@@ -329,6 +329,26 @@ window.I18N = {
       'qrp.copied':   'คัดลอกแล้ว',
       'qrp.copyFail': 'คัดลอกไม่สำเร็จ',
 
+      // ── Test-pass i18n fills ──
+      'auth.pwPh':      'รหัสผ่านของคุณ',
+      'auth.pwPhNew':   'อย่างน้อย 6 ตัวอักษร',
+      'auth.namePh':    'ชื่อ นามสกุล',
+      'mc.bothWant':    'คุณกับ {name} อยากดูเรื่องนี้เหมือนกัน',
+      'mc.watchedTogether': 'ดูด้วยกันแล้ว',
+      'mc.keepSwiping': 'ปัดต่อ',
+      'md.watchedTogether': 'ดูด้วยกันแล้ว',
+      'search.label':   'ค้นหา',
+      'search.popular': 'กำลังฮิตตอนนี้',
+      'search.resultN': 'ผลลัพธ์',
+      'list.titleN':    'เรื่อง',
+      'notif.title':    'การแจ้งเตือน',
+      'time.yesterday': 'เมื่อวาน',
+      'swipe.undo':     'ย้อนกลับ',
+      'rm.movie':       'หนัง',
+      'rm.series':      'ซีรีส์',
+      'media.seasonN':  'ซีซัน',
+      'media.episodeN': 'ตอน',
+
       // ── Common ──
       'common.save':   'บันทึก',
       'common.cancel': 'ยกเลิก',

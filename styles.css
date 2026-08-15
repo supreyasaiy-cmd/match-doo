@@ -74,15 +74,35 @@ body{
     radial-gradient(90% 45% at 50% 104%, rgba(255,191,101,0.10), transparent 60%),
     var(--page-bg, #0F141A);
   min-height: 100vh;
+  min-height: 100dvh;
   font-family: var(--sans);
   color: var(--cream);
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   padding: 0;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+/* Real full-screen app shell (replaces the iPhone mockup frame).
+   Fills the viewport on phones; caps to a centered column on desktop
+   so the phone-first layout doesn't stretch awkwardly on wide screens. */
+.app-shell{
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+/* On wide screens, lift the column off the ambient page background. */
+@media (min-width: 540px){
+  .app-shell{
+    box-shadow: 0 30px 90px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.05);
+  }
 }
 
 #root{ display:flex; align-items:center; justify-content:center; }

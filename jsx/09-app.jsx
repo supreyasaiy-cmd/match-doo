@@ -129,7 +129,7 @@ function App() {
     if (fr[0]) list.push({ id:'n1', type:'match',    person: fr[0], text: tr('notif.match1',`You and ${nm(fr[0])} both want the same film 🍿`).replace('{name}', nm(fr[0])), time:'2m' });
     if (fr[2]) list.push({ id:'n2', type:'friend',   person: fr[2], text: tr('notif.friend',`${nm(fr[2])} added you — say hi! 👋`).replace('{name}', nm(fr[2])), time:'1h' });
     list.push({ id:'n3', type:'reminder', text: tr('notif.reminder','Movie night with Family Night is tonight 🎬'), time:'3h' });
-    if (fr[1]) list.push({ id:'n4', type:'match',    person: fr[1], text: tr('notif.match2',`${nm(fr[1])} liked a film you love too 💫`).replace('{name}', nm(fr[1])), time:'Yesterday' });
+    if (fr[1]) list.push({ id:'n4', type:'match',    person: fr[1], text: tr('notif.match2',`${nm(fr[1])} liked a film you love too 💫`).replace('{name}', nm(fr[1])), time: tr('time.yesterday','Yesterday') });
     list.push({ id:'n5', type:'new', text: tr('notif.new','Fresh titles just landed on your picks ✨'), time:'2d' });
     return list;
   }, [lang]);
@@ -406,18 +406,17 @@ function App() {
 
   return (
     <>
-    <FitStage w={402} h={874}>
-    <IOSDevice dark={theme === 'dark'}>
+    <div className="app-shell">
       <div style={{
         position:'absolute', inset:0,
         background:'radial-gradient(125% 78% at 50% -10%, rgba(253,137,115,0.11), transparent 52%), radial-gradient(85% 55% at 96% 104%, rgba(199,73,52,0.09), transparent 60%), var(--ink)',
         color:'var(--cream)',
         display:'flex', flexDirection:'column',
       }}>
-        <div style={{height: 50, flexShrink: 0}}/>
+        <div style={{height: 'max(env(safe-area-inset-top), 12px)', flexShrink: 0}}/>
         <div style={{
           flex: 1, position:'relative', minHeight: 0,
-          overflow: 'hidden', paddingBottom: 24,
+          overflow: 'hidden', paddingBottom: 'max(env(safe-area-inset-bottom), 24px)',
           display:'flex', flexDirection:'column',
         }}>
           <div style={{flex: 1, position:'relative', minHeight: 0, overflow:'hidden'}}>
@@ -591,8 +590,7 @@ function App() {
           </div>
         </div>
       </div>
-    </IOSDevice>
-    </FitStage>
+    </div>
 
     <MatchDooTweaks t={t} setTweak={setTweak}/>
     </>
@@ -654,10 +652,10 @@ function SwipeTab({ deck, onSwipe, onTap, accent, onSearch, userName, banner, ad
               fontFamily:'var(--sans)', fontSize: 12.5, fontWeight: 600,
             }}>
               <Icon name="undo" size={15} color="var(--gold)"/>
-              Undo
+              {tr('swipe.undo','Undo')}
             </button>
           )}
-          <button onClick={onSearch} style={{
+          <button onClick={onSearch} aria-label={tr('search.label','Search')} style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.07)',
             width: 36, height: 36, borderRadius: 999, color:'var(--cream)',
             display:'flex', alignItems:'center', justifyContent:'center',
@@ -713,7 +711,7 @@ function NotificationsSheet({ items = [], onClose, onOpen }) {
       }}>
         <div style={{width: 42, height: 4, borderRadius: 2, background:'rgba(var(--fg-rgb),0.25)', margin:'0 auto 12px'}}/>
         <div style={{padding:'0 20px 8px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-          <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>Notifications</div>
+          <div style={{fontFamily:'var(--serif)', fontSize: 24, color:'var(--cream)', lineHeight: 1.1}}>{tr('notif.title','Notifications')}</div>
           <button onClick={onClose} style={{
             appearance:'none', border:0, background:'rgba(var(--fg-rgb),0.09)',
             width: 34, height: 34, borderRadius: 999, color:'var(--muted)',
